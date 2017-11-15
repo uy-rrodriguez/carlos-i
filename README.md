@@ -7,7 +7,9 @@ https://e-uapv2017.univ-avignon.fr/pluginfile.php/5566/mod_resource/content/3/CD
 
 ## Serveur DHCP
 Carlos-I aura le rôle de point d'accès WiFi qui nous permettra de nous connecter directement depuis l'application Android. Nous avons configuré un serveur DHCP suivant le guide :
-https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software
+https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-softwar
+
+Possibilité d'utiliser RaspAP (???).
 
 ## TensorFlow by Google :
 ### Installation
