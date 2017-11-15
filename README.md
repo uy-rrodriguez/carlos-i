@@ -25,13 +25,14 @@ https://www.svds.com/tensorflow-image-recognition-raspberry-pi/
 ### Configuration
 Pour chaque :
 
-  (1) GPIO
-  
-  (2) Phys.
-  
-  (3) wPI
+    (1) GPIO
+    
+    (2) Phys.
+    
+    (3) wPI
 
 PWM|IN1|IN2
+
 17:11:0|27:13:2|22:15:3|AVD
 
 10:14:12|9:21:13|11:23:14|ARG
@@ -41,16 +42,22 @@ PWM|IN1|IN2
 25:22:6|8:24:10|7:26:11|AVG
 
 
-Avancer
+Avancer :
 
-IN1=1
+    IN1=1
 
-IN2=0
+    IN2=0
 #### Commandes (exemple)
-gpio readall
-gpio mode 11 out
-gpio mode 13 out
-gpio mode 15 out
-gpio write 0 1
-gpio write 2 0
-gpio write 3 1 // wpm
+    gpio readall
+
+    gpio mode 11 out
+
+    gpio mode 13 out
+
+    gpio mode 15 out
+
+    gpio write 0 1
+
+    gpio write 2 0
+
+    gpio write 3 1 // wpm
