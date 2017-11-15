@@ -21,6 +21,11 @@ https://github.com/samjabrahams/tensorflow-on-raspberry-pi
 Exemle sur l'entrainement et l'utilisation de TensorFlow.
 https://www.svds.com/tensorflow-image-recognition-raspberry-pi/
 
+## Gestion de projet
+Utilisation des méthodes AGILE (Kanban).
+### Taiga.io
+https://tree.taiga.io/project/baptistebr-carlos-i/
+
 ## GPIO
 ### Configuration
 Pour chaque :
