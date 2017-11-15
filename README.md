@@ -31,20 +31,21 @@ Pour chaque :
   
   (3) wPI
 
-    PWM           IN1           IN2
-17  11  0     27  13  2     22  15  3     AVD
+PWM|IN1|IN2
+17:11:0|27:13:2|22:15:3|AVD
 
-10  14  12    9   21  13    11  23  14    ARG
+10:14:12|9:21:13|11:23:14|ARG
 
-16  36  27    20  38  28    21  40  29    ARD
+16:36:27|20:38:28|21:40:29|ARD
 
-25  22  6     8   24  10    7   26  11    AVG
+25:22:6|8:24:10|7:26:11|AVG
 
 
-Avancer | IN1=1
+Avancer
 
-        | IN2=0
+IN1=1
 
+IN2=0
 #### Commandes (exemple)
 gpio readall
 gpio mode 11 out
