@@ -45,7 +45,7 @@ class Sensor:
         
 def send_echo(sensor):
     sensor.write_to(1)
-    sleep(1)
+    time.sleep(1)
     sensor.write_to(0)
         
 def get_distance(sensor):
@@ -55,7 +55,7 @@ def get_distance(sensor):
         echo = sensor.get_from()
     distance = 0
     while echo == 1:
-        distance++
+        distance += 1
         echo = sensor.get_from()
     return distance
 

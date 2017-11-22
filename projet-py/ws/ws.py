@@ -1,7 +1,7 @@
 # coding: utf8
 
 import sys, traceback, json
-import web
+import ws.web
 import gpio
 
 
@@ -11,12 +11,16 @@ import gpio
 # ############################################################### #
 
 
+# IP et port par défaut
+DEFAULT_IP = "10.3.141.1"
+DEFAULT_PORT = 8080
+
 # Formats d'URLs acceptées
 urls = (
-	"/command/config",		"ConfigGPIO",
-	"/command/init",		"InitGPIO",
-	"/command/start",		"Forward",
-    "/phrase/stop",         "Stop",
+    "/command/config",      "Config",
+    "/command/init",        "Init",
+    "/command/start",       "Forward",
+    "/command/stop",        "Stop",
     "/(.*)",                "NotFound"
 )
 
@@ -35,159 +39,119 @@ instanceWS = None
 '''
     Hérite de web.application pour étendre ses fonctionnalités
 '''
-class MonWebservice(web.application, object):
+class MonWebservice(ws.web.application, object):
     instance = None
 
     def __init__(self, urls, vars_globals):
         super(MonWebservice, self).__init__(urls, vars_globals)
         MonWebservice.instance = self
 
-    def run(self, port=8080, *middleware):
+    def run(self, ip=DEFAULT_IP, port=DEFAULT_PORT, *middleware):
         func = self.wsgifunc(*middleware)
-        serv = web.httpserver.runsimple(func, ('0.0.0.0', port))
-        print_()
+        serv = ws.web.httpserver.runsimple(func, (ip, port))
         return serv
 
 
 
-# -- ConfigGPIO --------------------------------------------- #
+# -- Config --------------------------------------------- #
 
 '''
     Configuration des modes (OUT) des pins GPIO.
 '''
-class ConfigGPIO:
+class Config:
     def GET(self):
         try:
-            w = gpio.proxy.commandeVocale(parole)
+            w = gpio.wheels.Wheels()
+            w.config()
+            return "OK"
 
-                # Reponse
-                reponse = {}
-                reponse["commande"] = c.commande
-                reponse["erreur"] = c.erreur
-                reponse["msgErreur"] = c.msgErreur
-                reponse["retour"] = c.retour
-
-            else:
-                reponse["msgErreur"] = "Erreur de connection au serveur Manager"
-
-            return json.dumps(reponse)
-
-        except Exception, e:
-            print_exc_()
-
-            reponse = {"erreur" : True,
-                       "msgErreur" : "%s" % e,
-                       "commande" : "", "retour" : ""}
-            return json.dumps(reponse)
+        except Exception as e:
+            traceback.print_exc()
+            return "%s" % e
 
 
-# -- CommandePhrase --------------------------------------------- #
+# -- Init --------------------------------------------- #
 
 '''
-    Traitement d'une commande vocale émulée avec des phrases depuis Android.
-    On va recevoir le string représentant la phrase prononcée par l'utilisateur.
+    Initialisation des valeurs pour les GPIO concernés.
 '''
-class CommandePhrase:
-    def GET(self, phrase):
-        web.header('Content-Type', 'application/json')
-
-        reponse = {"erreur" : True,
-                   "msgErreur" : "Erreur inconnue",
-                   "commande" : "", "retour" : ""}
-
+class Init:
+    def GET(self):
         try:
-            if (ManagerProxy.proxy and ManagerProxy.proxy != None):
-                # Appel
-                c = ManagerProxy.proxy.commandePhrase(phrase)
-                print c
-                
-                # Reponse
-                reponse = {}
-                reponse["commande"] = c.commande
-                reponse["erreur"] = c.erreur
-                reponse["msgErreur"] = c.msgErreur
-                reponse["retour"] = c.retour
+            w = gpio.wheels.Wheels()
+            w.init()
+            return "OK"
 
-            else:
-                reponse["msgErreur"] = "Erreur de connection au serveur Manager"
-
-            return json.dumps(reponse)
-
-        except Exception, e:
-            print_exc_()
-
-            reponse = {"erreur" : True,
-                       "msgErreur" : "%s" % e,
-                       "commande" : "", "retour" : ""}
-            return json.dumps(reponse)
+        except Exception as e:
+            traceback.print_exc()
+            return "%s" % e
 
 
-# -- CommandeManuelle ------------------------------------------- #
+# -- Forward --------------------------------------------- #
 
 '''
-    Traitement d'une commande manuelle.
-    On va recevoir la commande et le nom du fichier audio correspondant.
+    Démarrage des moteurs, le robot avance.
 '''
-class CommandeManuelle:
-    def GET(self, commande, param1=None):
-        web.header('Content-Type', 'application/json')
-
-        reponse = {"erreur" : True,
-                   "msgErreur" : "Erreur inconnue",
-                   "commande" : "", "retour" : ""}
-
+class Forward:
+    def GET(self):
         try:
-            if (ManagerProxy.proxy and ManagerProxy.proxy != None):
-                # Création de l'objet Commande
-                c = AppMP3Player.Commande()
-                c.commande = commande
+            w = gpio.wheels.Wheels()
+            w.forward()
+            return "OK"
 
-                if (param1 != None):
-                    c.params = [param1]
-                else:
-                    c.params = []
+        except Exception as e:
+            traceback.print_exc()
+            return "%s" % e
 
-                # Appel
-                c = ManagerProxy.proxy.commandeManuelle(c)
 
-                # Reponse
-                reponse = {}
-                reponse["commande"] = c.commande
-                reponse["erreur"] = c.erreur
-                reponse["msgErreur"] = c.msgErreur
-                reponse["retour"] = c.retour
+# -- Backward --------------------------------------------- #
 
-            else:
-                reponse["msgErreur"] = "Erreur de connection au serveur Manager"
+'''
+    Démarrage des moteurs, le robot va en arrière.
+'''
+class Backward:
+    def GET(self):
+        try:
+            w = gpio.wheels.Wheels()
+            w.backward()
+            return "OK"
 
-            return json.dumps(reponse)
+        except Exception as e:
+            traceback.print_exc()
+            return "%s" % e
 
-        except Exception, e:
-            print_exc_()
 
-            reponse = {"erreur" : True,
-                       "msgErreur" : "%s" % e,
-                       "commande" : "", "retour" : ""}
-            return json.dumps(reponse)
+# -- Stop --------------------------------------------- #
+
+'''
+    Le robot s'arrete complètement.
+'''
+class Stop:
+    def GET(self):
+        try:
+            w = gpio.wheels.Wheels()
+            w.stop()
+            return "OK"
+
+        except Exception as e:
+            traceback.print_exc()
+            return "%s" % e
 
 
 # -- NotFound --------------------------------------------- #
 
 '''
-    Traitement d'une URL qui ne correspond a aucune autre regle.
+    Traitement d'une URL qui ne correspond a aucune autre règle.
 '''
 class NotFound:
-    def reponse(self):
-        reponse = {"erreur" : True,
-                   "msgErreur" : "URL incorrecte",
-                   "commande" : "", "retour" : ""}
-        return json.dumps(reponse)
+    def response(self):
+        return "404"
 
     def GET(self, data):
-        return self.reponse()
+        return self.response()
 
     def POST(self, data):
-        return self.reponse()
+        return self.response()
 
 
 
@@ -198,47 +162,17 @@ class NotFound:
 
 def main():
     status = 0
-    ic = None
     try:
-        props = Ice.createProperties(sys.argv)
-        iniData = Ice.InitializationData()
-        iniData.properties = props
-
-        # Initialisation du serveur et Ice
-        ic = Ice.initialize(iniData)
-        base = ic.stringToProxy("Manager:default -h " + config.IP_MANAGER + " -p " + str(config.PORT_ICE_MANAGER))
-        manager = AppMP3Player.ManagerPrx.checkedCast(base)
-        if not manager:
-            raise RuntimeError("Invalid proxy")
-
-
-        # On stocke le proxy dans une instance de ManagerProxy
-        ManagerProxy(manager)
-
-        # Publication de l'IP du WS
-        reponse_ip, erreur_ip = set_public_ip()
-        if not reponse_ip:
-            print_("Erreur lors de la publication de l'IP du WS. " + erreur_ip)
-
-
         # Démarrage du webservice
         instanceWS = MonWebservice(urls, globals())
-        instanceWS.run(port=int(config.PORT_WS))
+        instanceWS.run(ip=DEFAULT_IP, port=DEFAULT_PORT)
 
     except (KeyboardInterrupt, SystemExit):
         pass
 
     except:
-        print_exc_()
+        traceback.print_exc()
         status = 1
-
-    if ic:
-        # Clean up
-        try:
-            ic.destroy()
-        except:
-            print_exc_()
-            status = 1
 
     sys.exit(status)
 
