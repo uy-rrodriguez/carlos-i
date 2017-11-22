@@ -8,15 +8,16 @@
     Classe pour contrôler les capteurs ultrason via les valeurs des pins GPIO.
 """
 
-import os
+import os, time
+from multiprocessing import Process
 
-# Sensor 1 wPi numbers
-SENSOR_1_IN     =   21
-SENSOR_2_IN     =   22
+# Front sensor wPi numbers
+FRONT_SENSOR_IN     =   21
+BACK_SENSOR_IN      =   22
 
-# Sensor 2 wPi numbers
-SENSOR_1_OUT    =   13
-SENSOR_2_OUT    =   19
+# Back sensor wPi numbers
+FRONT_SENSOR_OUT    =   13
+BACK_SENSOR_OUT     =   19
 
 class Sensor:
     
@@ -33,23 +34,49 @@ class Sensor:
         os.system(cmd)
         
     def write_to(self, value):
-        cmd = "gpio write " + str(self.gpio_out) + " " + value
+        cmd = "gpio write " + str(self.gpio_out) + " " + str(value)
         print(cmd)
         os.system(cmd);
         
     def get_from(self):
-        pass
+        cmd = "gpio read " + str(self.gpio_in)
+        print(cmd)
+        return os.popen(cmd).read()
+        
+def send_echo(sensor):
+    sensor.write_to(1)
+    sleep(1)
+    sensor.write_to(0)
+        
+def get_distance(sensor):
+    Process(target=send_echo, args=(sensor,)).start()
+    echo = 0
+    while echo == 0:
+        echo = sensor.get_from()
+    distance = 0
+    while echo == 1:
+        distance++
+        echo = sensor.get_from()
+    return distance
 
-if __name == "__main__":
+if __name__ == "__main__":
     
     print("Front sensor's initialization")
-    sensor_1 = Sensor(SENSOR_1_IN, SENSOR_1_OUT)
+    front_sensor = Sensor(FRONT_SENSOR_IN, FRONT_SENSOR_OUT)
     
     print("Front sensor's configuration")
-    sensor_1.configure()
+    front_sensor.configure()
     
     print("Back sensor's initialization")
-    sensor_2 = Sensor(SENSOR_2_IN, SENSOR_2_OUT)
+    back_sensor = Sensor(BACK_SENSOR_IN, BACK_SENSOR_OUT)
     
     print("Back sensor's configuration")
-    sensor_2.configure()
+    back_sensor.configure()
+    
+    print("Distance from front sensor")
+    front_distance = get_distance(front_sensor)
+    print("Front distance: " + str(front_distance))
+    
+    print("Distance from back sensor")
+    back_distance = get_distance(back_sensor)
+    print("Back distance: " + str(back_distance))
