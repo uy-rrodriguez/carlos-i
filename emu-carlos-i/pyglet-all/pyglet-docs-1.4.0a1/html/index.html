@@ -1,0 +1,515 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet Documentation &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="#" />
+    <link rel="next" title="Installation" href="programming_guide/installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="programming_guide/installation.html" title="Installation"
+             accesskey="N">next</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="#">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pyglet-documentation">
+<h1>pyglet Documentation<a class="headerlink" href="#pyglet-documentation" title="Permalink to this headline">¶</a></h1>
+<p><strong>pyglet</strong> is a cross-platform windowing and multimedia library for Python,
+intended for developing games and other visually rich applications. It supports
+windowing, user interface event handling, OpenGL graphics, loading images
+and videos, and playing sounds and music. <strong>pyglet</strong> works on Windows, OS X
+and Linux.</p>
+<p>Some of the features of pyglet are:</p>
+<ul class="simple">
+<li><strong>No external dependencies or installation requirements.</strong> For most
+application and game requirements, pyglet needs nothing else besides Python,
+simplifying distribution and installation.</li>
+<li><strong>Take advantage of multiple windows and multi-monitor desktops.</strong> pyglet
+allows you to use as many windows as you need, and is fully aware of
+multi-monitor setups for use with fullscreen games and applications.</li>
+<li><strong>Load images, sound, music and video in almost any format.</strong> pyglet can
+optionally use AVbin to play back audio formats such as MP3, OGG/Vorbis and
+WMA, and video formats such as DivX, MPEG-2, H.264, WMV and Xvid.</li>
+<li><strong>pyglet is provided under the BSD open-source license</strong>, allowing you to
+use it for both commercial and other open-source projects with very little
+restriction.</li>
+<li><strong>Supports Python 2 and 3.</strong> Pick your favorite!</li>
+</ul>
+<p>Please join us on the <a class="reference external" href="http://groups.google.com/group/pyglet-users">mailing list</a>!</p>
+<div class="section" id="programming-guide">
+<h2>Programming Guide<a class="headerlink" href="#programming-guide" title="Permalink to this headline">¶</a></h2>
+<p>The pyglet Programming Guide provides in-depth documentation for writing
+applications using pyglet.  Many topics described here reference the pyglet
+API reference, which is listed below.</p>
+<p>If this is your first time reading about pyglet, we suggest you start at
+<a class="reference internal" href="programming_guide/quickstart.html"><span class="doc">Writing a pyglet application</span></a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/installation.html#running-the-examples">Running the examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/quickstart.html">Writing a pyglet application</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/quickstart.html#hello-world">Hello, World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/quickstart.html#image-viewer">Image viewer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/quickstart.html#handling-mouse-and-keyboard-events">Handling mouse and keyboard events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/quickstart.html#playing-sounds-and-music">Playing sounds and music</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/quickstart.html#where-to-next">Where to next?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/context.html">Creating an OpenGL context</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/context.html#displays-screens-configs-and-contexts">Displays, screens, configs and contexts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/context.html#opengl-configuration-options">OpenGL configuration options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/context.html#simple-context-configuration">Simple context configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/context.html#selecting-the-best-configuration">Selecting the best configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/context.html#sharing-objects-between-contexts">Sharing objects between contexts</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/gl.html">The OpenGL interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/gl.html#using-opengl">Using OpenGL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/gl.html#resizing-the-window">Resizing the window</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/gl.html#error-checking">Error checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/gl.html#using-extension-functions">Using extension functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/gl.html#using-multiple-windows">Using multiple windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/gl.html#agl-glx-and-wgl">AGL, GLX and WGL</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/graphics.html">Graphics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/graphics.html#drawing-primitives">Drawing primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/graphics.html#vertex-attributes">Vertex attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/graphics.html#vertex-lists">Vertex lists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/graphics.html#batched-rendering">Batched rendering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/graphics.html#batches-and-groups-in-other-modules">Batches and groups in other modules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/windowing.html">Windowing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/windowing.html#creating-a-window">Creating a window</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/windowing.html#size-and-position">Size and position</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/windowing.html#appearance">Appearance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/windowing.html#visibility">Visibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/windowing.html#subclassing-window">Subclassing Window</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/windowing.html#windows-and-opengl-contexts">Windows and OpenGL contexts</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/eventloop.html">The application event loop</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/eventloop.html#customising-the-event-loop">Customising the event loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/eventloop.html#dispatching-events-manually">Dispatching events manually</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/events.html">The pyglet event framework</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/events.html#setting-event-handlers">Setting event handlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/events.html#stacking-event-handlers">Stacking event handlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/events.html#creating-your-own-event-dispatcher">Creating your own event dispatcher</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/keyboard.html">Working with the keyboard</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/keyboard.html#keyboard-events">Keyboard events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/keyboard.html#text-and-motion-events">Text and motion events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/keyboard.html#keyboard-exclusivity">Keyboard exclusivity</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/mouse.html">Working with the mouse</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/mouse.html#mouse-events">Mouse events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/mouse.html#changing-the-mouse-cursor">Changing the mouse cursor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/mouse.html#mouse-exclusivity">Mouse exclusivity</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/input.html">Working with other input devices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/input.html#using-joysticks">Using joysticks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/input.html#using-the-apple-remote">Using the Apple Remote</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/time.html">Keeping track of time</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/time.html#calling-functions-periodically">Calling functions periodically</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/time.html#sprite-movement-techniques">Sprite movement techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/time.html#the-frame-rate">The frame rate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/time.html#user-defined-clocks">User-defined clocks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/text.html">Displaying text</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/text.html#simple-text-rendering">Simple text rendering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/text.html#the-document-layout-model">The document/layout model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/text.html#formatted-text">Formatted text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/text.html#custom-elements">Custom elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/text.html#user-editable-text">User-editable text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/text.html#loading-system-fonts">Loading system fonts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/text.html#font-sizes">Font sizes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/text.html#loading-custom-fonts">Loading custom fonts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/text.html#opengl-font-considerations">OpenGL font considerations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/image.html">Images</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/image.html#loading-an-image">Loading an image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/image.html#supported-image-formats">Supported image formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/image.html#working-with-images">Working with images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/image.html#the-abstractimage-hierarchy">The AbstractImage hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/image.html#accessing-or-providing-pixel-data">Accessing or providing pixel data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/image.html#image-sequences-and-atlases">Image sequences and atlases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/image.html#animations">Animations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/image.html#buffer-images">Buffer images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/image.html#displaying-images">Displaying images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/image.html#opengl-imaging">OpenGL imaging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/image.html#saving-an-image">Saving an image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/media.html">Sound and video</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/media.html#audio-drivers">Audio drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/media.html#supported-media-types">Supported media types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/media.html#ffmpeg-installation">FFmpeg installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/media.html#loading-media">Loading media</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/media.html#procedural-audio">Procedural Audio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/media.html#simple-audio-playback">Simple audio playback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/media.html#controlling-playback">Controlling playback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/media.html#incorporating-video">Incorporating video</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/media.html#positional-audio">Positional audio</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/resources.html">Application resources</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/resources.html#loading-resources">Loading resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/resources.html#specifying-the-resource-path">Specifying the resource path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/resources.html#multiple-loaders">Multiple loaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/resources.html#saving-user-preferences">Saving user preferences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/options.html">pyglet options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/debug.html">Debugging tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/debug.html#debugging-opengl">Debugging OpenGL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/debug.html#tracing-execution">Tracing execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/debug.html#platform-specific-debugging">Platform-specific debugging</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/advanced.html">Advanced topics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/advanced.html#environment-settings">Environment settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming_guide/examplegame.html">In-depth game example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/examplegame.html#basic-graphics">Basic graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/examplegame.html#basic-motion">Basic motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/examplegame.html#giving-the-player-something-to-do">Giving the player something to do</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/examplegame.html#collision-response">Collision response</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming_guide/examplegame.html#next-steps">Next steps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/pyglet.html">pyglet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/app.html">pyglet.app</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/app.html#applications">Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/app.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/app.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/app.html#attributes">Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/app.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/canvas.html">pyglet.canvas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/clock.html">pyglet.clock</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/clock.html#measuring-time">Measuring time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/clock.html#limiting-frame-rate">Limiting frame-rate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/clock.html#scheduling">Scheduling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/clock.html#displaying-fps">Displaying FPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/clock.html#using-multiple-clocks">Using multiple clocks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/event.html">pyglet.event</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/event.html#event-types">Event types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/event.html#attaching-event-handlers">Attaching event handlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/event.html#event-handler-stack">Event handler stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/event.html#dispatching-events">Dispatching events</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/font.html">pyglet.font</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/gl.html">pyglet.gl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/graphics/index.html">pyglet.graphics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/graphics/allocation.html">pyglet.graphics.allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/graphics/vertexattribute.html">pyglet.graphics.vertexattribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/graphics/vertexbuffer.html">pyglet.graphics.vertexbuffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/graphics/vertexdomain.html">pyglet.graphics.vertexdomain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/graphics/index.html#batches-and-groups">Batches and groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/graphics/index.html#data-item-parameters">Data item parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/graphics/index.html#drawing-modes">Drawing modes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/image/index.html">pyglet.image</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/image/atlas.html">pyglet.image.atlas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/image/index.html#drawing-images">Drawing images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/image/index.html#texture-access">Texture access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/image/index.html#pixel-access">Pixel access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/image/index.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/image/index.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/image/index.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/info.html">pyglet.info</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/input.html">pyglet.input</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/input.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/input.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/input.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/media.html">pyglet.media</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/media_procedural.html">pyglet.media.procedural</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/media.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/media.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/media.html#module-pyglet.media.exceptions">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/resource.html">pyglet.resource</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/resource.html#path-format">Path format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/sprite.html">pyglet.sprite</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/sprite.html#drawing-multiple-sprites">Drawing multiple sprites</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/text/index.html">pyglet.text</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/text/caret.html">pyglet.text.caret</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/text/document.html">pyglet.text.document</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/text/layout.html">pyglet.text.layout</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/window.html">pyglet.window</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/window_key.html">pyglet.window.key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/window.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/window.html#creating-a-game-window">Creating a game window</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/window.html#working-with-multiple-screens">Working with multiple screens</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/window.html#specifying-the-opengl-context-properties">Specifying the OpenGL context properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/window.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/window.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/window.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="development-guide">
+<h2>Development Guide<a class="headerlink" href="#development-guide" title="Permalink to this headline">¶</a></h2>
+<p>These documents describe details on how to develop pyglet itself further.  Read
+these to get a more detailed insight into how pyglet is designed, and how to
+help make pyglet even better.  Get in touch if you would like to contribute!</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internal/contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/contributing.html#roadmap">Roadmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/contributing.html#communication">Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/contributing.html#issue-tracker">Issue Tracker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/contributing.html#getting-the-latest-development-version">Getting the latest development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/contributing.html#contributing-to-the-source">Contributing to the source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/contributing.html#contributing-to-the-documentation">Contributing to the documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/contributing.html#contact">Contact</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal/virtualenv.html">Development environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/virtualenv.html#linux-or-mac-osx">Linux or Mac OSX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/virtualenv.html#windows">Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal/testing.html">Testing pyglet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/testing.html#test-suites">Test Suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/testing.html#running-tests">Running tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/testing.html#writing-tests">Writing tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal/doc.html">Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/doc.html#writing-documentation">Writing documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/doc.html#source-code">Source code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/doc.html#building">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/doc.html#html-theme">HTML Theme</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal/dist.html">Making a pyglet release</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/dist.html#major-version-increase">Major version increase</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal/gl.html">OpenGL Interface Implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/gl.html#ctypes-linkage">ctypes linkage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/gl.html#missing-extensions">Missing extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal/generated.html">ctypes Wrapper Generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/generated.html#generating-gl-wrappers">Generating GL wrappers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/generated.html#generated-gl-wrappers">Generated GL wrappers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/generated.html#generating-xlib-wrappers">Generating Xlib wrappers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal/wraptypes.html">wraptypes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/wraptypes.html#parser-modifications">Parser Modifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/wraptypes.html#preprocessor">Preprocessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/wraptypes.html#cparser">CParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/wraptypes.html#ctypesparser">CtypesParser</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal/media_manual.html">Media manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_manual.html#domain-knowledge">Domain knowledge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_manual.html#current-code-architecture">Current code architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_manual.html#helpful-tools">Helpful tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_manual.html#convert-video-to-mkv">Convert video to mkv</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal/media_logging_manual.html">Media logging manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_logging_manual.html#workflows">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_logging_manual.html#session">Session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_logging_manual.html#active-session">Active session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_logging_manual.html#commands-summary">Commands Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_logging_manual.html#data-directory-layout">Data directory layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_logging_manual.html#code-layout-and-conventions">Code Layout and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_logging_manual.html#commands-detailed">Commands detailed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_logging_manual.html#samples">Samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/media_logging_manual.html#pycharm-notes">pycharm notes</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="related-documentation">
+<h2>Related Documentation<a class="headerlink" href="#related-documentation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://www.glprogramming.com/red/">OpenGL Programming Guide</a></li>
+<li><a class="reference external" href="http://opengl.org/sdk/docs/man/">OpenGL Reference Pages</a></li>
+<li><a class="reference external" href="http://avbin.github.com/AVbin/Docs.html">AVbin Documentation</a></li>
+<li><a class="reference external" href="http://docs.python.org/3/library/ctypes.html">ctypes Reference</a></li>
+<li><a class="reference external" href="http://docs.python.org/">Python Documentation</a></li>
+</ul>
+</div>
+<div class="section" id="third-party-libraries">
+<h2>Third party libraries<a class="headerlink" href="#third-party-libraries" title="Permalink to this headline">¶</a></h2>
+<p>Listed here are a few third party libraries that you might find useful when
+developing your project.  Please direct any questions to the respective authors.
+If you would like to have your library listed here, let us know!</p>
+<dl class="docutils">
+<dt><a class="reference external" href="http://glooey.readthedocs.io/en/latest/index.html">glooey -  An object-oriented GUI library for pyglet</a></dt>
+<dd>Every game needs a user interface that matches its look and feel. The purpose of glooey
+is to help you make such an interface.  Towards this end, glooey provides 7 powerful
+placement widgets, a label widget, an image widget, 3 different button widgets, a text
+entry widget, a variety of scroll boxes and bars, 4 different dialog box widgets, and a
+variety of other miscellaneous widgets.  The appearance of any widget can be trivially
+customized, and glooey comes with built-in fantasy, puzzle, and 8-bit themes to prove it
+(and to help you hit the ground running if your game fits one of those genres).</dd>
+<dt><a class="reference external" href="https://github.com/gabdube/pyshaders">PyShaders - Pythonic OpenGL shader wrapper for python</a></dt>
+<dd>Pyshaders aims to completely wraps the opengl2.1 shader api in a python module.
+Pyshaders provides a pythonic OOP api that hides the lower level (ctypes) calls.
+Pyshaders provides a high level api and a low level api, and it can be integrated easily
+with existing code because it does not occlude the underlying opengl values.</dd>
+</dl>
+</div>
+<div class="section" id="projects-using-pyglet">
+<h2>Projects using pyglet<a class="headerlink" href="#projects-using-pyglet" title="Permalink to this headline">¶</a></h2>
+<p>pyglet is a fairly lightweight library, which makes it ideal to build upon.  Listed here are
+a few projects that take advantage of pyglet “under the hood”.  If you would like to have your
+project listed here, let us know!</p>
+<dl class="docutils">
+<dt><a class="reference external" href="http://http://python.cocos2d.org/index.html">cocos2d - A framework for building 2D games, demos, and other graphical/interactive applications</a></dt>
+<dd>Cocos2d is an open source software framework. It can be used to build games, apps and
+other cross platform GUI based interactive programs.</dd>
+<dt><a class="reference external" href="http://arcade.academy/">Arcade - A 2D library for game development focusing on simplicity</a></dt>
+<dd>Arcade builds on Pyglet with a focus to make creating 2D arcade games simple and easy
+for hobbyists and new programmers.</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyglet Documentation</a><ul>
+<li><a class="reference internal" href="#programming-guide">Programming Guide</a></li>
+<li><a class="reference internal" href="#api-reference">API Reference</a></li>
+<li><a class="reference internal" href="#development-guide">Development Guide</a></li>
+<li><a class="reference internal" href="#related-documentation">Related Documentation</a></li>
+<li><a class="reference internal" href="#third-party-libraries">Third party libraries</a></li>
+<li><a class="reference internal" href="#projects-using-pyglet">Projects using pyglet</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="programming_guide/installation.html"
+                        title="next chapter">Installation</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="programming_guide/installation.html" title="Installation"
+             >next</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="#">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

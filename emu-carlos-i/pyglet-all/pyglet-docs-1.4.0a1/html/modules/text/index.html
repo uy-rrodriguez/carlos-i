@@ -1,0 +1,468 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.text &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../../index.html" />
+    <link rel="next" title="pyglet.text.caret" href="caret.html" />
+    <link rel="prev" title="pyglet.sprite" href="../sprite.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="caret.html" title="pyglet.text.caret"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../sprite.html" title="pyglet.sprite"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pyglet-text">
+<h1>pyglet.text<a class="headerlink" href="#pyglet-text" title="Permalink to this headline">¶</a></h1>
+<p class="rubric">Submodules</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="caret.html">pyglet.text.caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="document.html">pyglet.text.document</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layout.html">pyglet.text.layout</a></li>
+</ul>
+</div>
+<p class="rubric">Details</p>
+<span class="target" id="module-pyglet.text"></span><p>Text formatting, layout and display.</p>
+<p>This module provides classes for loading styled documents from text files,
+HTML files and a pyglet-specific markup format.  Documents can be styled with
+multiple fonts, colours, styles, text sizes, margins, paragraph alignments,
+and so on.</p>
+<p>Using the layout classes, documents can be laid out on a single line or
+word-wrapped to fit a rectangle.  A layout can then be efficiently drawn in
+a window or updated incrementally (for example, to support interactive text
+editing).</p>
+<p>The label classes provide a simple interface for the common case where an
+application simply needs to display some text in a window.</p>
+<p>A plain text label can be created with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">label</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s1">&#39;Hello, world&#39;</span><span class="p">,</span>
+                          <span class="n">font_name</span><span class="o">=</span><span class="s1">&#39;Times New Roman&#39;</span><span class="p">,</span>
+                          <span class="n">font_size</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span>
+                          <span class="n">x</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively, a styled text label using HTML can be created with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">label</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">HTMLLabel</span><span class="p">(</span><span class="s1">&#39;&lt;b&gt;Hello&lt;/b&gt;, &lt;i&gt;world&lt;/i&gt;&#39;</span><span class="p">,</span>
+                              <span class="n">x</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Either label can then be drawn at any time with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">label</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>For details on the subset of HTML supported, see <cite>pyglet.text.formats.html</cite>.</p>
+<p>Refer to the Programming Guide for advanced usage of the document and layout
+classes, including interactive editing, embedding objects within documents and
+creating scrollable layouts.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+<dl class="exception">
+<dt id="pyglet.text.DocumentDecodeException">
+<em class="property">exception </em><code class="descname">DocumentDecodeException</code><a class="headerlink" href="#pyglet.text.DocumentDecodeException" title="Permalink to this definition">¶</a></dt>
+<dd><p>An error occurred decoding document text.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.text.DocumentDecoder">
+<em class="property">class </em><code class="descname">DocumentDecoder</code><a class="headerlink" href="#pyglet.text.DocumentDecoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract document decoder.</p>
+<dl class="method">
+<dt id="pyglet.text.DocumentDecoder.decode">
+<code class="descname">decode</code><span class="sig-paren">(</span><em>text</em>, <em>location=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.DocumentDecoder.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode document text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> (<em>str</em>) – Text to decode</li>
+<li><strong>location</strong> (<a class="reference internal" href="../resource.html#pyglet.resource.Location" title="pyglet.resource.Location"><em>Location</em></a>) – Location to use as base path for additional resources
+referenced within the document (for example, HTML images).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><cite>AbstractDocument</cite></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.text.DocumentLabel">
+<em class="property">class </em><code class="descname">DocumentLabel</code><span class="sig-paren">(</span><em>document=None</em>, <em>x=0</em>, <em>y=0</em>, <em>width=None</em>, <em>height=None</em>, <em>anchor_x='left'</em>, <em>anchor_y='baseline'</em>, <em>multiline=False</em>, <em>dpi=None</em>, <em>batch=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.DocumentLabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base label class.</p>
+<p>A label is a layout that exposes convenience methods for manipulating the
+associated document.</p>
+<dl class="method">
+<dt id="pyglet.text.DocumentLabel.get_style">
+<code class="descname">get_style</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.DocumentLabel.get_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a document style value by name.</p>
+<p>If the document has more than one value of the named style,
+<cite>pyglet.text.document.STYLE_INDETERMINATE</cite> is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Style name to query.  See documentation for
+<cite>pyglet.text.layout</cite> for known style names.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.DocumentLabel.set_style">
+<code class="descname">set_style</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.DocumentLabel.set_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a document style value by name over the whole document.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the style to set.  See documentation for
+<cite>pyglet.text.layout</cite> for known style names.</li>
+<li><strong>value</strong> (<em>object</em>) – Value of the style.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.DocumentLabel.bold">
+<code class="descname">bold</code><a class="headerlink" href="#pyglet.text.DocumentLabel.bold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bold font style.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.DocumentLabel.color">
+<code class="descname">color</code><a class="headerlink" href="#pyglet.text.DocumentLabel.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Text color.</p>
+<p>Color is a 4-tuple of RGBA components, each in range [0, 255].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">(int, int, int, int)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.DocumentLabel.font_name">
+<code class="descname">font_name</code><a class="headerlink" href="#pyglet.text.DocumentLabel.font_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Font family name.</p>
+<p>The font name, as passed to <a class="reference internal" href="../font.html#pyglet.font.load" title="pyglet.font.load"><code class="xref py py-func docutils literal"><span class="pre">pyglet.font.load()</span></code></a>.  A list of names can
+optionally be given: the first matching font will be used.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str or list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.DocumentLabel.font_size">
+<code class="descname">font_size</code><a class="headerlink" href="#pyglet.text.DocumentLabel.font_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Font size, in points.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.DocumentLabel.italic">
+<code class="descname">italic</code><a class="headerlink" href="#pyglet.text.DocumentLabel.italic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Italic font style.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.DocumentLabel.text">
+<code class="descname">text</code><a class="headerlink" href="#pyglet.text.DocumentLabel.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>The text of the label.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.text.HTMLLabel">
+<em class="property">class </em><code class="descname">HTMLLabel</code><span class="sig-paren">(</span><em>text=''</em>, <em>location=None</em>, <em>x=0</em>, <em>y=0</em>, <em>width=None</em>, <em>height=None</em>, <em>anchor_x='left'</em>, <em>anchor_y='baseline'</em>, <em>multiline=False</em>, <em>dpi=None</em>, <em>batch=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.HTMLLabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTML formatted text label.</p>
+<p>A subset of HTML 4.01 is supported.  See <cite>pyglet.text.formats.html</cite> for
+details.</p>
+<dl class="attribute">
+<dt id="pyglet.text.HTMLLabel.text">
+<code class="descname">text</code><a class="headerlink" href="#pyglet.text.HTMLLabel.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTML formatted text of the label.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.text.Label">
+<em class="property">class </em><code class="descname">Label</code><span class="sig-paren">(</span><em>text=''</em>, <em>font_name=None</em>, <em>font_size=None</em>, <em>bold=False</em>, <em>italic=False</em>, <em>color=(255</em>, <em>255</em>, <em>255</em>, <em>255)</em>, <em>x=0</em>, <em>y=0</em>, <em>width=None</em>, <em>height=None</em>, <em>anchor_x='left'</em>, <em>anchor_y='baseline'</em>, <em>align='left'</em>, <em>multiline=False</em>, <em>dpi=None</em>, <em>batch=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.Label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plain text label.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.text.decode_attributed">
+<code class="descname">decode_attributed</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.decode_attributed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a document directly from some attributed text.</p>
+<p>See <cite>pyglet.text.formats.attributed</cite> for a description of attributed text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – Attributed text to decode.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>FormattedDocument</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.text.decode_html">
+<code class="descname">decode_html</code><span class="sig-paren">(</span><em>text</em>, <em>location=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.decode_html" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a document directly from some HTML formatted text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> (<em>str</em>) – HTML data to decode.</li>
+<li><strong>location</strong> (<em>str</em>) – Location giving the base path for additional resources
+referenced from the document (e.g., images).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><cite>FormattedDocument</cite></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.text.decode_text">
+<code class="descname">decode_text</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.decode_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a document directly from some plain text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<em>str</em>) – Plain text to initialise the document with.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>UnformattedDocument</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.text.get_decoder">
+<code class="descname">get_decoder</code><span class="sig-paren">(</span><em>filename</em>, <em>mimetype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.get_decoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a document decoder for the given filename and MIME type.</p>
+<p>If <cite>mimetype</cite> is omitted it is guessed from the filename extension.</p>
+<p>The following MIME types are supported:</p>
+<dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">text/plain</span></code></dt>
+<dd>Plain text</dd>
+<dt><code class="docutils literal"><span class="pre">text/html</span></code></dt>
+<dd>HTML 4 Transitional</dd>
+<dt><code class="docutils literal"><span class="pre">text/vnd.pyglet-attributed</span></code></dt>
+<dd>Attributed text; see <cite>pyglet.text.formats.attributed</cite></dd>
+</dl>
+<p><cite>DocumentDecodeException</cite> is raised if another MIME type is given.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) – Filename to guess the MIME type from.  If a MIME type is given,
+the filename is ignored.</li>
+<li><strong>mimetype</strong> (<em>str</em>) – MIME type to lookup, or <code class="docutils literal"><span class="pre">None</span></code> to guess the type from the
+filename.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><cite>DocumentDecoder</cite></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.text.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>filename</em>, <em>file=None</em>, <em>mimetype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a document from a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) – Filename of document to load.</li>
+<li><strong>file</strong> (<em>file-like object</em>) – File object containing encoded data.  If omitted, <cite>filename</cite> is
+loaded from disk.</li>
+<li><strong>mimetype</strong> (<em>str</em>) – MIME type of the document.  If omitted, the filename extension is
+used to guess a MIME type.  See <cite>get_decoder</cite> for a list of
+supported MIME types.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><cite>AbstractDocument</cite></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../sprite.html"
+                        title="previous chapter">pyglet.sprite</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="caret.html"
+                        title="next chapter">pyglet.text.caret</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="caret.html" title="pyglet.text.caret"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../sprite.html" title="pyglet.sprite"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

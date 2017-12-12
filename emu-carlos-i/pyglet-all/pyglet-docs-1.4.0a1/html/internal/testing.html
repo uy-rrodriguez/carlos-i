@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Testing pyglet &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="next" title="Documentation" href="doc.html" />
+    <link rel="prev" title="Development environment" href="virtualenv.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="doc.html" title="Documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="virtualenv.html" title="Development environment"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="testing-pyglet">
+<h1>Testing pyglet<a class="headerlink" href="#testing-pyglet" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="test-suites">
+<h2>Test Suites<a class="headerlink" href="#test-suites" title="Permalink to this headline">¶</a></h2>
+<p>Tests for pyglet are divided into 3 suites.</p>
+<div class="section" id="unit-tests">
+<h3>Unit tests<a class="headerlink" href="#unit-tests" title="Permalink to this headline">¶</a></h3>
+<p>Unit tests only cover a single unit of code or a combination of a limited number of units. No
+resource intensive computations should be included. These tests should run in limited time without
+any user interaction.</p>
+</div>
+<div class="section" id="integration-tests">
+<h3>Integration tests<a class="headerlink" href="#integration-tests" title="Permalink to this headline">¶</a></h3>
+<p>Integration tests cover the integration of components of pyglet into the whole of pyglet and
+the integration into the supported systems. Like unit tests these tests do not require user
+interaction, but they can take longer to run due to access to system resources.</p>
+</div>
+<div class="section" id="interactive-tests">
+<h3>Interactive tests<a class="headerlink" href="#interactive-tests" title="Permalink to this headline">¶</a></h3>
+<p>Interactive tests require the user to verify whether the test is successful and in some cases
+require the user to perform actions in order for the test to continue. These tests can take a
+long time to run.</p>
+<p>There are currently 3 types of interactive test cases:</p>
+<blockquote>
+<div><ul class="simple">
+<li>tests that can only run in fully interactive mode as they require the user to perform an
+action in order for the test to continue. These tests are decorated with
+<code class="xref py py-func docutils literal"><span class="pre">requires_user_action()</span></code>.</li>
+<li>tests that can run without user interaction, but that cannot validate whether they should
+pass or fail. These tests are docorated with
+<code class="xref py py-func docutils literal"><span class="pre">requires_user_validation()</span></code>.</li>
+<li>tests that can run without user interaction and that can compare results to screenshots from
+a previous run to determine whether they pass or fail. This is the default type.</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="running-tests">
+<h2>Running tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h2>
+<p>The pyglet test suite is based on the <a class="reference external" href="http://pytest.org">py.test framework</a>.</p>
+<p>It is preferred to use a virtual environment to run the tests. For instructions to set
+up virtual environments see <a class="reference internal" href="virtualenv.html"><span class="doc">Development environment</span></a>.
+Make sure the virtual environment for the Python version you want to test is active. It is
+preferred to run the tests on 2.7, 3.4 and 3.5 to make sure changes are compatible with all
+supported Python versions.</p>
+<p>To run all tests, execute py.test in the root of the pyglet repository:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">py</span><span class="o">.</span><span class="n">test</span>
+</pre></div>
+</div>
+<p>You can also run just a single suite:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">py</span><span class="o">.</span><span class="n">test</span> <span class="n">tests</span><span class="o">/</span><span class="n">unit</span>
+<span class="n">py</span><span class="o">.</span><span class="n">test</span> <span class="n">tests</span><span class="o">/</span><span class="n">integration</span>
+<span class="n">py</span><span class="o">.</span><span class="n">test</span> <span class="n">tests</span><span class="o">/</span><span class="n">interactive</span>
+</pre></div>
+</div>
+<p>For the interactive test suites, there are some extra command line switches for py.test:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">--non-interactive</span></code>: Only run the interactive tests that can only verify themselves using
+screenshots. The screenshots are created when you run the tests in interactive mode, so you
+will need to run the tests interactively once, before you can use this option;</li>
+<li><code class="docutils literal"><span class="pre">--sanity</span></code>: Do a sanity check by running as many interactive tests without user intervention.
+Not all tests can run without intervention, so these tests will still be skipped. Mostly
+useful to quickly check changes in code. Not all tests perform complete validation.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="writing-tests">
+<h2>Writing tests<a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="annotations">
+<h3>Annotations<a class="headerlink" href="#annotations" title="Permalink to this headline">¶</a></h3>
+<p>Some control over test execution can be exerted by using annotations in the form of
+decorators. One function of annotations is to skip tests under certain conditions.</p>
+<div class="section" id="general-annotations">
+<h4>General annotations<a class="headerlink" href="#general-annotations" title="Permalink to this headline">¶</a></h4>
+<p>General test annotations are available in the module <code class="xref py py-mod docutils literal"><span class="pre">tests.annotations</span></code>.</p>
+<dl class="function">
+<dt id="tests.annotations.require_platform">
+<code class="descclassname">&#64;</code><code class="descname">require_platform</code><span class="sig-paren">(</span><em>platform</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.annotations.require_platform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only run the test on the given platform(s), skip on other platforms.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>platform</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – A list of platform identifiers as returned by
+<a class="reference internal" href="../programming_guide/options.html#pyglet.options" title="pyglet.options"><code class="xref py py-data docutils literal"><span class="pre">pyglet.options</span></code></a>. See also <a class="reference internal" href="#tests.annotations.Platform" title="tests.annotations.Platform"><code class="xref py py-class docutils literal"><span class="pre">Platform</span></code></a>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.annotations.skip_platform">
+<code class="descclassname">&#64;</code><code class="descname">skip_platform</code><span class="sig-paren">(</span><em>platform</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.annotations.skip_platform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skip test on the given platform(s).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>platform</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – A list of platform identifiers as returned by
+<a class="reference internal" href="../programming_guide/options.html#pyglet.options" title="pyglet.options"><code class="xref py py-data docutils literal"><span class="pre">pyglet.options</span></code></a>. See also <a class="reference internal" href="#tests.annotations.Platform" title="tests.annotations.Platform"><code class="xref py py-class docutils literal"><span class="pre">Platform</span></code></a>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.annotations.Platform">
+<em class="property">class </em><code class="descname">Platform</code><a class="headerlink" href="#tests.annotations.Platform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predefined lists of identifiers for platforms. For use with
+<a class="reference internal" href="#tests.annotations.require_platform" title="tests.annotations.require_platform"><code class="xref py py-func docutils literal"><span class="pre">require_platform()</span></code></a> and <a class="reference internal" href="#tests.annotations.skip_platform" title="tests.annotations.skip_platform"><code class="xref py py-func docutils literal"><span class="pre">skip_platform()</span></code></a>. Combine platforms using +.</p>
+<dl class="attribute">
+<dt id="tests.annotations.Platform.LINUX">
+<code class="descname">LINUX</code><em class="property"> = ('linux-compat', 'linux2', 'linux')</em><a class="headerlink" href="#tests.annotations.Platform.LINUX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linux platforms</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tests.annotations.Platform.OSX">
+<code class="descname">OSX</code><em class="property"> = ('darwin',)</em><a class="headerlink" href="#tests.annotations.Platform.OSX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mac OS X platforms</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tests.annotations.Platform.WINDOWS">
+<code class="descname">WINDOWS</code><em class="property"> = ('win32', 'cygwin')</em><a class="headerlink" href="#tests.annotations.Platform.WINDOWS" title="Permalink to this definition">¶</a></dt>
+<dd><p>MS Windows platforms</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.annotations.require_gl_extension">
+<code class="descclassname">&#64;</code><code class="descname">require_gl_extension</code><span class="sig-paren">(</span><em>extension</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.annotations.require_gl_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skip the test if the given GL extension is not available.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>extension</strong> (<em>str</em>) – Name of the extension required.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="suite-annotations">
+<h4>Suite annotations<a class="headerlink" href="#suite-annotations" title="Permalink to this headline">¶</a></h4>
+<p>This is currently not used.</p>
+<dl class="function">
+<dt id="tests.annotations.pytest.mark.unit">
+<code class="descclassname">&#64;</code><code class="descclassname">pytest.mark.</code><code class="descname">unit</code><a class="headerlink" href="#tests.annotations.pytest.mark.unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test belongs to the unit test suite.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.annotations.pytest.mark.integration">
+<code class="descclassname">&#64;</code><code class="descclassname">pytest.mark.</code><code class="descname">integration</code><a class="headerlink" href="#tests.annotations.pytest.mark.integration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test belongs to the integration test suite.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.annotations.pytest.mark.interactive">
+<code class="descclassname">&#64;</code><code class="descclassname">pytest.mark.</code><code class="descname">interactive</code><a class="headerlink" href="#tests.annotations.pytest.mark.interactive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test belongs to the interactive test suite.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="interactive-test-annotations">
+<h4>Interactive test annotations<a class="headerlink" href="#interactive-test-annotations" title="Permalink to this headline">¶</a></h4>
+<p>Interactive test cases can be marked with specific py.test marks. Currently
+the following marks are used:</p>
+<dl class="function">
+<dt id="tests.annotations.pytest.mark.requires_user_action">
+<code class="descclassname">&#64;</code><code class="descclassname">pytest.mark.</code><code class="descname">requires_user_action</code><a class="headerlink" href="#tests.annotations.pytest.mark.requires_user_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test requires user interaction to run. It needs to be skipped when running in
+non-interactive or sanity mode.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.annotations.pytest.mark.requires_user_validation">
+<code class="descclassname">&#64;</code><code class="descclassname">pytest.mark.</code><code class="descname">requires_user_validation</code><a class="headerlink" href="#tests.annotations.pytest.mark.requires_user_validation" title="Permalink to this definition">¶</a></dt>
+<dd><p>User validation is required to mark the test passed or failed. However the test
+can run in sanity mode.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.annotations.pytest.mark.only_interactive">
+<code class="descclassname">&#64;</code><code class="descclassname">pytest.mark.</code><code class="descname">only_interactive</code><a class="headerlink" href="#tests.annotations.pytest.mark.only_interactive" title="Permalink to this definition">¶</a></dt>
+<dd><p>For another reason the test can only run in interactive mode.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Testing pyglet</a><ul>
+<li><a class="reference internal" href="#test-suites">Test Suites</a><ul>
+<li><a class="reference internal" href="#unit-tests">Unit tests</a></li>
+<li><a class="reference internal" href="#integration-tests">Integration tests</a></li>
+<li><a class="reference internal" href="#interactive-tests">Interactive tests</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#running-tests">Running tests</a></li>
+<li><a class="reference internal" href="#writing-tests">Writing tests</a><ul>
+<li><a class="reference internal" href="#annotations">Annotations</a><ul>
+<li><a class="reference internal" href="#general-annotations">General annotations</a></li>
+<li><a class="reference internal" href="#suite-annotations">Suite annotations</a></li>
+<li><a class="reference internal" href="#interactive-test-annotations">Interactive test annotations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="virtualenv.html"
+                        title="previous chapter">Development environment</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="doc.html"
+                        title="next chapter">Documentation</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="doc.html" title="Documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="virtualenv.html" title="Development environment"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.gl &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="next" title="pyglet.graphics" href="graphics/index.html" />
+    <link rel="prev" title="pyglet.font" href="font.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="graphics/index.html" title="pyglet.graphics"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="font.html" title="pyglet.font"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyglet.gl">
+<span id="pyglet-gl"></span><h1>pyglet.gl<a class="headerlink" href="#module-pyglet.gl" title="Permalink to this headline">¶</a></h1>
+<p>OpenGL and GLU interface.</p>
+<p>This package imports all OpenGL, GLU and registered OpenGL extension
+functions.  Functions have identical signatures to their C counterparts.  For
+example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyglet.gl</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1"># [...omitted: set up a GL context and framebuffer]</span>
+<span class="n">glBegin</span><span class="p">(</span><span class="n">GL_QUADS</span><span class="p">)</span>
+<span class="n">glVertex3f</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">glVertex3f</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+<span class="n">glVertex3f</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+<span class="n">glEnd</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>OpenGL is documented in full at the <a class="reference external" href="http://www.opengl.org/documentation/red_book/">OpenGL Reference Pages</a>.</p>
+<p>The <a class="reference external" href="http://fly.cc.fer.hr/~unreal/theredbook/">OpenGL Programming Guide</a> is a popular reference manual organised by
+topic.  The free online version documents only OpenGL 1.1.  <a class="reference external" href="http://www.opengl.org/documentation/red_book/">Later editions</a>
+cover more recent versions of the API and can be purchased from a book store.</p>
+<p>The following subpackages are imported into this “mega” package already (and
+so are available by importing <code class="docutils literal"><span class="pre">pyglet.gl</span></code>):</p>
+<dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">pyglet.gl.gl</span></code></dt>
+<dd>OpenGL</dd>
+<dt><code class="docutils literal"><span class="pre">pyglet.gl.glu</span></code></dt>
+<dd>GLU</dd>
+<dt><code class="docutils literal"><span class="pre">pyglet.gl.gl.glext_arb</span></code></dt>
+<dd>ARB registered OpenGL extension functions</dd>
+</dl>
+<p>These subpackages are also available, but are not imported into this namespace
+by default:</p>
+<dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">pyglet.gl.glext_nv</span></code></dt>
+<dd>nVidia OpenGL extension functions</dd>
+<dt><code class="docutils literal"><span class="pre">pyglet.gl.agl</span></code></dt>
+<dd>AGL (Mac OS X OpenGL context functions)</dd>
+<dt><code class="docutils literal"><span class="pre">pyglet.gl.glx</span></code></dt>
+<dd>GLX (Linux OpenGL context functions)</dd>
+<dt><code class="docutils literal"><span class="pre">pyglet.gl.glxext_arb</span></code></dt>
+<dd>ARB registered GLX extension functions</dd>
+<dt><code class="docutils literal"><span class="pre">pyglet.gl.glxext_nv</span></code></dt>
+<dd>nvidia GLX extension functions</dd>
+<dt><code class="docutils literal"><span class="pre">pyglet.gl.wgl</span></code></dt>
+<dd>WGL (Windows OpenGL context functions)</dd>
+<dt><code class="docutils literal"><span class="pre">pyglet.gl.wglext_arb</span></code></dt>
+<dd>ARB registered WGL extension functions</dd>
+<dt><code class="docutils literal"><span class="pre">pyglet.gl.wglext_nv</span></code></dt>
+<dd>nvidia WGL extension functions</dd>
+</dl>
+<p>The information modules are provided for convenience, and are documented
+below.</p>
+<dl class="exception">
+<dt id="pyglet.gl.ConfigException">
+<em class="property">exception </em><code class="descname">ConfigException</code><a class="headerlink" href="#pyglet.gl.ConfigException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="pyglet.gl.ContextException">
+<em class="property">exception </em><code class="descname">ContextException</code><a class="headerlink" href="#pyglet.gl.ContextException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pyglet.gl.get_current_context">
+<code class="descname">get_current_context</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.get_current_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the active OpenGL context.</p>
+<p>You can change the current context by calling <cite>Context.set_current</cite>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Deprecated. Use <cite>current_context</cite></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><cite>Context</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the context to which OpenGL commands are directed, or None
+if there is no selected context.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="pyglet.gl.current_context">
+<code class="descname">current_context</code><em class="property"> = None</em><a class="headerlink" href="#pyglet.gl.current_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>The active OpenGL context.</p>
+<p>You can change the current context by calling <cite>Context.set_current</cite>; do not
+modify this global.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><cite>Context</cite></td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.gl.GLException">
+<em class="property">class </em><code class="descname">GLException</code><a class="headerlink" href="#pyglet.gl.GLException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="pyglet.gl.ObjectSpace">
+<em class="property">class </em><code class="descname">ObjectSpace</code><a class="headerlink" href="#pyglet.gl.ObjectSpace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="pyglet.gl.Config">
+<em class="property">class </em><code class="descname">Config</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Graphics configuration.</p>
+<p>A Config stores the preferences for OpenGL attributes such as the
+number of auxilliary buffers, size of the colour and depth buffers,
+double buffering, stencilling, multi- and super-sampling, and so on.</p>
+<p>Different platforms support a different set of attributes, so these
+are set with a string key and a value which is integer or boolean.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>double_buffer</strong> (<em>bool</em>) – Specify the presence of a back-buffer for every color buffer.</li>
+<li><strong>stereo</strong> (<em>bool</em>) – Specify the presence of separate left and right buffer sets.</li>
+<li><strong>buffer_size</strong> (<em>int</em>) – Total bits per sample per color buffer.</li>
+<li><strong>aux_buffers</strong> (<em>int</em>) – The number of auxilliary color buffers.</li>
+<li><strong>sample_buffers</strong> (<em>int</em>) – The number of multisample buffers.</li>
+<li><strong>samples</strong> (<em>int</em>) – The number of samples per pixel, or 0 if there are no multisample
+buffers.</li>
+<li><strong>red_size</strong> (<em>int</em>) – Bits per sample per buffer devoted to the red component.</li>
+<li><strong>green_size</strong> (<em>int</em>) – Bits per sample per buffer devoted to the green component.</li>
+<li><strong>blue_size</strong> (<em>int</em>) – Bits per sample per buffer devoted to the blue component.</li>
+<li><strong>alpha_size</strong> (<em>int</em>) – Bits per sample per buffer devoted to the alpha component.</li>
+<li><strong>depth_size</strong> (<em>int</em>) – Bits per sample in the depth buffer.</li>
+<li><strong>stencil_size</strong> (<em>int</em>) – Bits per sample in the stencil buffer.</li>
+<li><strong>accum_red_size</strong> (<em>int</em>) – Bits per pixel devoted to the red component in the accumulation
+buffer.</li>
+<li><strong>accum_green_size</strong> (<em>int</em>) – Bits per pixel devoted to the green component in the accumulation
+buffer.</li>
+<li><strong>accum_blue_size</strong> (<em>int</em>) – Bits per pixel devoted to the blue component in the accumulation
+buffer.</li>
+<li><strong>accum_alpha_size</strong> (<em>int</em>) – Bits per pixel devoted to the alpha component in the accumulation
+buffer.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.gl.Config.create_context">
+<code class="descname">create_context</code><span class="sig-paren">(</span><em>share</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Config.create_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a GL context that satisifies this configuration.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Deprecated. Use <cite>CanvasConfig.create_context</cite>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>share</strong> (<a class="reference internal" href="#pyglet.gl.Context" title="pyglet.gl.Context"><em>Context</em></a>) – If not None, a context with which to share objects with.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>Context</cite></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The new context.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.gl.Config.get_gl_attributes">
+<code class="descname">get_gl_attributes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Config.get_gl_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of attributes set on this config.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of tuple <code class="docutils literal"><span class="pre">(name,</span> <span class="pre">value)</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">All attributes, with unset attributes having a value of
+<code class="docutils literal"><span class="pre">None</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.gl.Config.is_complete">
+<code class="descname">is_complete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Config.is_complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if this config is complete and able to create a context.</p>
+<p>Configs created directly are not complete, they can only serve
+as templates for retrieving a supported config from the system.
+For example, <cite>pyglet.window.Screen.get_matching_configs</cite> returns
+complete configs.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Deprecated. Use <code class="docutils literal"><span class="pre">isinstance(config,</span> <span class="pre">CanvasConfig)</span></code>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the config is complete and can create a context.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.gl.Config.match">
+<code class="descname">match</code><span class="sig-paren">(</span><em>canvas</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Config.match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of matching complete configs for the given canvas.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>canvas</strong> (<a class="reference internal" href="canvas.html#pyglet.canvas.Canvas" title="pyglet.canvas.Canvas"><em>Canvas</em></a>) – Display to host contexts created from the config.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <cite>CanvasConfig</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.gl.Config.debug">
+<code class="descname">debug</code><em class="property"> = None</em><a class="headerlink" href="#pyglet.gl.Config.debug" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.gl.Config.forward_compatible">
+<code class="descname">forward_compatible</code><em class="property"> = None</em><a class="headerlink" href="#pyglet.gl.Config.forward_compatible" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.gl.Config.major_version">
+<code class="descname">major_version</code><em class="property"> = None</em><a class="headerlink" href="#pyglet.gl.Config.major_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.gl.Config.minor_version">
+<code class="descname">minor_version</code><em class="property"> = None</em><a class="headerlink" href="#pyglet.gl.Config.minor_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.gl.CanvasConfig">
+<em class="property">class </em><code class="descname">CanvasConfig</code><span class="sig-paren">(</span><em>canvas</em>, <em>base_config</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.CanvasConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyglet.gl.base.Config</span></code></p>
+<p>OpenGL configuration for a particular canvas.</p>
+<p>Use <cite>Config.match</cite> to obtain an instance of this class.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><a class="reference internal" href="canvas.html#module-pyglet.canvas" title="pyglet.canvas"><strong>canvas</strong></a> (<a class="reference internal" href="canvas.html#pyglet.canvas.Canvas" title="pyglet.canvas.Canvas"><em>Canvas</em></a>) – The canvas this config is valid on.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.gl.CanvasConfig.compatible">
+<code class="descname">compatible</code><span class="sig-paren">(</span><em>canvas</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.CanvasConfig.compatible" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.gl.CanvasConfig.create_context">
+<code class="descname">create_context</code><span class="sig-paren">(</span><em>share</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.CanvasConfig.create_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a GL context that satisifies this configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>share</strong> (<a class="reference internal" href="#pyglet.gl.Context" title="pyglet.gl.Context"><em>Context</em></a>) – If not None, a context with which to share objects with.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>Context</cite></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The new context.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.gl.CanvasConfig.is_complete">
+<code class="descname">is_complete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.CanvasConfig.is_complete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.gl.Context">
+<em class="property">class </em><code class="descname">Context</code><span class="sig-paren">(</span><em>config</em>, <em>context_share=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Context" title="Permalink to this definition">¶</a></dt>
+<dd><p>OpenGL context for drawing.</p>
+<p>Use <cite>CanvasConfig.create_context</cite> to create a context.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>object_space</strong> (<a class="reference internal" href="#pyglet.gl.ObjectSpace" title="pyglet.gl.ObjectSpace"><em>ObjectSpace</em></a>) – An object which is shared between all contexts that share
+GL objects.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.gl.Context.attach">
+<code class="descname">attach</code><span class="sig-paren">(</span><em>canvas</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Context.attach" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.gl.Context.delete_buffer">
+<code class="descname">delete_buffer</code><span class="sig-paren">(</span><em>buffer_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Context.delete_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Safely delete a buffer object belonging to this context.</p>
+<p>This method behaves similarly to <code class="xref py py-func docutils literal"><span class="pre">delete_texture()</span></code>, though for
+<code class="docutils literal"><span class="pre">glDeleteBuffers</span></code> instead of <code class="docutils literal"><span class="pre">glDeleteTextures</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>buffer_id</strong> (<em>int</em>) – The OpenGL name of the buffer to delete.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.gl.Context.delete_texture">
+<code class="descname">delete_texture</code><span class="sig-paren">(</span><em>texture_id</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Context.delete_texture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Safely delete a texture belonging to this context.</p>
+<p>Usually, the texture is released immediately using
+<code class="docutils literal"><span class="pre">glDeleteTextures</span></code>, however if another context that does not share
+this context’s object space is currently active, the deletion will
+be deferred until an appropriate context is activated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>texture_id</strong> (<em>int</em>) – The OpenGL name of the texture to delete.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.gl.Context.destroy">
+<code class="descname">destroy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Context.destroy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the context.</p>
+<p>The context will not be useable after being destroyed.  Each platform
+has its own convention for releasing the context and the buffer(s)
+that depend on it in the correct order; this should never be called
+by an application.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.gl.Context.detach">
+<code class="descname">detach</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Context.detach" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.gl.Context.get_info">
+<code class="descname">get_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Context.get_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the OpenGL information for this context.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><cite>GLInfo</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.gl.Context.set_current">
+<code class="descname">set_current</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.gl.Context.set_current" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.gl.Context.CONTEXT_SHARE_EXISTING">
+<code class="descname">CONTEXT_SHARE_EXISTING</code><em class="property"> = 1</em><a class="headerlink" href="#pyglet.gl.Context.CONTEXT_SHARE_EXISTING" title="Permalink to this definition">¶</a></dt>
+<dd><p>Context share behaviour indicating that objects are shared with
+the most recently created context (the default).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.gl.Context.CONTEXT_SHARE_NONE">
+<code class="descname">CONTEXT_SHARE_NONE</code><em class="property"> = None</em><a class="headerlink" href="#pyglet.gl.Context.CONTEXT_SHARE_NONE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Context share behaviour indicating that objects should not be
+shared with existing contexts.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="font.html"
+                        title="previous chapter">pyglet.font</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="graphics/index.html"
+                        title="next chapter">pyglet.graphics</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="graphics/index.html" title="pyglet.graphics"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="font.html" title="pyglet.font"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

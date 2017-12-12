@@ -1,0 +1,817 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.clock &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="next" title="pyglet.event" href="event.html" />
+    <link rel="prev" title="pyglet.canvas" href="canvas.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="event.html" title="pyglet.event"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="canvas.html" title="pyglet.canvas"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyglet.clock">
+<span id="pyglet-clock"></span><h1>pyglet.clock<a class="headerlink" href="#module-pyglet.clock" title="Permalink to this headline">¶</a></h1>
+<p>Precise framerate calculation, scheduling and framerate limiting.</p>
+<div class="section" id="measuring-time">
+<h2>Measuring time<a class="headerlink" href="#measuring-time" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>tick</cite> and <cite>get_fps</cite> functions can be used in conjunction to fulfil most
+games’ basic requirements:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyglet</span> <span class="k">import</span> <span class="n">clock</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+    <span class="c1"># ... update and render ...</span>
+    <span class="nb">print</span> <span class="s1">&#39;FPS is </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">clock</span><span class="o">.</span><span class="n">get_fps</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">dt</span></code> value returned gives the number of seconds (as a float) since the
+last “tick”.</p>
+<p>The <cite>get_fps</cite> function averages the framerate over a sliding window of
+approximately 1 second.  (You can calculate the instantaneous framerate by
+taking the reciprocal of <code class="docutils literal"><span class="pre">dt</span></code>).</p>
+<p>Always remember to <cite>tick</cite> the clock!</p>
+</div>
+<div class="section" id="limiting-frame-rate">
+<h2>Limiting frame-rate<a class="headerlink" href="#limiting-frame-rate" title="Permalink to this headline">¶</a></h2>
+<p>The framerate can be limited:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">clock</span><span class="o">.</span><span class="n">set_fps_limit</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This causes <a class="reference internal" href="#pyglet.clock.Clock" title="pyglet.clock.Clock"><code class="xref py py-class docutils literal"><span class="pre">Clock</span></code></a> to sleep during each <cite>tick</cite> in an
+attempt to keep the number of ticks (frames) per second below 60.</p>
+<p>The implementation uses platform-dependent high-resolution sleep functions
+to achieve better accuracy with busy-waiting than would be possible using
+just the <cite>time</cite> module.</p>
+</div>
+<div class="section" id="scheduling">
+<h2>Scheduling<a class="headerlink" href="#scheduling" title="Permalink to this headline">¶</a></h2>
+<p>You can schedule a function to be called every time the clock is ticked:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">dt</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="s1">&#39;</span><span class="si">%f</span><span class="s1"> seconds since last callback&#39;</span> <span class="o">%</span> <span class="n">dt</span>
+
+<span class="n">clock</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <cite>schedule_interval</cite> method causes a function to be called every “n”
+seconds:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">clock</span><span class="o">.</span><span class="n">schedule_interval</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span>   <span class="c1"># called twice a second</span>
+</pre></div>
+</div>
+<p>The <cite>schedule_once</cite> method causes a function to be called once “n” seconds
+in the future:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">clock</span><span class="o">.</span><span class="n">schedule_once</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>        <span class="c1"># called in 5 seconds</span>
+</pre></div>
+</div>
+<p>All of the <cite>schedule</cite> methods will pass on any additional args or keyword args
+you specify to the callback function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">animate</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="n">sprite</span><span class="p">):</span>
+   <span class="n">sprite</span><span class="o">.</span><span class="n">position</span> <span class="o">+=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">velocity</span>
+
+<span class="n">clock</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">animate</span><span class="p">,</span> <span class="n">velocity</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">sprite</span><span class="o">=</span><span class="n">alien</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can cancel a function scheduled with any of these methods using
+<cite>unschedule</cite>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">clock</span><span class="o">.</span><span class="n">unschedule</span><span class="p">(</span><span class="n">animate</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="displaying-fps">
+<h2>Displaying FPS<a class="headerlink" href="#displaying-fps" title="Permalink to this headline">¶</a></h2>
+<p>The ClockDisplay class provides a simple FPS counter.  You should create
+an instance of ClockDisplay once during the application’s start up:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fps_display</span> <span class="o">=</span> <span class="n">clock</span><span class="o">.</span><span class="n">ClockDisplay</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Call draw on the ClockDisplay object for each frame:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fps_display</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>There are several options to change the font, color and text displayed
+within the __init__ method.</p>
+</div>
+<div class="section" id="using-multiple-clocks">
+<h2>Using multiple clocks<a class="headerlink" href="#using-multiple-clocks" title="Permalink to this headline">¶</a></h2>
+<p>The clock functions are all relayed to an instance of
+<a class="reference internal" href="#pyglet.clock.Clock" title="pyglet.clock.Clock"><code class="xref py py-class docutils literal"><span class="pre">Clock</span></code></a> which is initialised with the module.  You can
+get this instance to use directly:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">clk</span> <span class="o">=</span> <span class="n">clock</span><span class="o">.</span><span class="n">get_default</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can also replace the default clock with your own:</p>
+<blockquote>
+<div>myclk = clock.Clock()
+clock.set_default(myclk)</div></blockquote>
+<p>Each clock maintains its own set of scheduled functions and FPS
+limiting/measurement.  Each clock must be “ticked” separately.</p>
+<p>Multiple and derived clocks potentially allow you to separate “game-time” and
+“wall-time”, or to synchronise your clock to an audio or video stream instead
+of the system clock.</p>
+<dl class="class">
+<dt id="pyglet.clock.Clock">
+<em class="property">class </em><code class="descname">Clock</code><span class="sig-paren">(</span><em>fps_limit=None</em>, <em>time_function=&lt;built-in function time&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for calculating and limiting framerate.</p>
+<p>It is also used for calling scheduled functions.</p>
+<dl class="method">
+<dt id="pyglet.clock.Clock.call_scheduled_functions">
+<code class="descname">call_scheduled_functions</code><span class="sig-paren">(</span><em>dt</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.call_scheduled_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call scheduled functions that elapsed on the last <cite>update_time</cite>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dt</strong> (<em>float</em>) – The elapsed time since the last update to pass to each
+scheduled function.  This is <em>not</em> used to calculate which
+functions have elapsed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if any functions were called, otherwise False.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.Clock.get_fps">
+<code class="descname">get_fps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.get_fps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the average FPS of recent history.</p>
+<p>The result is the average of a sliding window of the last “n” frames,
+where “n” is some number designed to cover approximately 1 second.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The measured frames per second.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.Clock.get_fps_limit">
+<code class="descname">get_fps_limit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.get_fps_limit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the framerate limit.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The framerate limit previously set in the constructor or
+<cite>set_fps_limit</cite>, or None if no limit was set.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.Clock.get_sleep_time">
+<code class="descname">get_sleep_time</code><span class="sig-paren">(</span><em>sleep_idle</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.get_sleep_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the time until the next item is scheduled.</p>
+<p>This method considers all scheduled items and the current
+<code class="docutils literal"><span class="pre">fps_limit</span></code>, if any.</p>
+<p>Applications can choose to continue receiving updates at the
+maximum framerate during idle time (when no functions are scheduled),
+or they can sleep through their idle time and allow the CPU to
+switch to other processes or run in low-power mode.</p>
+<p>If <cite>sleep_idle</cite> is <code class="docutils literal"><span class="pre">True</span></code> the latter behaviour is selected, and
+<code class="docutils literal"><span class="pre">None</span></code> will be returned if there are no scheduled items.</p>
+<p>Otherwise, if <cite>sleep_idle</cite> is <code class="docutils literal"><span class="pre">False</span></code>, a sleep time allowing
+the maximum possible framerate (considering <code class="docutils literal"><span class="pre">fps_limit</span></code>) will
+be returned; or an earlier time if a scheduled function is ready.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sleep_idle</strong> (<em>bool</em>) – If True, the application intends to sleep through its idle
+time; otherwise it will continue ticking at the maximum
+frame rate allowed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Time until the next scheduled event in seconds, or <code class="docutils literal"><span class="pre">None</span></code>
+if there is no event scheduled.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.Clock.schedule">
+<code class="descname">schedule</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedule a function to be called every frame.</p>
+<p>The function should have a prototype that includes <code class="docutils literal"><span class="pre">dt</span></code> as the
+first argument, which gives the elapsed time, in seconds, since the
+last clock tick.  Any additional arguments given to this function
+are passed on to the callback:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> (<em>callable</em>) – The function to call each frame.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.Clock.schedule_interval">
+<code class="descname">schedule_interval</code><span class="sig-paren">(</span><em>func</em>, <em>interval</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.schedule_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedule a function to be called every <cite>interval</cite> seconds.</p>
+<p>Specifying an interval of 0 prevents the function from being
+called again (see <cite>schedule</cite> to call a function as often as possible).</p>
+<p>The callback function prototype is the same as for <cite>schedule</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>func</strong> (<em>callable</em>) – The function to call when the timer lapses.</li>
+<li><strong>interval</strong> (<em>float</em>) – The number of seconds to wait between each call.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.Clock.schedule_interval_soft">
+<code class="descname">schedule_interval_soft</code><span class="sig-paren">(</span><em>func</em>, <em>interval</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.schedule_interval_soft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedule a function to be called every <code class="docutils literal"><span class="pre">interval</span></code> seconds.</p>
+<p>This method is similar to <cite>schedule_interval</cite>, except that the
+clock will move the interval out of phase with other scheduled
+functions so as to distribute CPU more load evenly over time.</p>
+<p>This is useful for functions that need to be called regularly,
+but not relative to the initial start time.  <a class="reference internal" href="media.html#module-pyglet.media" title="pyglet.media"><code class="xref py py-mod docutils literal"><span class="pre">pyglet.media</span></code></a>
+does this for scheduling audio buffer updates, which need to occur
+regularly – if all audio updates are scheduled at the same time
+(for example, mixing several tracks of a music score, or playing
+multiple videos back simultaneously), the resulting load on the
+CPU is excessive for those intervals but idle outside.  Using
+the soft interval scheduling, the load is more evenly distributed.</p>
+<p>Soft interval scheduling can also be used as an easy way to schedule
+graphics animations out of phase; for example, multiple flags
+waving in the wind.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>func</strong> (<em>callable</em>) – The function to call when the timer lapses.</li>
+<li><strong>interval</strong> (<em>float</em>) – The number of seconds to wait between each call.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.Clock.schedule_once">
+<code class="descname">schedule_once</code><span class="sig-paren">(</span><em>func</em>, <em>delay</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.schedule_once" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedule a function to be called once after <cite>delay</cite> seconds.</p>
+<p>The callback function prototype is the same as for <cite>schedule</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>func</strong> (<em>callable</em>) – The function to call when the timer lapses.</li>
+<li><strong>delay</strong> (<em>float</em>) – The number of seconds to wait before the timer lapses.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.Clock.set_fps_limit">
+<code class="descname">set_fps_limit</code><span class="sig-paren">(</span><em>fps_limit</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.set_fps_limit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the framerate limit.</p>
+<p>The framerate limit applies only when a function is scheduled
+for every frame.  That is, the framerate limit can be exceeded by
+scheduling a function for a very small period of time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fps_limit</strong> (<em>float</em>) – Maximum frames per second allowed, or None to disable
+limiting.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Deprecated. Use <cite>pyglet.app.run</cite> and <cite>schedule_interval</cite> instead.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.Clock.tick">
+<code class="descname">tick</code><span class="sig-paren">(</span><em>poll=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.tick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Signify that one frame has passed.</p>
+<p>This will call any scheduled functions that have elapsed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>poll</strong> (<em>bool</em>) – If True, the function will call any scheduled functions
+but will not sleep or busy-wait for any reason.  Recommended
+for advanced applications managing their own sleep timers
+only.
+Since pyglet 1.1.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The number of seconds since the last “tick”, or 0 if this was
+the first frame.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.Clock.unschedule">
+<code class="descname">unschedule</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.unschedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a function from the schedule.</p>
+<p>If the function appears in the schedule more than once, all occurrences
+are removed.  If the function was not scheduled, no error is raised.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> (<em>callable</em>) – The function to remove from the schedule.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.Clock.update_time">
+<code class="descname">update_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.Clock.update_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the elapsed time since the last call to <cite>update_time</cite>.</p>
+<p>This updates the clock’s internal measure of time and returns
+the difference since the last update (or since the clock was created).</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of seconds since the last <cite>update_time</cite>, or 0
+if this was the first time it was called.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.clock.Clock.MIN_SLEEP">
+<code class="descname">MIN_SLEEP</code><em class="property"> = 0.005</em><a class="headerlink" href="#pyglet.clock.Clock.MIN_SLEEP" title="Permalink to this definition">¶</a></dt>
+<dd><p>The minimum amount of time in seconds this clock will attempt to sleep
+for when framerate limiting.  Higher values will increase the
+accuracy of the limiting but also increase CPU usage while
+busy-waiting.  Lower values mean the process sleeps more often, but is
+prone to over-sleep and run at a potentially lower or uneven framerate
+than desired.
+On Windows, MIN_SLEEP is larger because the default timer resolution
+is set by default to 15 .6 ms.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.clock.Clock.SLEEP_UNDERSHOOT">
+<code class="descname">SLEEP_UNDERSHOOT</code><em class="property"> = 0.004</em><a class="headerlink" href="#pyglet.clock.Clock.SLEEP_UNDERSHOOT" title="Permalink to this definition">¶</a></dt>
+<dd><p>The amount of time in seconds this clock subtracts from sleep values
+to compensate for lazy operating systems.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.clock.ClockDisplay">
+<em class="property">class </em><code class="descname">ClockDisplay</code><span class="sig-paren">(</span><em>font=None</em>, <em>interval=0.25</em>, <em>format='%(fps).2f'</em>, <em>color=(0.5</em>, <em>0.5</em>, <em>0.5</em>, <em>0.5)</em>, <em>clock=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.ClockDisplay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display current clock values, such as FPS.</p>
+<p>This is a convenience class for displaying diagnostics such as the
+framerate.  See the module documentation for example usage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>label</strong> (<a class="reference internal" href="font.html#pyglet.font.Text" title="pyglet.font.Text"><em>pyglet.font.Text</em></a>) – The label which is displayed.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Deprecated. This class presents values that are often misleading, as
+they reflect the rate of clock ticks, not displayed framerate.  Use
+pyglet.window.FPSDisplay instead.</p>
+</div>
+<dl class="method">
+<dt id="pyglet.clock.ClockDisplay.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.ClockDisplay.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method called each frame to render the label.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.ClockDisplay.unschedule">
+<code class="descname">unschedule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.ClockDisplay.unschedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the display from its clock’s schedule.</p>
+<p><a class="reference internal" href="#pyglet.clock.ClockDisplay" title="pyglet.clock.ClockDisplay"><code class="xref py py-class docutils literal"><span class="pre">ClockDisplay</span></code></a> uses
+<code class="xref py py-class docutils literal"><span class="pre">schedule_interval</span></code> to periodically update
+its display label.  Even if the ClockDisplay is not being used any
+more, its update method will still be scheduled, which can be a
+resource drain.  Call this method to unschedule the update method
+and allow the ClockDisplay to be garbage collected.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.clock.ClockDisplay.update_text">
+<code class="descname">update_text</code><span class="sig-paren">(</span><em>dt=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.ClockDisplay.update_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scheduled method to update the label text.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.get_default">
+<code class="descname">get_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.get_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the pyglet default Clock.</p>
+<p>Return the <a class="reference internal" href="#pyglet.clock.Clock" title="pyglet.clock.Clock"><code class="xref py py-class docutils literal"><span class="pre">Clock</span></code></a> instance that is used by all
+module-level clock functions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><cite>Clock</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The default clock.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.get_fps">
+<code class="descname">get_fps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.get_fps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current measured FPS of the default clock.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.get_fps_limit">
+<code class="descname">get_fps_limit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.get_fps_limit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the framerate limit for the default clock.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The framerate limit previously set by <cite>set_fps_limit</cite>, or None if
+no limit was set.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.get_sleep_time">
+<code class="descname">get_sleep_time</code><span class="sig-paren">(</span><em>sleep_idle</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.get_sleep_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the time until the next item is scheduled on the default clock.</p>
+<p>See <cite>Clock.get_sleep_time</cite> for details.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sleep_idle</strong> (<em>bool</em>) – If True, the application intends to sleep through its idle
+time; otherwise it will continue ticking at the maximum
+frame rate allowed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Time until the next scheduled event in seconds, or <code class="docutils literal"><span class="pre">None</span></code>
+if there is no event scheduled.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.schedule">
+<code class="descname">schedule</code><span class="sig-paren">(</span><em>func</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedule ‘func’ to be called every frame on the default clock.</p>
+<p>The arguments passed to func are <code class="docutils literal"><span class="pre">dt</span></code>, followed by any <code class="docutils literal"><span class="pre">*args</span></code> and
+<code class="docutils literal"><span class="pre">**kwargs</span></code> given here.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> (<em>callable</em>) – The function to call each frame.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.schedule_interval">
+<code class="descname">schedule_interval</code><span class="sig-paren">(</span><em>func</em>, <em>interval</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.schedule_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedule <code class="docutils literal"><span class="pre">func</span></code> on the default clock every interval seconds.</p>
+<p>The arguments passed to <code class="docutils literal"><span class="pre">func</span></code> are <code class="docutils literal"><span class="pre">dt</span></code> (time since last function
+call), followed by any <code class="docutils literal"><span class="pre">*args</span></code> and <code class="docutils literal"><span class="pre">**kwargs</span></code> given here.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>func</strong> (<em>callable</em>) – The function to call when the timer lapses.</li>
+<li><strong>interval</strong> (<em>float</em>) – The number of seconds to wait between each call.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.schedule_interval_soft">
+<code class="descname">schedule_interval_soft</code><span class="sig-paren">(</span><em>func</em>, <em>interval</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.schedule_interval_soft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedule <code class="docutils literal"><span class="pre">func</span></code> on the default clock every interval seconds.</p>
+<p>The clock will move the interval out of phase with other scheduled
+functions so as to distribute CPU more load evenly over time.</p>
+<p>The arguments passed to <code class="docutils literal"><span class="pre">func</span></code> are <code class="docutils literal"><span class="pre">dt</span></code> (time since last function
+call), followed by any <code class="docutils literal"><span class="pre">*args</span></code> and <code class="docutils literal"><span class="pre">**kwargs</span></code> given here.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">See:</th><td class="field-body"><cite>Clock.schedule_interval_soft</cite></td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>func</strong> (<em>callable</em>) – The function to call when the timer lapses.</li>
+<li><strong>interval</strong> (<em>float</em>) – The number of seconds to wait between each call.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.schedule_once">
+<code class="descname">schedule_once</code><span class="sig-paren">(</span><em>func</em>, <em>delay</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.schedule_once" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedule <code class="docutils literal"><span class="pre">func</span></code> to be called once after <code class="docutils literal"><span class="pre">delay</span></code> seconds.</p>
+<p>This function uses the fefault clock. <code class="docutils literal"><span class="pre">delay</span></code> can be a float. The
+arguments passed to <code class="docutils literal"><span class="pre">func</span></code> are <code class="docutils literal"><span class="pre">dt</span></code> (time since last function call),
+followed by any <code class="docutils literal"><span class="pre">*args</span></code> and <code class="docutils literal"><span class="pre">**kwargs</span></code> given here.</p>
+<p>If no default clock is set, the func is queued and will be scheduled
+on the default clock as soon as it is created.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>func</strong> (<em>callable</em>) – The function to call when the timer lapses.</li>
+<li><strong>delay</strong> (<em>float</em>) – The number of seconds to wait before the timer lapses.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.set_default">
+<code class="descname">set_default</code><span class="sig-paren">(</span><em>default</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.set_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default clock to use for all module-level functions.</p>
+<p>By default an instance of <a class="reference internal" href="#pyglet.clock.Clock" title="pyglet.clock.Clock"><code class="xref py py-class docutils literal"><span class="pre">Clock</span></code></a> is used.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>default</strong> (<a class="reference internal" href="#pyglet.clock.Clock" title="pyglet.clock.Clock"><em>Clock</em></a>) – The default clock to use.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.set_fps_limit">
+<code class="descname">set_fps_limit</code><span class="sig-paren">(</span><em>fps_limit</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.set_fps_limit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the framerate limit for the default clock.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fps_limit</strong> (<em>float</em>) – Maximum frames per second allowed, or None to disable
+limiting.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Deprecated. Use <cite>pyglet.app.run</cite> and <cite>schedule_interval</cite> instead.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.test_clock">
+<code class="descname">test_clock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.test_clock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test clock implementation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.tick">
+<code class="descname">tick</code><span class="sig-paren">(</span><em>poll=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.tick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Signify that one frame has passed on the default clock.</p>
+<p>This will call any scheduled functions that have elapsed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>poll</strong> (<em>bool</em>) – If True, the function will call any scheduled functions
+but will not sleep or busy-wait for any reason.  Recommended
+for advanced applications managing their own sleep timers
+only.
+Since pyglet 1.1.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The number of seconds since the last “tick”, or 0 if this was the
+first frame.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.clock.unschedule">
+<code class="descname">unschedule</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.clock.unschedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove <code class="docutils literal"><span class="pre">func</span></code> from the default clock’s schedule.</p>
+<p>No error is raised if the <code class="docutils literal"><span class="pre">func</span></code> was never scheduled.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> (<em>callable</em>) – The function to remove from the schedule.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyglet.clock</a><ul>
+<li><a class="reference internal" href="#measuring-time">Measuring time</a></li>
+<li><a class="reference internal" href="#limiting-frame-rate">Limiting frame-rate</a></li>
+<li><a class="reference internal" href="#scheduling">Scheduling</a></li>
+<li><a class="reference internal" href="#displaying-fps">Displaying FPS</a></li>
+<li><a class="reference internal" href="#using-multiple-clocks">Using multiple clocks</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="canvas.html"
+                        title="previous chapter">pyglet.canvas</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="event.html"
+                        title="next chapter">pyglet.event</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="event.html" title="pyglet.event"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="canvas.html" title="pyglet.canvas"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

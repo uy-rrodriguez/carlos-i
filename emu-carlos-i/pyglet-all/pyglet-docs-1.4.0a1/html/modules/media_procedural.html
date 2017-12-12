@@ -1,0 +1,427 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.media.procedural &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="up" title="pyglet.media" href="media.html" />
+    <link rel="next" title="pyglet.resource" href="resource.html" />
+    <link rel="prev" title="pyglet.media" href="media.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="resource.html" title="pyglet.resource"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="media.html" title="pyglet.media"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="media.html" accesskey="U">pyglet.media</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyglet.media.sources.procedural">
+<span id="pyglet-media-procedural"></span><h1>pyglet.media.procedural<a class="headerlink" href="#module-pyglet.media.sources.procedural" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.ADSREnvelope">
+<em class="property">class </em><code class="descname">ADSREnvelope</code><span class="sig-paren">(</span><em>attack</em>, <em>decay</em>, <em>release</em>, <em>sustain_amplitude=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.ADSREnvelope" title="Permalink to this definition">¶</a></dt>
+<dd><p>A four part Attack, Decay, Suspend, Release envelope.</p>
+<p>This is a four part ADSR envelope. The attack, decay, and release
+parameters should be provided in seconds. For example, a value of
+0.1 would be 100ms. The sustain_amplitude parameter affects the
+sustain volume. This defaults to a value of 0.5, but can be provided
+on a scale from 0.0 to 1.0.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>attack</strong> (<em>float</em>) – The attack time, in seconds.</li>
+<li><strong>decay</strong> (<em>float</em>) – The decay time, in seconds.</li>
+<li><strong>release</strong> (<em>float</em>) – The release time, in seconds.</li>
+<li><strong>sustain_amplitude</strong> (<em>float</em>) – The sustain amplitude (volume), from 0.0 to 1.0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.media.sources.procedural.ADSREnvelope.build_envelope">
+<code class="descname">build_envelope</code><span class="sig-paren">(</span><em>sample_rate</em>, <em>duration</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.ADSREnvelope.build_envelope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.Digitar">
+<em class="property">class </em><code class="descname">Digitar</code><span class="sig-paren">(</span><em>duration</em>, <em>frequency=440</em>, <em>decay=0.996</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.Digitar" title="Permalink to this definition">¶</a></dt>
+<dd><p>A procedurally generated guitar-like waveform.</p>
+<p>A guitar-like waveform, based on the Karplus-Strong algorithm.
+The sound is similar to a plucked guitar string. The resulting
+sound decays over time, and so the actual length will vary
+depending on the frequency. Lower frequencies require a longer
+<cite>length</cite> parameter to prevent cutting off abruptly.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>duration</strong> (<em>float</em>) – The length, in seconds, of audio that you wish to generate.</li>
+<li><strong>frequency</strong> (<em>int</em>) – The frequency, in Hz of the waveform you wish to produce.</li>
+<li><strong>decay</strong> (<em>float</em>) – The decay rate of the effect. Defaults to 0.996.</li>
+<li><strong>sample_rate</strong> (<em>int</em>) – Audio samples per second. (CD quality is 44100).</li>
+<li><strong>sample_size</strong> (<em>int</em>) – The bit precision. Must be either 8 or 16.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.Envelope">
+<em class="property">class </em><code class="descname">Envelope</code><a class="headerlink" href="#pyglet.media.sources.procedural.Envelope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for ProceduralSource amplitude envelopes.</p>
+<dl class="method">
+<dt id="pyglet.media.sources.procedural.Envelope.build_envelope">
+<code class="descname">build_envelope</code><span class="sig-paren">(</span><em>sample_rate</em>, <em>duration</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.Envelope.build_envelope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.FM">
+<em class="property">class </em><code class="descname">FM</code><span class="sig-paren">(</span><em>duration</em>, <em>carrier=440</em>, <em>modulator=440</em>, <em>mod_index=1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.FM" title="Permalink to this definition">¶</a></dt>
+<dd><p>A procedurally generated FM waveform.</p>
+<p>This is a simplistic frequency modulated waveform, based on the
+concepts by John Chowning. Basic sine waves are used for both
+frequency carrier and modulator inputs, of which the frequencies can
+be provided. The modulation index, or amplitude, can also be adjusted.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>duration</strong> (<em>float</em>) – The length, in seconds, of audio that you wish to generate.</li>
+<li><strong>carrier</strong> (<em>int</em>) – The carrier frequency, in Hz.</li>
+<li><strong>modulator</strong> (<em>int</em>) – The modulator frequency, in Hz.</li>
+<li><strong>mod_index</strong> (<em>int</em>) – The modulation index.</li>
+<li><strong>sample_rate</strong> (<em>int</em>) – Audio samples per second. (CD quality is 44100).</li>
+<li><strong>sample_size</strong> (<em>int</em>) – The bit precision. Must be either 8 or 16.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.FlatEnvelope">
+<em class="property">class </em><code class="descname">FlatEnvelope</code><span class="sig-paren">(</span><em>amplitude=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.FlatEnvelope" title="Permalink to this definition">¶</a></dt>
+<dd><p>A flat envelope, providing basic amplitude setting.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>amplitude</strong> (<em>float</em>) – The amplitude (volume) of the wave, from 0.0 to 1.0.
+Values outside of this range will be clamped.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.media.sources.procedural.FlatEnvelope.build_envelope">
+<code class="descname">build_envelope</code><span class="sig-paren">(</span><em>sample_rate</em>, <em>duration</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.FlatEnvelope.build_envelope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.LinearDecayEnvelope">
+<em class="property">class </em><code class="descname">LinearDecayEnvelope</code><span class="sig-paren">(</span><em>peak=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.LinearDecayEnvelope" title="Permalink to this definition">¶</a></dt>
+<dd><p>A linearly decaying envelope.</p>
+<p>This envelope linearly decays the amplitude from the peak value
+to 0, over the length of the waveform.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>peak</strong> (<em>float</em>) – The Initial peak value of the envelope, from 0.0 to 1.0.
+Values outside of this range will be clamped.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.media.sources.procedural.LinearDecayEnvelope.build_envelope">
+<code class="descname">build_envelope</code><span class="sig-paren">(</span><em>sample_rate</em>, <em>duration</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.LinearDecayEnvelope.build_envelope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.ProceduralSource">
+<em class="property">class </em><code class="descname">ProceduralSource</code><span class="sig-paren">(</span><em>duration</em>, <em>sample_rate=44800</em>, <em>sample_size=16</em>, <em>envelope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.ProceduralSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for procedurally defined and generated waveforms.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>duration</strong> (<em>float</em>) – The length, in seconds, of audio that you wish to generate.</li>
+<li><strong>sample_rate</strong> (<em>int</em>) – Audio samples per second. (CD quality is 44100).</li>
+<li><strong>sample_size</strong> (<em>int</em>) – The bit precision. Must be either 8 or 16.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.media.sources.procedural.ProceduralSource.get_audio_data">
+<code class="descname">get_audio_data</code><span class="sig-paren">(</span><em>num_bytes</em>, <em>compensation_time=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.ProceduralSource.get_audio_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <cite>num_bytes</cite> bytes of audio data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.media.sources.procedural.ProceduralSource.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.ProceduralSource.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the audio to disk as a standard RIFF Wave.</p>
+<p>A standard RIFF wave header will be added to the raw PCM
+audio data when it is saved to disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) – The file name to save as.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.media.sources.procedural.ProceduralSource.seek">
+<code class="descname">seek</code><span class="sig-paren">(</span><em>timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.ProceduralSource.seek" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.media.sources.procedural.ProceduralSource.envelope">
+<code class="descname">envelope</code><a class="headerlink" href="#pyglet.media.sources.procedural.ProceduralSource.envelope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.Sawtooth">
+<em class="property">class </em><code class="descname">Sawtooth</code><span class="sig-paren">(</span><em>duration</em>, <em>frequency=440</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.Sawtooth" title="Permalink to this definition">¶</a></dt>
+<dd><p>A procedurally generated sawtooth waveform.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>duration</strong> (<em>float</em>) – The length, in seconds, of audio that you wish to generate.</li>
+<li><strong>frequency</strong> (<em>int</em>) – The frequency, in Hz of the waveform you wish to produce.</li>
+<li><strong>sample_rate</strong> (<em>int</em>) – Audio samples per second. (CD quality is 44100).</li>
+<li><strong>sample_size</strong> (<em>int</em>) – The bit precision. Must be either 8 or 16.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.Silence">
+<em class="property">class </em><code class="descname">Silence</code><span class="sig-paren">(</span><em>duration</em>, <em>sample_rate=44800</em>, <em>sample_size=16</em>, <em>envelope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.Silence" title="Permalink to this definition">¶</a></dt>
+<dd><p>A silent waveform.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.Sine">
+<em class="property">class </em><code class="descname">Sine</code><span class="sig-paren">(</span><em>duration</em>, <em>frequency=440</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.Sine" title="Permalink to this definition">¶</a></dt>
+<dd><p>A procedurally generated sinusoid waveform.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>duration</strong> (<em>float</em>) – The length, in seconds, of audio that you wish to generate.</li>
+<li><strong>frequency</strong> (<em>int</em>) – The frequency, in Hz of the waveform you wish to produce.</li>
+<li><strong>sample_rate</strong> (<em>int</em>) – Audio samples per second. (CD quality is 44100).</li>
+<li><strong>sample_size</strong> (<em>int</em>) – The bit precision. Must be either 8 or 16.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.Square">
+<em class="property">class </em><code class="descname">Square</code><span class="sig-paren">(</span><em>duration</em>, <em>frequency=440</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.Square" title="Permalink to this definition">¶</a></dt>
+<dd><p>A procedurally generated square (or pulse) waveform.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>duration</strong> (<em>float</em>) – The length, in seconds, of audio that you wish to generate.</li>
+<li><strong>frequency</strong> (<em>int</em>) – The frequency, in Hz of the waveform you wish to produce.</li>
+<li><strong>sample_rate</strong> (<em>int</em>) – Audio samples per second. (CD quality is 44100).</li>
+<li><strong>sample_size</strong> (<em>int</em>) – The bit precision. Must be either 8 or 16.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.TremoloEnvelope">
+<em class="property">class </em><code class="descname">TremoloEnvelope</code><span class="sig-paren">(</span><em>depth</em>, <em>rate</em>, <em>amplitude=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.TremoloEnvelope" title="Permalink to this definition">¶</a></dt>
+<dd><p>A tremolo envelope, for modulation amplitude.</p>
+<p>A tremolo envelope that modulates the amplitude of the
+waveform with a sinusoidal pattern. The depth and rate
+of modulation can be specified. Depth is calculated as
+a percentage of the maximum amplitude. For example:
+a depth of 0.2 and amplitude of 0.5 will fluctuate
+the amplitude between 0.4 an 0.5.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>depth</strong> (<em>float</em>) – The amount of fluctuation, from 0.0 to 1.0.</li>
+<li><strong>rate</strong> (<em>float</em>) – The fluctuation frequency, in seconds.</li>
+<li><strong>amplitude</strong> (<em>float</em>) – The peak amplitude (volume), from 0.0 to 1.0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.media.sources.procedural.TremoloEnvelope.build_envelope">
+<code class="descname">build_envelope</code><span class="sig-paren">(</span><em>sample_rate</em>, <em>duration</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.TremoloEnvelope.build_envelope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.Triangle">
+<em class="property">class </em><code class="descname">Triangle</code><span class="sig-paren">(</span><em>duration</em>, <em>frequency=440</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.Triangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>A procedurally generated triangle waveform.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>duration</strong> (<em>float</em>) – The length, in seconds, of audio that you wish to generate.</li>
+<li><strong>frequency</strong> (<em>int</em>) – The frequency, in Hz of the waveform you wish to produce.</li>
+<li><strong>sample_rate</strong> (<em>int</em>) – Audio samples per second. (CD quality is 44100).</li>
+<li><strong>sample_size</strong> (<em>int</em>) – The bit precision. Must be either 8 or 16.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.media.sources.procedural.WhiteNoise">
+<em class="property">class </em><code class="descname">WhiteNoise</code><span class="sig-paren">(</span><em>duration</em>, <em>sample_rate=44800</em>, <em>sample_size=16</em>, <em>envelope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.media.sources.procedural.WhiteNoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>A white noise, random waveform.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="media.html"
+                        title="previous chapter">pyglet.media</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="resource.html"
+                        title="next chapter">pyglet.resource</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="resource.html" title="pyglet.resource"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="media.html" title="pyglet.media"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="media.html" >pyglet.media</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

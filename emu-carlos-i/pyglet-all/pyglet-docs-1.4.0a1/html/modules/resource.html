@@ -1,0 +1,914 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.resource &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="next" title="pyglet.sprite" href="sprite.html" />
+    <link rel="prev" title="pyglet.media.procedural" href="media_procedural.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sprite.html" title="pyglet.sprite"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="media_procedural.html" title="pyglet.media.procedural"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyglet.resource">
+<span id="pyglet-resource"></span><h1>pyglet.resource<a class="headerlink" href="#module-pyglet.resource" title="Permalink to this headline">¶</a></h1>
+<p>Load application resources from a known path.</p>
+<p>Loading resources by specifying relative paths to filenames is often
+problematic in Python, as the working directory is not necessarily the same
+directory as the application’s script files.</p>
+<p>This module allows applications to specify a search path for resources.
+Relative paths are taken to be relative to the application’s <code class="docutils literal"><span class="pre">__main__</span></code>
+module. ZIP files can appear on the path; they will be searched inside.  The
+resource module also behaves as expected when applications are bundled using py2exe or py2app.</p>
+<p>As well as providing file references (with the <a class="reference internal" href="#pyglet.resource.file" title="pyglet.resource.file"><code class="xref py py-func docutils literal"><span class="pre">file()</span></code></a> function), the
+resource module also contains convenience functions for loading images,
+textures, fonts, media and documents.</p>
+<p>3rd party modules or packages not bound to a specific application should
+construct their own <a class="reference internal" href="#pyglet.resource.Loader" title="pyglet.resource.Loader"><code class="xref py py-class docutils literal"><span class="pre">Loader</span></code></a> instance and override the path to use the
+resources in the module’s directory.</p>
+<div class="section" id="path-format">
+<h2>Path format<a class="headerlink" href="#path-format" title="Permalink to this headline">¶</a></h2>
+<p>The resource path <a class="reference internal" href="#pyglet.resource.path" title="pyglet.resource.path"><code class="xref py py-attr docutils literal"><span class="pre">path</span></code></a> (see also <code class="xref py py-meth docutils literal"><span class="pre">Loader.__init__()</span></code> and
+<code class="xref py py-meth docutils literal"><span class="pre">Loader.path()</span></code>)
+is a list of locations to search for resources.  Locations are searched in the
+order given in the path.  If a location is not valid (for example, if the
+directory does not exist), it is skipped.</p>
+<p>Locations in the path beginning with an ampersand (‘’&#64;’’ symbol) specify
+Python packages.  Other locations specify a ZIP archive or directory on the
+filesystem.  Locations that are not absolute are assumed to be relative to the
+script home.  Some examples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Search just the `res` directory, assumed to be located alongside the</span>
+<span class="c1"># main script file.</span>
+<span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;res&#39;</span><span class="p">]</span>
+
+<span class="c1"># Search the directory containing the module `levels.level1`, followed</span>
+<span class="c1"># by the `res/images` directory.</span>
+<span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;@levels.level1&#39;</span><span class="p">,</span> <span class="s1">&#39;res/images&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Paths are always case-sensitive and forward slashes are always used as path
+separators, even in cases when the filesystem or platform does not do this.
+This avoids a common programmer error when porting applications between
+platforms.</p>
+<p>The default path is <code class="docutils literal"><span class="pre">['.']</span></code>.  If you modify the path, you must call
+<a class="reference internal" href="#pyglet.resource.reindex" title="pyglet.resource.reindex"><code class="xref py py-func docutils literal"><span class="pre">reindex()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+<dl class="exception">
+<dt id="pyglet.resource.ResourceNotFoundException">
+<em class="property">exception </em><code class="descname">ResourceNotFoundException</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.ResourceNotFoundException" title="Permalink to this definition">¶</a></dt>
+<dd><p>The named resource was not found on the search path.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.resource.FileLocation">
+<em class="property">class </em><code class="descname">FileLocation</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.FileLocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Location on the filesystem.</p>
+<dl class="method">
+<dt id="pyglet.resource.FileLocation.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>filename</em>, <em>mode='rb'</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.FileLocation.open" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.resource.Loader">
+<em class="property">class </em><code class="descname">Loader</code><span class="sig-paren">(</span><em>path=None</em>, <em>script_home=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load program resource files from disk.</p>
+<p>The loader contains a search path which can include filesystem
+directories, ZIP archives and Python packages.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#pyglet.resource.path" title="pyglet.resource.path"><strong>path</strong></a> (<em>list of str</em>) – List of search locations.  After modifying the path you must
+call the <cite>reindex</cite> method.</li>
+<li><strong>script_home</strong> (<em>str</em>) – Base resource location, defaulting to the location of the
+application script.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.resource.Loader.add_font">
+<code class="descname">add_font</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.add_font" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a font resource to the application.</p>
+<p>Fonts not installed on the system must be added to pyglet before they
+can be used with <cite>font.load</cite>.  Although the font is added with
+its filename using this function, it is loaded by specifying its
+family name.  For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">resource</span><span class="o">.</span><span class="n">add_font</span><span class="p">(</span><span class="s1">&#39;action_man.ttf&#39;</span><span class="p">)</span>
+<span class="n">action_man</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;Action Man&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the font resource to add.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.animation">
+<code class="descname">animation</code><span class="sig-paren">(</span><em>name</em>, <em>flip_x=False</em>, <em>flip_y=False</em>, <em>rotate=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.animation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an animation with optional transformation.</p>
+<p>Animations loaded from the same source but with different
+transformations will use the same textures.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) – Filename of the animation source to load.</li>
+<li><strong>flip_x</strong> (<em>bool</em>) – If True, the returned image will be flipped horizontally.</li>
+<li><strong>flip_y</strong> (<em>bool</em>) – If True, the returned image will be flipped vertically.</li>
+<li><strong>rotate</strong> (<em>int</em>) – The returned image will be rotated clockwise by the given
+number of degrees (a multiple of 90).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="image/index.html#pyglet.image.Animation" title="pyglet.image.Animation"><code class="xref py py-class docutils literal"><span class="pre">Animation</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.attributed">
+<code class="descname">attributed</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.attributed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an attributed text document.</p>
+<p>See <cite>pyglet.text.formats.attributed</cite> for details on this format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the attribute text resource to load.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>FormattedDocument</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.file">
+<code class="descname">file</code><span class="sig-paren">(</span><em>name</em>, <em>mode='rb'</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a resource.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) – Filename of the resource to load.</li>
+<li><strong>mode</strong> (<em>str</em>) – Combination of <code class="docutils literal"><span class="pre">r</span></code>, <code class="docutils literal"><span class="pre">w</span></code>, <code class="docutils literal"><span class="pre">a</span></code>, <code class="docutils literal"><span class="pre">b</span></code> and <code class="docutils literal"><span class="pre">t</span></code> characters
+with the meaning as for the builtin <code class="docutils literal"><span class="pre">open</span></code> function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">file object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.get_cached_animation_names">
+<code class="descname">get_cached_animation_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.get_cached_animation_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of animation filenames that have been cached.</p>
+<p>This is useful for debugging and profiling only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.get_cached_image_names">
+<code class="descname">get_cached_image_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.get_cached_image_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of image filenames that have been cached.</p>
+<p>This is useful for debugging and profiling only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.get_cached_texture_names">
+<code class="descname">get_cached_texture_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.get_cached_texture_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the names of textures currently cached.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.get_texture_bins">
+<code class="descname">get_texture_bins</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.get_texture_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of texture bins in use.</p>
+<p>This is useful for debugging and profiling only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of <a class="reference internal" href="image/atlas.html#pyglet.image.atlas.TextureBin" title="pyglet.image.atlas.TextureBin"><code class="xref py py-class docutils literal"><span class="pre">TextureBin</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.html">
+<code class="descname">html</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.html" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an HTML document.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the HTML resource to load.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>FormattedDocument</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.image">
+<code class="descname">image</code><span class="sig-paren">(</span><em>name</em>, <em>flip_x=False</em>, <em>flip_y=False</em>, <em>rotate=0</em>, <em>atlas=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an image with optional transformation.</p>
+<p>This is similar to <cite>texture</cite>, except the resulting image will be
+packed into a <a class="reference internal" href="image/atlas.html#pyglet.image.atlas.TextureBin" title="pyglet.image.atlas.TextureBin"><code class="xref py py-class docutils literal"><span class="pre">TextureBin</span></code></a> if it is an appropriate size for packing.
+This is more efficient than loading images into separate textures.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) – Filename of the image source to load.</li>
+<li><strong>flip_x</strong> (<em>bool</em>) – If True, the returned image will be flipped horizontally.</li>
+<li><strong>flip_y</strong> (<em>bool</em>) – If True, the returned image will be flipped vertically.</li>
+<li><strong>rotate</strong> (<em>int</em>) – The returned image will be rotated clockwise by the given
+number of degrees (a multiple of 90).</li>
+<li><strong>atlas</strong> (<em>bool</em>) – If True, the image will be loaded into an atlas managed by
+pyglet. If atlas loading is not appropriate for specific
+texturing reasons (e.g. border control is required) then set
+this argument to False.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><cite>Texture</cite></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A complete texture if the image is large or not in an atlas,
+otherwise a <a class="reference internal" href="image/index.html#pyglet.image.TextureRegion" title="pyglet.image.TextureRegion"><code class="xref py py-class docutils literal"><span class="pre">TextureRegion</span></code></a> of a texture atlas.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.location">
+<code class="descname">location</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the location of a resource.</p>
+<p>This method is useful for opening files referenced from a resource.
+For example, an HTML file loaded as a resource might reference some
+images.  These images should be located relative to the HTML file, not
+looked up individually in the loader’s path.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the resource to locate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>Location</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.media">
+<code class="descname">media</code><span class="sig-paren">(</span><em>name</em>, <em>streaming=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.media" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a sound or video resource.</p>
+<p>The meaning of <cite>streaming</cite> is as for <cite>media.load</cite>.  Compressed
+sources cannot be streamed (that is, video and compressed audio
+cannot be streamed from a ZIP archive).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) – Filename of the media source to load.</li>
+<li><strong>streaming</strong> (<em>bool</em>) – True if the source should be streamed from disk, False if
+it should be entirely decoded into memory immediately.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><cite>media.Source</cite></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.reindex">
+<code class="descname">reindex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.reindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refresh the file index.</p>
+<p>You must call this method if <cite>path</cite> is changed or the filesystem
+layout changes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.text">
+<code class="descname">text</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a plain text document.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the plain text resource to load.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>UnformattedDocument</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.resource.Loader.texture">
+<code class="descname">texture</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Loader.texture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a texture.</p>
+<p>The named image will be loaded as a single OpenGL texture.  If the
+dimensions of the image are not powers of 2 a <a class="reference internal" href="image/index.html#pyglet.image.TextureRegion" title="pyglet.image.TextureRegion"><code class="xref py py-class docutils literal"><span class="pre">TextureRegion</span></code></a> will
+be returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the image resource to load.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>Texture</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.resource.Location">
+<em class="property">class </em><code class="descname">Location</code><a class="headerlink" href="#pyglet.resource.Location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract resource location.</p>
+<p>Given a location, a file can be loaded from that location with the <cite>open</cite>
+method.  This provides a convenient way to specify a path to load files
+from, and not necessarily have that path reside on the filesystem.</p>
+<dl class="method">
+<dt id="pyglet.resource.Location.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>filename</em>, <em>mode='rb'</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.Location.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a file at this location.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) – The filename to open.  Absolute paths are not supported.
+Relative paths are not supported by most locations (you
+should specify only a filename with no path component).</li>
+<li><strong>mode</strong> (<em>str</em>) – The file mode to open with.  Only files opened on the
+filesystem make use of this parameter; others ignore it.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">file object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.resource.URLLocation">
+<em class="property">class </em><code class="descname">URLLocation</code><span class="sig-paren">(</span><em>base_url</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.URLLocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Location on the network.</p>
+<p>This class uses the <code class="docutils literal"><span class="pre">urlparse</span></code> and <code class="docutils literal"><span class="pre">urllib2</span></code> modules to open files on
+the network given a URL.</p>
+<dl class="method">
+<dt id="pyglet.resource.URLLocation.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>filename</em>, <em>mode='rb'</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.URLLocation.open" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.resource.ZIPLocation">
+<em class="property">class </em><code class="descname">ZIPLocation</code><span class="sig-paren">(</span><em>zip</em>, <em>dir</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.ZIPLocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Location within a ZIP file.</p>
+<dl class="method">
+<dt id="pyglet.resource.ZIPLocation.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>filename</em>, <em>mode='rb'</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.ZIPLocation.open" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.get_script_home">
+<code class="descname">get_script_home</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.get_script_home" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the directory containing the program entry module.</p>
+<p>For ordinary Python scripts, this is the directory containing the
+<code class="docutils literal"><span class="pre">__main__</span></code> module.  For executables created with py2exe the result is
+the directory containing the running executable file.  For OS X bundles
+created using Py2App the result is the Resources directory within the
+running bundle.</p>
+<p>If none of the above cases apply and the file for <code class="docutils literal"><span class="pre">__main__</span></code> cannot
+be determined the working directory is returned.</p>
+<p>When the script is being run by a Python profiler, this function
+may return the directory where the profiler is running instead of
+the directory of the real script. To workaround this behaviour the
+full path to the real script can be specified in <a class="reference internal" href="#pyglet.resource.path" title="pyglet.resource.path"><code class="xref py py-attr docutils literal"><span class="pre">pyglet.resource.path</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.get_settings_path">
+<code class="descname">get_settings_path</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.get_settings_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a directory to save user preferences.</p>
+<p>Different platforms have different conventions for where to save user
+preferences, saved games, and settings.  This function implements those
+conventions.  Note that the returned path may not exist: applications
+should use <code class="docutils literal"><span class="pre">os.makedirs</span></code> to construct it if desired.</p>
+<p>On Linux, a directory <cite>name</cite> in the user’s configuration directory is
+returned (usually under <code class="docutils literal"><span class="pre">~/.config</span></code>).</p>
+<p>On Windows (including under Cygwin) the <cite>name</cite> directory in the user’s
+<code class="docutils literal"><span class="pre">Application</span> <span class="pre">Settings</span></code> directory is returned.</p>
+<p>On Mac OS X the <cite>name</cite> directory under <code class="docutils literal"><span class="pre">~/Library/Application</span> <span class="pre">Support</span></code>
+is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – The name of the application.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="pyglet.resource.path">
+<code class="descname">path</code><em class="property"> = ['.']</em><a class="headerlink" href="#pyglet.resource.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default resource search path.</p>
+<p>Locations in the search path are searched in order and are always
+case-sensitive.  After changing the path you must call <cite>reindex</cite>.</p>
+<p>See the module documentation for details on the path format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<dl class="function">
+<dt id="pyglet.resource.reindex">
+<code class="descname">reindex</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.reindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refresh the file index.</p>
+<p>You must call this method if <cite>path</cite> is changed or the filesystem
+layout changes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.file">
+<code class="descname">file</code><span class="sig-paren">(</span><em>name</em>, <em>mode='rb'</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a resource.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) – Filename of the resource to load.</li>
+<li><strong>mode</strong> (<em>str</em>) – Combination of <code class="docutils literal"><span class="pre">r</span></code>, <code class="docutils literal"><span class="pre">w</span></code>, <code class="docutils literal"><span class="pre">a</span></code>, <code class="docutils literal"><span class="pre">b</span></code> and <code class="docutils literal"><span class="pre">t</span></code> characters
+with the meaning as for the builtin <code class="docutils literal"><span class="pre">open</span></code> function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">file object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.location">
+<code class="descname">location</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the location of a resource.</p>
+<p>This method is useful for opening files referenced from a resource.
+For example, an HTML file loaded as a resource might reference some
+images.  These images should be located relative to the HTML file, not
+looked up individually in the loader’s path.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the resource to locate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>Location</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.add_font">
+<code class="descname">add_font</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.add_font" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a font resource to the application.</p>
+<p>Fonts not installed on the system must be added to pyglet before they
+can be used with <cite>font.load</cite>.  Although the font is added with
+its filename using this function, it is loaded by specifying its
+family name.  For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">resource</span><span class="o">.</span><span class="n">add_font</span><span class="p">(</span><span class="s1">&#39;action_man.ttf&#39;</span><span class="p">)</span>
+<span class="n">action_man</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;Action Man&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the font resource to add.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.image">
+<code class="descname">image</code><span class="sig-paren">(</span><em>name</em>, <em>flip_x=False</em>, <em>flip_y=False</em>, <em>rotate=0</em>, <em>atlas=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an image with optional transformation.</p>
+<p>This is similar to <cite>texture</cite>, except the resulting image will be
+packed into a <a class="reference internal" href="image/atlas.html#pyglet.image.atlas.TextureBin" title="pyglet.image.atlas.TextureBin"><code class="xref py py-class docutils literal"><span class="pre">TextureBin</span></code></a> if it is an appropriate size for packing.
+This is more efficient than loading images into separate textures.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) – Filename of the image source to load.</li>
+<li><strong>flip_x</strong> (<em>bool</em>) – If True, the returned image will be flipped horizontally.</li>
+<li><strong>flip_y</strong> (<em>bool</em>) – If True, the returned image will be flipped vertically.</li>
+<li><strong>rotate</strong> (<em>int</em>) – The returned image will be rotated clockwise by the given
+number of degrees (a multiple of 90).</li>
+<li><strong>atlas</strong> (<em>bool</em>) – If True, the image will be loaded into an atlas managed by
+pyglet. If atlas loading is not appropriate for specific
+texturing reasons (e.g. border control is required) then set
+this argument to False.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><cite>Texture</cite></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A complete texture if the image is large or not in an atlas,
+otherwise a <a class="reference internal" href="image/index.html#pyglet.image.TextureRegion" title="pyglet.image.TextureRegion"><code class="xref py py-class docutils literal"><span class="pre">TextureRegion</span></code></a> of a texture atlas.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.animation">
+<code class="descname">animation</code><span class="sig-paren">(</span><em>name</em>, <em>flip_x=False</em>, <em>flip_y=False</em>, <em>rotate=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.animation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an animation with optional transformation.</p>
+<p>Animations loaded from the same source but with different
+transformations will use the same textures.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) – Filename of the animation source to load.</li>
+<li><strong>flip_x</strong> (<em>bool</em>) – If True, the returned image will be flipped horizontally.</li>
+<li><strong>flip_y</strong> (<em>bool</em>) – If True, the returned image will be flipped vertically.</li>
+<li><strong>rotate</strong> (<em>int</em>) – The returned image will be rotated clockwise by the given
+number of degrees (a multiple of 90).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="image/index.html#pyglet.image.Animation" title="pyglet.image.Animation"><code class="xref py py-class docutils literal"><span class="pre">Animation</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.get_cached_image_names">
+<code class="descname">get_cached_image_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.get_cached_image_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of image filenames that have been cached.</p>
+<p>This is useful for debugging and profiling only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.get_cached_animation_names">
+<code class="descname">get_cached_animation_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.get_cached_animation_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of animation filenames that have been cached.</p>
+<p>This is useful for debugging and profiling only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.get_texture_bins">
+<code class="descname">get_texture_bins</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.get_texture_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of texture bins in use.</p>
+<p>This is useful for debugging and profiling only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List of <a class="reference internal" href="image/atlas.html#pyglet.image.atlas.TextureBin" title="pyglet.image.atlas.TextureBin"><code class="xref py py-class docutils literal"><span class="pre">TextureBin</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.media">
+<code class="descname">media</code><span class="sig-paren">(</span><em>name</em>, <em>streaming=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.media" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a sound or video resource.</p>
+<p>The meaning of <cite>streaming</cite> is as for <cite>media.load</cite>.  Compressed
+sources cannot be streamed (that is, video and compressed audio
+cannot be streamed from a ZIP archive).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) – Filename of the media source to load.</li>
+<li><strong>streaming</strong> (<em>bool</em>) – True if the source should be streamed from disk, False if
+it should be entirely decoded into memory immediately.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><cite>media.Source</cite></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.texture">
+<code class="descname">texture</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.texture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a texture.</p>
+<p>The named image will be loaded as a single OpenGL texture.  If the
+dimensions of the image are not powers of 2 a <a class="reference internal" href="image/index.html#pyglet.image.TextureRegion" title="pyglet.image.TextureRegion"><code class="xref py py-class docutils literal"><span class="pre">TextureRegion</span></code></a> will
+be returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the image resource to load.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>Texture</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.html">
+<code class="descname">html</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.html" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an HTML document.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the HTML resource to load.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>FormattedDocument</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.attributed">
+<code class="descname">attributed</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.attributed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an attributed text document.</p>
+<p>See <cite>pyglet.text.formats.attributed</cite> for details on this format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the attribute text resource to load.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>FormattedDocument</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.text">
+<code class="descname">text</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a plain text document.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Filename of the plain text resource to load.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><cite>UnformattedDocument</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.resource.get_cached_texture_names">
+<code class="descname">get_cached_texture_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.resource.get_cached_texture_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the names of textures currently cached.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyglet.resource</a><ul>
+<li><a class="reference internal" href="#path-format">Path format</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="media_procedural.html"
+                        title="previous chapter">pyglet.media.procedural</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sprite.html"
+                        title="next chapter">pyglet.sprite</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sprite.html" title="pyglet.sprite"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="media_procedural.html" title="pyglet.media.procedural"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

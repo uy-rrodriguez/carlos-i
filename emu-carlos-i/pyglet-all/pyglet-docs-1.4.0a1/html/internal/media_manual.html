@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Media manual &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="next" title="Media logging manual" href="media_logging_manual.html" />
+    <link rel="prev" title="wraptypes" href="wraptypes.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="media_logging_manual.html" title="Media logging manual"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="wraptypes.html" title="wraptypes"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="media-manual">
+<h1>Media manual<a class="headerlink" href="#media-manual" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="domain-knowledge">
+<h2>Domain knowledge<a class="headerlink" href="#domain-knowledge" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial <a class="reference external" href="http://dranger.com/ffmpeg/ffmpeg.html">http://dranger.com/ffmpeg/ffmpeg.html</a> is a good intro for
+building some domain knowledge. Bear in mind that the tutorial is rather old,
+and some ffmpeg functions have become deprecated - but the basics are still
+valid.</p>
+<p>In the FFmpeg base code there is the ffplay.c player - a very good way to see
+how things are managed. In particular, some newer FFmpeg functions are used,
+while current pyglet media code still uses functions that have now been
+deprecated.</p>
+</div>
+<div class="section" id="current-code-architecture">
+<h2>Current code architecture<a class="headerlink" href="#current-code-architecture" title="Permalink to this headline">¶</a></h2>
+<p>The overview of the media code is the following:</p>
+<div class="section" id="source">
+<h3>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h3>
+<p>Found in media/sources folder.</p>
+<p><a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a> s represent data containing media
+information. They can come from disk or be created in memory. A
+<a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a> ‘s responsibility is to read data into
+and provide audio and/or video data out of its stream. Essentially, it’s a
+<em>producer</em>.</p>
+</div>
+<div class="section" id="ffmpegstreamingsource">
+<h3>FFmpegStreamingSource<a class="headerlink" href="#ffmpegstreamingsource" title="Permalink to this headline">¶</a></h3>
+<p>One implementation of the <a class="reference internal" href="../modules/media.html#pyglet.media.StreamingSource" title="pyglet.media.StreamingSource"><code class="xref py py-class docutils literal"><span class="pre">StreamingSource</span></code></a> is the
+<code class="docutils literal"><span class="pre">FFmpegSource</span></code>. It implements the <a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a> base class
+by calling FFmpeg functions wrapped by ctypes and found in
+media/sources/ffmpeg_lib. They offer basic functionalities for handling media
+streams, such as opening a file, reading stream info, reading a packet, and
+decoding audio and video packets.</p>
+<p>The <code class="xref py py-class docutils literal"><span class="pre">FFmpegSource</span></code> maintains two queues,
+one for audio packets and one for video packets, with a pre-determined maximum
+size. When the source is loaded, it will read packets from the stream and will
+fill up the queues until one of them is full. It has then to stop because we
+never know what type of packet we will get next from the stream. It could be a
+packet of the same type as the filled up queue, in  which case we would not be
+able to store the additional packet.</p>
+<p>Whenever a <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a> - a consumer of a source -
+asks for audio data or a video frame, the
+<a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a> will pop the next packet from the
+appropriate queue, decode the data, and return the result to the Player. If
+this results in available space in both audio and video queues, it will read
+additional packets until one of the queues is full again.</p>
+</div>
+<div class="section" id="player">
+<h3>Player<a class="headerlink" href="#player" title="Permalink to this headline">¶</a></h3>
+<p>Found in media/player.py</p>
+<p>The <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a> is the main object that drives the
+source.  It maintains a <a class="reference internal" href="../modules/media.html#pyglet.media.sources.PlayList" title="pyglet.media.sources.PlayList"><code class="xref py py-class docutils literal"><span class="pre">PlayList</span></code></a> which
+maintains a queue of sources that it can play sequentially. Its
+responsibilities are to play, pause and seek into the source.</p>
+<p>If the source contains audio, the <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a> will
+instantiate an <code class="docutils literal"><span class="pre">AudioPlayer</span></code> by asking the <code class="docutils literal"><span class="pre">SoundDriver</span></code> to create an
+appropriate <code class="docutils literal"><span class="pre">AudioPlayer</span></code> for the given platform. The <code class="docutils literal"><span class="pre">AudioDriver</span></code> is a
+singleton created according to which drivers are available. Currently
+supported sound drivers are: DirectSound, PulseAudio and OpenAL.</p>
+<p>If the source contains video, the Player has a
+<code class="xref py py-meth docutils literal"><span class="pre">get_texture()</span></code> method returning the current
+video frame.</p>
+<p>The player has an internal <cite>master clock</cite> which is used to synchronize the
+video and the audio. The audio synchronization is delegated to the
+<code class="docutils literal"><span class="pre">AudioPlayer</span></code>. More info found below. The video synchronization is made by
+asking the <a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a> for the next video timestamp.
+The <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a> then schedules on pyglet event loop a
+call to its <code class="xref py py-meth docutils literal"><span class="pre">update_texture()</span></code> with a delay
+equals to the difference between the next video timestamp and the master clock
+current time.</p>
+<p>When <code class="xref py py-meth docutils literal"><span class="pre">update_texture()</span></code> is called, we will
+check if the actual master clock time is not too late compared to the video
+timestamp. This could happen if the loop was very busy and the function could
+not be called on time. In this case, the frame would be skipped until we find
+a frame with a suitable timestamp for the current master clock time.</p>
+</div>
+<div class="section" id="audioplayer">
+<h3>AudioPlayer<a class="headerlink" href="#audioplayer" title="Permalink to this headline">¶</a></h3>
+<p>Found in media/drivers</p>
+<p>The <code class="docutils literal"><span class="pre">AudioPlayer</span></code> is responsible only for the audio data. It can read, pause,
+and seek into the <a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a>.</p>
+<p>In order to accomplish these tasks, the audio player keeps a reference to the
+<code class="docutils literal"><span class="pre">AudioDriver</span></code> singleton which provides access to the lower level functions
+for the selected audio driver.</p>
+<p>When instructed to play, it will register itself on pyglet event loop and
+check every 0.1 seconds if there is enough space in its audio buffer. If so it
+will ask the source for more audio data to refill its audio buffer. It’s also
+at this time that it will check for the difference between the estimated audio
+time and the <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a> master clock. A weighted
+average is used to smooth the inaccuracies of the audio time estimation as
+explained in <a class="reference external" href="http://dranger.com/ffmpeg/tutorial06.html">http://dranger.com/ffmpeg/tutorial06.html</a>. If the resulting
+difference is too big, the <code class="docutils literal"><span class="pre">Source</span></code>
+<a class="reference internal" href="../modules/media.html#pyglet.media.Source.get_audio_data" title="pyglet.media.Source.get_audio_data"><code class="xref py py-meth docutils literal"><span class="pre">get_audio_data()</span></code></a> method has a
+<code class="docutils literal"><span class="pre">compensation_time</span></code> argument which allows it to shorten or stretch the
+number of audio samples. This allows the audio to get back in synch with the
+master clock.</p>
+</div>
+<div class="section" id="audiodriver">
+<h3>AudioDriver<a class="headerlink" href="#audiodriver" title="Permalink to this headline">¶</a></h3>
+<p>Found in media/drivers</p>
+<p>The <code class="docutils literal"><span class="pre">AudioDriver</span></code> is a wrapper around the low-level sound driver available
+on the platform. It’s a singleton. It can create an <code class="docutils literal"><span class="pre">AudioPlayer</span></code>
+appropriate for the current <code class="docutils literal"><span class="pre">AudioDriver</span></code>.</p>
+</div>
+<div class="section" id="normal-operation-of-the-player">
+<h3>Normal operation of the <code class="docutils literal"><span class="pre">Player</span></code><a class="headerlink" href="#normal-operation-of-the-player" title="Permalink to this headline">¶</a></h3>
+<p>The client code instantiates a media player this way:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">player</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">Player</span><span class="p">()</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="n">player</span><span class="o">.</span><span class="n">queue</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="n">player</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>When the client code runs <code class="docutils literal"><span class="pre">player.play()</span></code>:</p>
+<p>The <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a> will check if there is an audio track
+on the media. If so it will instantiate an <code class="docutils literal"><span class="pre">AudioPlayer</span></code> appropriate for the
+available sound driver on the platform. It will create an empty
+<a class="reference internal" href="../modules/image/index.html#pyglet.image.Texture" title="pyglet.image.Texture"><code class="xref py py-class docutils literal"><span class="pre">Texture</span></code></a> if the media contains video frames and will
+schedule its <code class="xref py py-meth docutils literal"><span class="pre">update_texture()</span></code> to be called
+immediately. Finally it will start the master clock.</p>
+<p>The <code class="docutils literal"><span class="pre">AudioPlayer</span></code> will ask its <a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a> for
+audio data. The <a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a> will pop the next
+available audio packet and will decode it. The resulting audio data will be
+returned to the <code class="docutils literal"><span class="pre">AudioPlayer</span></code>. If the audio queue and the video queues are
+not full, the <a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a> will read more packets
+from the stream until one of the queues is full again.</p>
+<p>When the <code class="xref py py-meth docutils literal"><span class="pre">update_texture()</span></code> method is called,
+the next video timestamp will be checked with the master clock. We allow a
+delay up to the frame duration. If the master clock is beyond that time, the
+frame will be skipped. We will check the following frames for its timestamp
+until we find the appropriate frame for the master clock time. We will set the
+<a class="reference internal" href="../modules/media.html#pyglet.media.player.Player.texture" title="pyglet.media.player.Player.texture"><code class="xref py py-attr docutils literal"><span class="pre">texture</span></code></a> to the new video frame. We will
+check for the next video frame timestamp and we will schedule a new call to
+<code class="xref py py-meth docutils literal"><span class="pre">update_texture()</span></code> with a delay equals to the
+difference between the next video timestamps and the master clock time.</p>
+</div>
+</div>
+<div class="section" id="helpful-tools">
+<h2>Helpful tools<a class="headerlink" href="#helpful-tools" title="Permalink to this headline">¶</a></h2>
+<p>I’ve found that using the binary ffprobe is a good way to explore the content
+of a media file. Here’s a couple of things which might be
+interesting and helpful:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ffprobe</span> <span class="n">samples_v1</span><span class="o">.</span><span class="mi">01</span>\<span class="n">SampleVideo_320x240_1mb</span><span class="o">.</span><span class="mi">3</span><span class="n">gp</span> <span class="o">-</span><span class="n">show_frames</span>
+</pre></div>
+</div>
+<p>This will show information about each frame in the file. You can choose only
+audio or only video frames by using the <code class="docutils literal"><span class="pre">v</span></code> flag for video and <code class="docutils literal"><span class="pre">a</span></code> for
+audio.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ffprobe</span> <span class="n">samples_v1</span><span class="o">.</span><span class="mi">01</span>\<span class="n">SampleVideo_320x240_1mb</span><span class="o">.</span><span class="mi">3</span><span class="n">gp</span> <span class="o">-</span><span class="n">show_frames</span> <span class="o">-</span><span class="n">select_streams</span> <span class="n">v</span>
+</pre></div>
+</div>
+<p>You can also ask to see a subset of frame information this way:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ffprobe</span> <span class="n">samples_v1</span><span class="o">.</span><span class="mi">01</span>\<span class="n">SampleVideo_320x240_1mb</span><span class="o">.</span><span class="mi">3</span><span class="n">gp</span> <span class="o">-</span><span class="n">show_frames</span>
+<span class="o">-</span><span class="n">select_streams</span> <span class="n">v</span> <span class="o">-</span><span class="n">show_entries</span> <span class="n">frame</span><span class="o">=</span><span class="n">pkt_pts</span><span class="p">,</span><span class="n">pict_type</span>
+</pre></div>
+</div>
+<p>Finally, you can get a more compact view with the additional <code class="docutils literal"><span class="pre">compact</span></code> flag:</p>
+<blockquote>
+<div>ffprobe samples_v1.01SampleVideo_320x240_1mb.3gp -show_frames
+-select_streams v -show_entries frame=pkt_pts,pict_type -of compact</div></blockquote>
+</div>
+<div class="section" id="convert-video-to-mkv">
+<h2>Convert video to mkv<a class="headerlink" href="#convert-video-to-mkv" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ffmpeg</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">original_video</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">c</span><span class="p">:</span><span class="n">v</span> <span class="n">libx264</span> <span class="o">-</span><span class="n">preset</span> <span class="n">slow</span> <span class="o">-</span><span class="n">profile</span><span class="p">:</span><span class="n">v</span> <span class="n">high</span> <span class="o">-</span><span class="n">crf</span> <span class="mi">18</span>
+<span class="o">-</span><span class="n">coder</span> <span class="mi">1</span> <span class="o">-</span><span class="n">pix_fmt</span> <span class="n">yuv420p</span> <span class="o">-</span><span class="n">movflags</span> <span class="o">+</span><span class="n">faststart</span> <span class="o">-</span><span class="n">g</span> <span class="mi">30</span> <span class="o">-</span><span class="n">bf</span> <span class="mi">2</span> <span class="o">-</span><span class="n">c</span><span class="p">:</span><span class="n">a</span> <span class="n">aac</span> <span class="o">-</span><span class="n">b</span><span class="p">:</span><span class="n">a</span> <span class="mi">384</span><span class="n">k</span>
+<span class="o">-</span><span class="n">profile</span><span class="p">:</span><span class="n">a</span> <span class="n">aac_low</span> <span class="o">&lt;</span><span class="n">outputfilename</span><span class="o">.</span><span class="n">mkv</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Media manual</a><ul>
+<li><a class="reference internal" href="#domain-knowledge">Domain knowledge</a></li>
+<li><a class="reference internal" href="#current-code-architecture">Current code architecture</a><ul>
+<li><a class="reference internal" href="#source">Source</a></li>
+<li><a class="reference internal" href="#ffmpegstreamingsource">FFmpegStreamingSource</a></li>
+<li><a class="reference internal" href="#player">Player</a></li>
+<li><a class="reference internal" href="#audioplayer">AudioPlayer</a></li>
+<li><a class="reference internal" href="#audiodriver">AudioDriver</a></li>
+<li><a class="reference internal" href="#normal-operation-of-the-player">Normal operation of the <code class="docutils literal"><span class="pre">Player</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#helpful-tools">Helpful tools</a></li>
+<li><a class="reference internal" href="#convert-video-to-mkv">Convert video to mkv</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="wraptypes.html"
+                        title="previous chapter">wraptypes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="media_logging_manual.html"
+                        title="next chapter">Media logging manual</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="media_logging_manual.html" title="Media logging manual"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="wraptypes.html" title="wraptypes"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

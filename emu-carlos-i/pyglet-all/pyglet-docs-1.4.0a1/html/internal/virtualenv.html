@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Development environment &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="next" title="Testing pyglet" href="testing.html" />
+    <link rel="prev" title="Contributing" href="contributing.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="testing.html" title="Testing pyglet"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="contributing.html" title="Contributing"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="development-environment">
+<h1>Development environment<a class="headerlink" href="#development-environment" title="Permalink to this headline">¶</a></h1>
+<p>To develop pyglet, you need an environment with at least the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Python 3.4+ and Python 2.7</li>
+<li><a class="reference external" href="https://pytest.org">py.test</a></li>
+<li>Your favorite Python editor or IDE</li>
+</ul>
+</div></blockquote>
+<p>To generate documentation you also need:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="https://sphinx-doc.org">Sphinx</a></li>
+<li><a class="reference external" href="http://www.graphviz.org/Download_windows.php">Graphviz</a></li>
+</ul>
+</div></blockquote>
+<p>To use and test all pyglet functionality you should also have:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="https://www.ffmpeg.org/download.html">FFmpeg</a></li>
+<li><a class="reference external" href="https://pillow.readthedocs.io">Pillow</a></li>
+<li><a class="reference external" href="https://coverage.readthedocs.io">coverage</a></li>
+</ul>
+</div></blockquote>
+<p>To build packages for distribution you need to install:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="https://bitbucket.org/pypa/wheel/">wheel</a></li>
+</ul>
+</div></blockquote>
+<p>It is preferred to create a Python virtual environment to develop in.  This allows you
+to easily test on all Python versions supported by pyglet, not pollute your local system
+with pyglet development dependencies, and not have your local system interfere with
+pyglet developement.  All dependencies you install while inside an activated virtual
+environment will remain isolated inside that environment.  When you’re finished, you can
+simply delete it.</p>
+<p>This section will show you how to set up and use virtual environments.  If you’re already
+familiar with this, you can probably skip the rest of this page.</p>
+<div class="section" id="linux-or-mac-osx">
+<h2>Linux or Mac OSX<a class="headerlink" href="#linux-or-mac-osx" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setting-up">
+<h3>Setting up<a class="headerlink" href="#setting-up" title="Permalink to this headline">¶</a></h3>
+<p>Setting up a virtual environment is almost the same for Linux and OS X. First, use your
+OS’s package manager (apt, brew, etc) to install the following dependencies:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Python 3.4+ and Python 2.7</li>
+<li>pip (for each version of Python)</li>
+<li>Graphviz (if you want to generate documentation)</li>
+</ul>
+</div></blockquote>
+<p>To create virtual environments, <code class="docutils literal"><span class="pre">venv</span></code> is included in the standard library since
+Python 3.3. For Python 2.7, you will need to install the <code class="docutils literal"><span class="pre">virtualenv</span></code> package
+(you might need to add sudo):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">virtualenv</span>
+</pre></div>
+</div>
+<p>Make a directory somewhere to hold our virtual environments:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">pyglet</span><span class="o">-</span><span class="n">venv</span>
+</pre></div>
+</div>
+<p>Next, we’ll create the virtual environments for each version of python. We’ll put them
+both inside the “pyglet-venv” folder, to keep things in one place.  Remember that the
+library names are different for Python 2 and 3:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python2</span> <span class="o">-</span><span class="n">m</span> <span class="n">virtualenv</span> <span class="n">pyglet</span><span class="o">-</span><span class="n">venv</span><span class="o">/</span><span class="n">py2</span>
+<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">pyglet</span><span class="o">-</span><span class="n">venv</span><span class="o">/</span><span class="n">py3</span>
+</pre></div>
+</div>
+<p>Once the virtual environments have been created, the next step is to activate one of them.
+You’ll then install the dependencies, which will be isolated inside that virtual environment.
+Only one can be active at a time, so perform the following steps one one at a time</p>
+<p>Activate whichever virtual environment you wish to use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">.</span> <span class="n">pyglet</span><span class="o">-</span><span class="n">venv</span><span class="o">/</span><span class="n">py2</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+<span class="c1"># or</span>
+<span class="o">.</span> <span class="n">pyglet</span><span class="o">-</span><span class="n">venv</span><span class="o">/</span><span class="n">py3</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
+<p>You will see the name of the virtual environment at the start of the command prompt.</p>
+<p>[Optional] Make sure pip is the latest version:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span>
+</pre></div>
+</div>
+<p>Now install required dependencies:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pytest</span>
+</pre></div>
+</div>
+<p>Install the documentation generator:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">sphinx</span>
+</pre></div>
+</div>
+<p>And optional dependencies:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pytest</span><span class="o">-</span><span class="n">cov</span> <span class="n">Pillow</span> <span class="n">wheel</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="finishing">
+<h3>Finishing<a class="headerlink" href="#finishing" title="Permalink to this headline">¶</a></h3>
+<p>To get out of the virtual environment run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="windows">
+<h2>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Setting up<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Make sure you download and install:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://www.python.org/downloads/windows/">Python 3.4+ and Python 2.7</a></li>
+<li><a class="reference external" href="http://www.graphviz.org/Download_windows.php">Graphviz</a></li>
+</ul>
+</div></blockquote>
+<p>Pip should be installed by default with the latest Python installers.  Make sure you do not
+uncheck the option.  When finished installing, open a command prompt.</p>
+<p>To create virtual environments, <code class="docutils literal"><span class="pre">venv</span></code> is included in the standard library since
+Python 3.3.  For Python 2.7 only, you will need to install the <code class="docutils literal"><span class="pre">virtualenv</span></code> package:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">py</span> <span class="o">-</span><span class="mi">2</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">virtualenv</span>
+</pre></div>
+</div>
+<p>Make a directory somewhere to hold our virtual environments:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">md</span> <span class="n">pyglet</span><span class="o">-</span><span class="n">venv</span>
+</pre></div>
+</div>
+<p>Next, we’ll create the virtual environments for each version of python. We’ll put them
+both inside the “pyglet-venv” folder, to keep things in one place.  Remember that the
+library names are different for Python 2 and 3:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">py</span> <span class="o">-</span><span class="mi">2</span> <span class="o">-</span><span class="n">m</span> <span class="n">virtualenv</span> <span class="n">pyglet</span><span class="o">-</span><span class="n">venv</span>\<span class="n">py2</span>
+<span class="n">py</span> <span class="o">-</span><span class="mi">3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">pyglet</span><span class="o">-</span><span class="n">venv</span>\<span class="n">py3</span>
+</pre></div>
+</div>
+<p>Once the virtual environments have been created, the next step is to activate one of them.
+You’ll then install the dependencies, which will be isolated inside that virtual environment.
+Only one can be active at a time, so perform the following steps one one at a time.</p>
+<p>Activate the virtual environment:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pyglet</span><span class="o">-</span><span class="n">venv</span>\<span class="n">py2</span>\<span class="n">Scripts</span>\<span class="n">activate</span>
+<span class="c1"># or</span>
+<span class="n">pyglet</span><span class="o">-</span><span class="n">venv</span>\<span class="n">py3</span>\<span class="n">Scripts</span>\<span class="n">activate</span>
+</pre></div>
+</div>
+<p>You will see the name of the virtual environment at the start of the command prompt.</p>
+<p>[Optional] Make sure pip is the latest version:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span>
+</pre></div>
+</div>
+<p>Now install required dependencies:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pytest</span>
+</pre></div>
+</div>
+<p>Install the documentation generator:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">sphinx</span>
+</pre></div>
+</div>
+<p>And optional dependencies:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pytest</span><span class="o">-</span><span class="n">cov</span> <span class="n">Pillow</span> <span class="n">wheel</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>Finishing<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>To get out of the virtual environment run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Development environment</a><ul>
+<li><a class="reference internal" href="#linux-or-mac-osx">Linux or Mac OSX</a><ul>
+<li><a class="reference internal" href="#setting-up">Setting up</a></li>
+<li><a class="reference internal" href="#finishing">Finishing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#windows">Windows</a><ul>
+<li><a class="reference internal" href="#id1">Setting up</a></li>
+<li><a class="reference internal" href="#id2">Finishing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="contributing.html"
+                        title="previous chapter">Contributing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="testing.html"
+                        title="next chapter">Testing pyglet</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="testing.html" title="Testing pyglet"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="contributing.html" title="Contributing"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.graphics.vertexbuffer &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../../index.html" />
+    <link rel="up" title="pyglet.graphics" href="index.html" />
+    <link rel="next" title="pyglet.graphics.vertexdomain" href="vertexdomain.html" />
+    <link rel="prev" title="pyglet.graphics.vertexattribute" href="vertexattribute.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="vertexdomain.html" title="pyglet.graphics.vertexdomain"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vertexattribute.html" title="pyglet.graphics.vertexattribute"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">pyglet.graphics</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyglet.graphics.vertexbuffer">
+<span id="pyglet-graphics-vertexbuffer"></span><h1>pyglet.graphics.vertexbuffer<a class="headerlink" href="#module-pyglet.graphics.vertexbuffer" title="Permalink to this headline">¶</a></h1>
+<p>Byte abstractions of Vertex Buffer Objects and vertex arrays.</p>
+<p>Use <a class="reference internal" href="#pyglet.graphics.vertexbuffer.create_buffer" title="pyglet.graphics.vertexbuffer.create_buffer"><code class="xref py py-func docutils literal"><span class="pre">create_buffer()</span></code></a> or <a class="reference internal" href="#pyglet.graphics.vertexbuffer.create_mappable_buffer" title="pyglet.graphics.vertexbuffer.create_mappable_buffer"><code class="xref py py-func docutils literal"><span class="pre">create_mappable_buffer()</span></code></a> to create a
+Vertex Buffer Object, or a vertex array if VBOs are not supported by the
+current context.</p>
+<p>Buffers can optionally be created “mappable” (incorporating the
+<a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractMappable" title="pyglet.graphics.vertexbuffer.AbstractMappable"><code class="xref py py-class docutils literal"><span class="pre">AbstractMappable</span></code></a> mix-in).  In this case the buffer provides a
+<a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractMappable.get_region" title="pyglet.graphics.vertexbuffer.AbstractMappable.get_region"><code class="xref py py-meth docutils literal"><span class="pre">get_region()</span></code></a> method which provides the most
+efficient path for updating partial data within the buffer.</p>
+<dl class="class">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBuffer">
+<em class="property">class </em><code class="descname">AbstractBuffer</code><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract buffer of byte data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.size" title="pyglet.graphics.vertexbuffer.AbstractBuffer.size"><strong>size</strong></a> (<em>int</em>) – Size of buffer, in bytes</li>
+<li><a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.ptr" title="pyglet.graphics.vertexbuffer.AbstractBuffer.ptr"><strong>ptr</strong></a> (<em>int</em>) – Memory offset of the buffer, as used by the <code class="docutils literal"><span class="pre">glVertexPointer</span></code>
+family of functions</li>
+<li><strong>target</strong> (<em>int</em>) – OpenGL buffer target, for example <code class="docutils literal"><span class="pre">GL_ARRAY_BUFFER</span></code></li>
+<li><strong>usage</strong> (<em>int</em>) – OpenGL buffer usage, for example <code class="docutils literal"><span class="pre">GL_DYNAMIC_DRAW</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBuffer.bind">
+<code class="descname">bind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind this buffer to its OpenGL target.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBuffer.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this buffer, reducing system resource usage.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBuffer.map">
+<code class="descname">map</code><span class="sig-paren">(</span><em>invalidate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map the entire buffer into system memory.</p>
+<p>The mapped region must be subsequently unmapped with <cite>unmap</cite> before
+performing any other operations on the buffer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>invalidate</strong> (<em>bool</em>) – If True, the initial contents of the mapped block need not
+reflect the actual contents of the buffer.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal"><span class="pre">POINTER(ctypes.c_ubyte)</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Pointer to the mapped block in memory</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBuffer.resize">
+<code class="descname">resize</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.resize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resize the buffer to a new size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> (<em>int</em>) – New size of the buffer, in bytes</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBuffer.set_data">
+<code class="descname">set_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.set_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the entire contents of the buffer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>sequence of int</em><em> or </em><em>ctypes pointer</em>) – The byte array to set.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBuffer.set_data_region">
+<code class="descname">set_data_region</code><span class="sig-paren">(</span><em>data</em>, <em>start</em>, <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.set_data_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set part of the buffer contents.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>sequence of int</em><em> or </em><em>ctypes pointer</em>) – The byte array of data to set</li>
+<li><strong>start</strong> (<em>int</em>) – Offset to start replacing data</li>
+<li><strong>length</strong> (<em>int</em>) – Length of region to replace</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBuffer.unbind">
+<code class="descname">unbind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.unbind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the buffer’s OpenGL target.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBuffer.unmap">
+<code class="descname">unmap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.unmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unmap a previously mapped memory block.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBuffer.ptr">
+<code class="descname">ptr</code><em class="property"> = 0</em><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.ptr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBuffer.size">
+<code class="descname">size</code><em class="property"> = 0</em><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBuffer.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBufferRegion">
+<em class="property">class </em><code class="descname">AbstractBufferRegion</code><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBufferRegion" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mapped region of a buffer.</p>
+<p>Buffer regions are obtained using <a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractMappable.get_region" title="pyglet.graphics.vertexbuffer.AbstractMappable.get_region"><code class="xref py py-meth docutils literal"><span class="pre">get_region()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>array</strong> (<em>ctypes array</em>) – Array of data, of the type and count requested by
+<a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractMappable.get_region" title="pyglet.graphics.vertexbuffer.AbstractMappable.get_region"><code class="xref py py-meth docutils literal"><span class="pre">get_region()</span></code></a>.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.AbstractBufferRegion.invalidate">
+<code class="descname">invalidate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractBufferRegion.invalidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark this region as changed.</p>
+<p>The buffer may not be updated with the latest contents of the
+array until this method is called.  (However, it may not be updated
+until the next time the buffer is used, for efficiency).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.vertexbuffer.AbstractMappable">
+<em class="property">class </em><code class="descname">AbstractMappable</code><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractMappable" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.AbstractMappable.get_region">
+<code class="descname">get_region</code><span class="sig-paren">(</span><em>start</em>, <em>size</em>, <em>ptr_type</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.AbstractMappable.get_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map a region of the buffer into a ctypes array of the desired
+type.  This region does not need to be unmapped, but will become
+invalid if the buffer is resized.</p>
+<p>Note that although a pointer type is required, an array is mapped.
+For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">get_region</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">sizeof</span><span class="p">(</span><span class="n">c_int</span><span class="p">)</span> <span class="o">*</span> <span class="mi">20</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">c_int</span> <span class="o">*</span> <span class="mi">20</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>will map bytes 0 to 80 of the buffer to an array of 20 ints.</p>
+<p>Changes to the array may not be recognised until the region’s
+<a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractBufferRegion.invalidate" title="pyglet.graphics.vertexbuffer.AbstractBufferRegion.invalidate"><code class="xref py py-meth docutils literal"><span class="pre">AbstractBufferRegion.invalidate()</span></code></a> method is called.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> (<em>int</em>) – Offset into the buffer to map from, in bytes</li>
+<li><strong>size</strong> (<em>int</em>) – Size of the buffer region to map, in bytes</li>
+<li><strong>ptr_type</strong> (<em>ctypes pointer type</em>) – Pointer type describing the array format to create</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractBufferRegion" title="pyglet.graphics.vertexbuffer.AbstractBufferRegion"><code class="xref py py-class docutils literal"><span class="pre">AbstractBufferRegion</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.vertexbuffer.IndirectArrayRegion">
+<em class="property">class </em><code class="descname">IndirectArrayRegion</code><span class="sig-paren">(</span><em>region</em>, <em>size</em>, <em>component_count</em>, <em>component_stride</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.IndirectArrayRegion" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mapped region in which data elements are not necessarily contiguous.</p>
+<p>This region class is used to wrap buffer regions in which the data
+must be accessed with some stride.  For example, in an interleaved buffer
+this region can be used to access a single interleaved component as if the
+data was contiguous.</p>
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.IndirectArrayRegion.invalidate">
+<code class="descname">invalidate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.IndirectArrayRegion.invalidate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.vertexbuffer.MappableVertexBufferObject">
+<em class="property">class </em><code class="descname">MappableVertexBufferObject</code><span class="sig-paren">(</span><em>size</em>, <em>target</em>, <em>usage</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>A VBO with system-memory backed store.</p>
+<p>Updates to the data via <a class="reference internal" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.set_data" title="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.set_data"><code class="xref py py-meth docutils literal"><span class="pre">set_data()</span></code></a>, <a class="reference internal" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.set_data_region" title="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.set_data_region"><code class="xref py py-meth docutils literal"><span class="pre">set_data_region()</span></code></a> and
+<a class="reference internal" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.map" title="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.map"><code class="xref py py-meth docutils literal"><span class="pre">map()</span></code></a> will be held in local memory until <a class="reference internal" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.bind" title="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.bind"><code class="xref py py-meth docutils literal"><span class="pre">bind()</span></code></a> is
+called.  The advantage is that fewer OpenGL calls are needed, increasing
+performance.</p>
+<p>There may also be less performance penalty for resizing this buffer.</p>
+<p>Updates to data via <a class="reference internal" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.map" title="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.map"><code class="xref py py-meth docutils literal"><span class="pre">map()</span></code></a> are committed immediately.</p>
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.bind">
+<code class="descname">bind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.bind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.get_region">
+<code class="descname">get_region</code><span class="sig-paren">(</span><em>start</em>, <em>size</em>, <em>ptr_type</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.get_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.map">
+<code class="descname">map</code><span class="sig-paren">(</span><em>invalidate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.resize">
+<code class="descname">resize</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.resize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.set_data">
+<code class="descname">set_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.set_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.set_data_region">
+<code class="descname">set_data_region</code><span class="sig-paren">(</span><em>data</em>, <em>start</em>, <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.set_data_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.MappableVertexBufferObject.unmap">
+<code class="descname">unmap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject.unmap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.vertexbuffer.VertexArray">
+<em class="property">class </em><code class="descname">VertexArray</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>A ctypes implementation of a vertex array.</p>
+<p>Many of the methods on this class are effectively no-op’s, such as
+<a class="reference internal" href="#pyglet.graphics.vertexbuffer.VertexArray.bind" title="pyglet.graphics.vertexbuffer.VertexArray.bind"><code class="xref py py-meth docutils literal"><span class="pre">bind()</span></code></a>, <a class="reference internal" href="#pyglet.graphics.vertexbuffer.VertexArray.unbind" title="pyglet.graphics.vertexbuffer.VertexArray.unbind"><code class="xref py py-meth docutils literal"><span class="pre">unbind()</span></code></a>, <a class="reference internal" href="#pyglet.graphics.vertexbuffer.VertexArray.map" title="pyglet.graphics.vertexbuffer.VertexArray.map"><code class="xref py py-meth docutils literal"><span class="pre">map()</span></code></a>, <a class="reference internal" href="#pyglet.graphics.vertexbuffer.VertexArray.unmap" title="pyglet.graphics.vertexbuffer.VertexArray.unmap"><code class="xref py py-meth docutils literal"><span class="pre">unmap()</span></code></a> and
+<a class="reference internal" href="#pyglet.graphics.vertexbuffer.VertexArray.delete" title="pyglet.graphics.vertexbuffer.VertexArray.delete"><code class="xref py py-meth docutils literal"><span class="pre">delete()</span></code></a>; they exist in order to present
+a consistent interface with <a class="reference internal" href="#pyglet.graphics.vertexbuffer.VertexBufferObject" title="pyglet.graphics.vertexbuffer.VertexBufferObject"><code class="xref py py-class docutils literal"><span class="pre">VertexBufferObject</span></code></a>.</p>
+<p>This buffer type is also mappable, and so <a class="reference internal" href="#pyglet.graphics.vertexbuffer.VertexArray.get_region" title="pyglet.graphics.vertexbuffer.VertexArray.get_region"><code class="xref py py-meth docutils literal"><span class="pre">get_region()</span></code></a> can be used.</p>
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexArray.bind">
+<code class="descname">bind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexArray.bind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexArray.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexArray.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexArray.get_region">
+<code class="descname">get_region</code><span class="sig-paren">(</span><em>start</em>, <em>size</em>, <em>ptr_type</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexArray.get_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexArray.map">
+<code class="descname">map</code><span class="sig-paren">(</span><em>invalidate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexArray.map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexArray.resize">
+<code class="descname">resize</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexArray.resize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexArray.set_data">
+<code class="descname">set_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexArray.set_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexArray.set_data_region">
+<code class="descname">set_data_region</code><span class="sig-paren">(</span><em>data</em>, <em>start</em>, <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexArray.set_data_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexArray.unbind">
+<code class="descname">unbind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexArray.unbind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexArray.unmap">
+<code class="descname">unmap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexArray.unmap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.vertexbuffer.VertexArrayRegion">
+<em class="property">class </em><code class="descname">VertexArrayRegion</code><span class="sig-paren">(</span><em>array</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexArrayRegion" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mapped region of a vertex array.</p>
+<p>The <a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractBufferRegion.invalidate" title="pyglet.graphics.vertexbuffer.AbstractBufferRegion.invalidate"><code class="xref py py-meth docutils literal"><span class="pre">invalidate()</span></code></a> method is a no-op but is
+provided in order to present a consistent interface with
+<a class="reference internal" href="#pyglet.graphics.vertexbuffer.VertexBufferObjectRegion" title="pyglet.graphics.vertexbuffer.VertexBufferObjectRegion"><code class="xref py py-meth docutils literal"><span class="pre">VertexBufferObjectRegion()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.vertexbuffer.VertexBufferObject">
+<em class="property">class </em><code class="descname">VertexBufferObject</code><span class="sig-paren">(</span><em>size</em>, <em>target</em>, <em>usage</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexBufferObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lightweight representation of an OpenGL VBO.</p>
+<p>The data in the buffer is not replicated in any system memory (unless it
+is done so by the video driver).  While this can improve memory usage and
+possibly performance, updates to the buffer are relatively slow.</p>
+<p>This class does not implement <a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractMappable" title="pyglet.graphics.vertexbuffer.AbstractMappable"><code class="xref py py-class docutils literal"><span class="pre">AbstractMappable</span></code></a>, and so has no
+<a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractMappable.get_region" title="pyglet.graphics.vertexbuffer.AbstractMappable.get_region"><code class="xref py py-meth docutils literal"><span class="pre">get_region()</span></code></a> method.  See
+<a class="reference internal" href="#pyglet.graphics.vertexbuffer.MappableVertexBufferObject" title="pyglet.graphics.vertexbuffer.MappableVertexBufferObject"><code class="xref py py-class docutils literal"><span class="pre">MappableVertexBufferObject</span></code></a> for a VBO class
+that does implement <a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractMappable.get_region" title="pyglet.graphics.vertexbuffer.AbstractMappable.get_region"><code class="xref py py-meth docutils literal"><span class="pre">get_region()</span></code></a>.</p>
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexBufferObject.bind">
+<code class="descname">bind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexBufferObject.bind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexBufferObject.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexBufferObject.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexBufferObject.map">
+<code class="descname">map</code><span class="sig-paren">(</span><em>invalidate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexBufferObject.map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexBufferObject.resize">
+<code class="descname">resize</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexBufferObject.resize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexBufferObject.set_data">
+<code class="descname">set_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexBufferObject.set_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexBufferObject.set_data_region">
+<code class="descname">set_data_region</code><span class="sig-paren">(</span><em>data</em>, <em>start</em>, <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexBufferObject.set_data_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexBufferObject.unbind">
+<code class="descname">unbind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexBufferObject.unbind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexBufferObject.unmap">
+<code class="descname">unmap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexBufferObject.unmap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.vertexbuffer.VertexBufferObjectRegion">
+<em class="property">class </em><code class="descname">VertexBufferObjectRegion</code><span class="sig-paren">(</span><em>buffer</em>, <em>start</em>, <em>end</em>, <em>array</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexBufferObjectRegion" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mapped region of a VBO.</p>
+<dl class="method">
+<dt id="pyglet.graphics.vertexbuffer.VertexBufferObjectRegion.invalidate">
+<code class="descname">invalidate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.VertexBufferObjectRegion.invalidate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.graphics.vertexbuffer.create_buffer">
+<code class="descname">create_buffer</code><span class="sig-paren">(</span><em>size</em>, <em>target=34962</em>, <em>usage=35048</em>, <em>vbo=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.create_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a buffer of vertex data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>size</strong> (<em>int</em>) – Size of the buffer, in bytes</li>
+<li><strong>target</strong> (<em>int</em>) – OpenGL target buffer</li>
+<li><strong>usage</strong> (<em>int</em>) – OpenGL usage constant</li>
+<li><strong>vbo</strong> (<em>bool</em>) – True if a <cite>VertexBufferObject</cite> should be created if the driver
+supports it; otherwise only a <cite>VertexArray</cite> is created.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><cite>AbstractBuffer</cite></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.graphics.vertexbuffer.create_mappable_buffer">
+<code class="descname">create_mappable_buffer</code><span class="sig-paren">(</span><em>size</em>, <em>target=34962</em>, <em>usage=35048</em>, <em>vbo=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexbuffer.create_mappable_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a mappable buffer of vertex data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>size</strong> (<em>int</em>) – Size of the buffer, in bytes</li>
+<li><strong>target</strong> (<em>int</em>) – OpenGL target buffer</li>
+<li><strong>usage</strong> (<em>int</em>) – OpenGL usage constant</li>
+<li><strong>vbo</strong> (<em>bool</em>) – True if a <a class="reference internal" href="#pyglet.graphics.vertexbuffer.VertexBufferObject" title="pyglet.graphics.vertexbuffer.VertexBufferObject"><code class="xref py py-class docutils literal"><span class="pre">VertexBufferObject</span></code></a> should be created if the driver
+supports it; otherwise only a <a class="reference internal" href="#pyglet.graphics.vertexbuffer.VertexArray" title="pyglet.graphics.vertexbuffer.VertexArray"><code class="xref py py-class docutils literal"><span class="pre">VertexArray</span></code></a> is created.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractBuffer" title="pyglet.graphics.vertexbuffer.AbstractBuffer"><code class="xref py py-class docutils literal"><span class="pre">AbstractBuffer</span></code></a> with <a class="reference internal" href="#pyglet.graphics.vertexbuffer.AbstractMappable" title="pyglet.graphics.vertexbuffer.AbstractMappable"><code class="xref py py-class docutils literal"><span class="pre">AbstractMappable</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="vertexattribute.html"
+                        title="previous chapter">pyglet.graphics.vertexattribute</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="vertexdomain.html"
+                        title="next chapter">pyglet.graphics.vertexdomain</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="vertexdomain.html" title="pyglet.graphics.vertexdomain"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vertexattribute.html" title="pyglet.graphics.vertexattribute"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="index.html" >pyglet.graphics</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

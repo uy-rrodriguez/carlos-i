@@ -1,0 +1,622 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Sound and video &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="next" title="Application resources" href="resources.html" />
+    <link rel="prev" title="Images" href="image.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="resources.html" title="Application resources"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="image.html" title="Images"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="sound-and-video">
+<h1>Sound and video<a class="headerlink" href="#sound-and-video" title="Permalink to this headline">¶</a></h1>
+<p>pyglet can play many audio and video formats. Audio is played back with
+either OpenAL, DirectSound or Pulseaudio, permitting hardware-accelerated
+mixing and surround-sound 3D positioning. Video is played into OpenGL
+textures, and so can be easily be manipulated in real-time by applications
+and incorporated into 3D environments.</p>
+<p>Decoding of compressed audio and video is provided by <a class="reference external" href="https://www.ffmpeg.org/download.html">FFmpeg</a>, an optional
+component available for Linux, Windows and Mac OS X. FFmpeg needs to be
+installed separately.</p>
+<p>If FFmpeg is not present, pyglet will fall back to reading uncompressed WAV
+files only. This may be sufficient for many applications that require only a
+small number of short sounds, in which case those applications need not
+distribute FFmpeg.</p>
+<div class="section" id="audio-drivers">
+<h2>Audio drivers<a class="headerlink" href="#audio-drivers" title="Permalink to this headline">¶</a></h2>
+<p>pyglet can use OpenAL, DirectSound or Pulseaudio to play back audio. Only one
+of these drivers can be used in an application. In most cases you won’t need
+to concern yourself with choosing a driver, but you can manually select one if
+desired. This must be done before the <a class="reference internal" href="../modules/media.html#module-pyglet.media" title="pyglet.media"><code class="xref py py-mod docutils literal"><span class="pre">pyglet.media</span></code></a> module is loaded.
+The available drivers depend on your operating system:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Windows</th>
+<th class="head">Mac OS X</th>
+<th class="head">Linux</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>OpenAL <a class="footnote-reference" href="#openalf" id="id1">[1]</a></td>
+<td>OpenAL</td>
+<td>OpenAL <a class="footnote-reference" href="#openalf" id="id2">[1]</a></td>
+</tr>
+<tr class="row-odd"><td>DirectSound</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td>Pulseaudio</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>The audio driver can be set through the <code class="docutils literal"><span class="pre">audio</span></code> key of the
+<a class="reference internal" href="options.html#pyglet.options" title="pyglet.options"><code class="xref py py-data docutils literal"><span class="pre">pyglet.options</span></code></a> dictionary. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pyglet</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;audio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;openal&#39;</span><span class="p">,</span> <span class="s1">&#39;pulse&#39;</span><span class="p">,</span> <span class="s1">&#39;directsound&#39;</span><span class="p">,</span> <span class="s1">&#39;silent&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This tells pyglet to try using the OpenAL driver first, and if not available
+to try Pulseaudio and DirectSound in that order. If all else fails, no driver
+will be instantiated. The <code class="docutils literal"><span class="pre">audio</span></code> option can be a list of any of these
+strings, giving the preference order for each driver:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">String</th>
+<th class="head">Audio driver</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">openal</span></code></td>
+<td>OpenAL</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">directsound</span></code></td>
+<td>DirectSound</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">pulse</span></code></td>
+<td>Pulseaudio</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">silent</span></code></td>
+<td>No audio output</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>You must set the <code class="docutils literal"><span class="pre">audio</span></code> option before importing <a class="reference internal" href="../modules/media.html#module-pyglet.media" title="pyglet.media"><code class="xref py py-mod docutils literal"><span class="pre">pyglet.media</span></code></a>. You
+can alternatively set it through an environment variable; see
+<a class="reference internal" href="advanced.html#guide-environment-settings"><span class="std std-ref">Environment settings</span></a>.</p>
+<p>The following sections describe the requirements and limitations of each audio
+driver.</p>
+<div class="section" id="directsound">
+<h3>DirectSound<a class="headerlink" href="#directsound" title="Permalink to this headline">¶</a></h3>
+<p>DirectSound is available only on Windows, and is installed by default.
+pyglet uses only DirectX 7 features. On Windows Vista, DirectSound does not
+support hardware audio mixing or surround sound.</p>
+</div>
+<div class="section" id="openal">
+<h3>OpenAL<a class="headerlink" href="#openal" title="Permalink to this headline">¶</a></h3>
+<p>OpenAL is included with Mac OS X. Windows users can download a generic driver
+from <a class="reference external" href="http://www.openal.org/downloads.html">openal.org</a>, or from their sound device’s manufacturer. Linux users can
+use the reference implementation also provided by Creative. For example,
+Ubuntu users can <code class="docutils literal"><span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">openal</span></code>. ALUT is not required. pyglet
+makes use of OpenAL 1.1 features if available, but will also work with
+OpenAL 1.0.</p>
+<p>Due to a long-standing bug in the reference implementation of OpenAL, stereo
+audio is downmixed to mono on Linux. This does not affect Windows or Mac OS X
+users.</p>
+</div>
+<div class="section" id="pulse">
+<h3>Pulse<a class="headerlink" href="#pulse" title="Permalink to this headline">¶</a></h3>
+<p>Pulseaudio has become the standard Linux audio implementation over the past
+few years, and is installed by default with most modern Linux distributions.</p>
+</div>
+<div class="section" id="linux-issues">
+<h3>Linux Issues<a class="headerlink" href="#linux-issues" title="Permalink to this headline">¶</a></h3>
+<p>Linux users have the option of choosing between OpenAL and Pulse for audio
+output. Unfortunately OpenAL has severe limitations that are outside the
+scope of pyglet’s control.</p>
+<p>If your application can manage without stereo playback, you should use the
+OpenAL driver (assuming your users have it installed). You can do this with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pyglet</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;audio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;openal&#39;</span><span class="p">,</span> <span class="s1">&#39;pulse&#39;</span><span class="p">,</span> <span class="s1">&#39;silent&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If your application needs stereo playback, consider using the Pulse driver
+in preference to the OpenAL driver (this is the default).</p>
+<table class="docutils footnote" frame="void" id="openalf" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> OpenAL is not installed by default on Windows, nor in many Linux
+distributions. It can be downloaded separately from your audio device
+manufacturer or <a class="reference external" href="http://www.openal.org/downloads.html">openal.org</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="supported-media-types">
+<h2>Supported media types<a class="headerlink" href="#supported-media-types" title="Permalink to this headline">¶</a></h2>
+<p>If FFmpeg is not installed, only uncompressed RIFF/WAV files encoded with
+linear PCM can be read.</p>
+<p>With FFmpeg, many common and less-common formats are supported. Due to the
+large number of combinations of audio and video codecs, options, and container
+formats, it is difficult to provide a complete yet useful list. Some of the
+supported audio formats are:</p>
+<ul class="simple">
+<li>AU</li>
+<li>MP2</li>
+<li>MP3</li>
+<li>OGG/Vorbis</li>
+<li>WAV</li>
+<li>WMA</li>
+</ul>
+<p>Some of the supported video formats are:</p>
+<ul class="simple">
+<li>AVI</li>
+<li>DivX</li>
+<li>H.263</li>
+<li>H.264</li>
+<li>MPEG</li>
+<li>MPEG-2</li>
+<li>OGG/Theora</li>
+<li>Xvid</li>
+<li>WMV</li>
+</ul>
+<p>For a complete list, see the FFmpeg sources. Otherwise, it is probably simpler
+to try playing back your target file with the <code class="docutils literal"><span class="pre">media_player.py</span></code> example.</p>
+<p>New versions of FFmpeg as they are released may support additional formats, or
+fix errors in the current implementation. Currently a C bindings was written
+with ctypes using FFmpeg v3.3. Future versions of FFmpeg might need a rewrite
+of the binding.</p>
+</div>
+<div class="section" id="ffmpeg-installation">
+<h2>FFmpeg installation<a class="headerlink" href="#ffmpeg-installation" title="Permalink to this headline">¶</a></h2>
+<p>You can install FFmpeg for your platform by following the instructions found
+in the <a class="reference external" href="https://www.ffmpeg.org/download.html">FFmpeg download</a> page.</p>
+<p>For Mac OS and Linux, the library is usually installed system-wide. For
+Windows users, it’s not recommended to install the library in one of the
+windows sub-folders.</p>
+<p>Instead we recommend to use the <a class="reference internal" href="options.html#pyglet.options" title="pyglet.options"><code class="xref py py-data docutils literal"><span class="pre">pyglet.options</span></code></a>
+<code class="docutils literal"><span class="pre">search_local_libs</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyglet</span>
+<span class="n">pyglet</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;search_local_libs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>This will allow pyglet to find the FFmpeg binaries in the <code class="docutils literal"><span class="pre">lib</span></code> folder
+located in your running script folder.</p>
+</div>
+<div class="section" id="loading-media">
+<h2>Loading media<a class="headerlink" href="#loading-media" title="Permalink to this headline">¶</a></h2>
+<p>Audio and video files are loaded in the same way, using the
+<a class="reference internal" href="../modules/media.html#pyglet.media.load" title="pyglet.media.load"><code class="xref py py-func docutils literal"><span class="pre">pyglet.media.load()</span></code></a> function, providing a filename:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;explosion.wav&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the media file is bundled with the application, consider using the
+<a class="reference internal" href="../modules/resource.html#module-pyglet.resource" title="pyglet.resource"><code class="xref py py-mod docutils literal"><span class="pre">resource</span></code></a> module (see <a class="reference internal" href="resources.html#guide-resources"><span class="std std-ref">Application resources</span></a>).</p>
+<p>The result of loading a media file is a
+<a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a> object. This object provides useful
+information about the type of media encoded in the file, and serves as an
+opaque object used for playing back the file (described in the next section).</p>
+<p>The <a class="reference internal" href="../modules/media.html#pyglet.media.load" title="pyglet.media.load"><code class="xref py py-func docutils literal"><span class="pre">load()</span></code></a> function will raise a
+<a class="reference internal" href="../modules/media.html#pyglet.media.exceptions.MediaException" title="pyglet.media.exceptions.MediaException"><code class="xref py py-class docutils literal"><span class="pre">MediaException</span></code></a> if the format is unknown.
+<code class="docutils literal"><span class="pre">IOError</span></code> may also be raised if the file could not be read from disk.
+Future versions of pyglet will also support reading from arbitrary file-like
+objects, however a valid filename must currently be given.</p>
+<p>The length of the media file is given by the
+<a class="reference internal" href="../modules/media.html#pyglet.media.Source.duration" title="pyglet.media.Source.duration"><code class="xref py py-class docutils literal"><span class="pre">duration</span></code></a> property, which returns the media’s
+length in seconds.</p>
+<p>Audio metadata is provided in the source’s
+<code class="xref py py-attr docutils literal"><span class="pre">audio_format</span></code> attribute, which is <code class="docutils literal"><span class="pre">None</span></code> for
+silent videos. This metadata is not generally useful to applications. See
+the <a class="reference internal" href="../modules/media.html#pyglet.media.AudioFormat" title="pyglet.media.AudioFormat"><code class="xref py py-class docutils literal"><span class="pre">AudioFormat</span></code></a> class documentation for details.</p>
+<p>Video metadata is provided in the source’s
+<code class="xref py py-attr docutils literal"><span class="pre">video_format</span></code> attribute, which is <code class="docutils literal"><span class="pre">None</span></code> for
+audio files. It is recommended that this attribute is checked before
+attempting play back a video file – if a movie file has a readable audio
+track but unknown video format it will appear as an audio file.</p>
+<p>You can use the video metadata, described in a
+<a class="reference internal" href="../modules/media.html#pyglet.media.VideoFormat" title="pyglet.media.VideoFormat"><code class="xref py py-class docutils literal"><span class="pre">VideoFormat</span></code></a> object, to set up display of the video
+before beginning playback. The attributes are as follows:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">width</span></code>, <code class="docutils literal"><span class="pre">height</span></code></td>
+<td>Width and height of the video image, in pixels.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">sample_aspect</span></code></td>
+<td>The aspect ratio of each video pixel.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>You must take care to apply the sample aspect ratio to the video image size
+for display purposes. The following code determines the display size for a
+given video format:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_video_size</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">sample_aspect</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">sample_aspect</span> <span class="o">&gt;</span> <span class="mf">1.</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">width</span> <span class="o">*</span> <span class="n">sample_aspect</span><span class="p">,</span> <span class="n">height</span>
+    <span class="k">elif</span> <span class="n">sample_aspect</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">/</span> <span class="n">sample_aspect</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span>
+</pre></div>
+</div>
+<p>Media files are not normally read entirely from disk; instead, they are
+streamed into the decoder, and then into the audio buffers and video memory
+only when needed. This reduces the startup time of loading a file and reduces
+the memory requirements of the application.</p>
+<p>However, there are times when it is desirable to completely decode an audio
+file in memory first. For example, a sound that will be played many times
+(such as a bullet or explosion) should only be decoded once. You can instruct
+pyglet to completely decode an audio file into memory at load time:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">explosion</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;explosion.wav&#39;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The resulting source is an instance of <a class="reference internal" href="../modules/media.html#pyglet.media.StaticSource" title="pyglet.media.StaticSource"><code class="xref py py-class docutils literal"><span class="pre">StaticSource</span></code></a>,
+which provides the same interface as a <a class="reference internal" href="../modules/media.html#pyglet.media.StreamingSource" title="pyglet.media.StreamingSource"><code class="xref py py-class docutils literal"><span class="pre">StreamingSource</span></code></a>.
+You can also construct a <a class="reference internal" href="../modules/media.html#pyglet.media.StaticSource" title="pyglet.media.StaticSource"><code class="xref py py-class docutils literal"><span class="pre">StaticSource</span></code></a> directly from an
+already- loaded <a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">explosion</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">StaticSource</span><span class="p">(</span><span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;explosion.wav&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="procedural-audio">
+<h2>Procedural Audio<a class="headerlink" href="#procedural-audio" title="Permalink to this headline">¶</a></h2>
+<p>In addition to loading audio files, the <code class="xref py py-mod docutils literal"><span class="pre">pyglet.media.procedural</span></code> module is available
+for simple audio synthesis. There are several basic waveforms available:</p>
+<ul class="simple">
+<li><a class="reference internal" href="../modules/media_procedural.html#pyglet.media.sources.procedural.Sine" title="pyglet.media.sources.procedural.Sine"><code class="xref py py-class docutils literal"><span class="pre">Sine</span></code></a></li>
+<li><a class="reference internal" href="../modules/media_procedural.html#pyglet.media.sources.procedural.Sawtooth" title="pyglet.media.sources.procedural.Sawtooth"><code class="xref py py-class docutils literal"><span class="pre">Sawtooth</span></code></a></li>
+<li><a class="reference internal" href="../modules/media_procedural.html#pyglet.media.sources.procedural.Square" title="pyglet.media.sources.procedural.Square"><code class="xref py py-class docutils literal"><span class="pre">Square</span></code></a></li>
+<li><a class="reference internal" href="../modules/media_procedural.html#pyglet.media.sources.procedural.FM" title="pyglet.media.sources.procedural.FM"><code class="xref py py-class docutils literal"><span class="pre">FM</span></code></a></li>
+<li><a class="reference internal" href="../modules/media_procedural.html#pyglet.media.sources.procedural.Silence" title="pyglet.media.sources.procedural.Silence"><code class="xref py py-class docutils literal"><span class="pre">Silence</span></code></a></li>
+<li><a class="reference internal" href="../modules/media_procedural.html#pyglet.media.sources.procedural.WhiteNoise" title="pyglet.media.sources.procedural.WhiteNoise"><code class="xref py py-class docutils literal"><span class="pre">WhiteNoise</span></code></a></li>
+<li><a class="reference internal" href="../modules/media_procedural.html#pyglet.media.sources.procedural.Digitar" title="pyglet.media.sources.procedural.Digitar"><code class="xref py py-class docutils literal"><span class="pre">Digitar</span></code></a></li>
+</ul>
+<p>The module documentation for each will provide more information on constructing them, but at
+a minimum you will need to specify the duration. You will also want to set the frequency
+(most waveforms will default to 440Hz). Some waveforms, such as the FM, have additional parameters.</p>
+<p>For shaping the waveforms, several simple envelopes are available. These envelopes affect
+the amplitude (volume), and can make for more natural sounding tones. You first create an envelope
+instance, and then pass it into the constructor of any of the above waveforms. The same envelope
+instance can be passed to any number of waveforms, reducing duplicate code when creating multiple
+sounds. If no envelope is used, all procedural classes will default to the FlatEnvelope of maximum
+volume, which esentially has no effect on the sound. Check the module documentation of each
+Envelope to see which parameters are available.</p>
+<ul class="simple">
+<li><a class="reference internal" href="../modules/media_procedural.html#pyglet.media.sources.procedural.FlatEnvelope" title="pyglet.media.sources.procedural.FlatEnvelope"><code class="xref py py-class docutils literal"><span class="pre">FlatEnvelope</span></code></a></li>
+<li><a class="reference internal" href="../modules/media_procedural.html#pyglet.media.sources.procedural.LinearDecayEnvelope" title="pyglet.media.sources.procedural.LinearDecayEnvelope"><code class="xref py py-class docutils literal"><span class="pre">LinearDecayEnvelope</span></code></a></li>
+<li><a class="reference internal" href="../modules/media_procedural.html#pyglet.media.sources.procedural.ADSREnvelope" title="pyglet.media.sources.procedural.ADSREnvelope"><code class="xref py py-class docutils literal"><span class="pre">ADSREnvelope</span></code></a></li>
+<li><a class="reference internal" href="../modules/media_procedural.html#pyglet.media.sources.procedural.TremoloEnvelope" title="pyglet.media.sources.procedural.TremoloEnvelope"><code class="xref py py-class docutils literal"><span class="pre">TremoloEnvelope</span></code></a></li>
+</ul>
+<p>An example of creating an envelope and waveforms:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">adsr</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">procedural</span><span class="o">.</span><span class="n">ADSREnvelope</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+
+<span class="n">saw</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">procedural</span><span class="o">.</span><span class="n">Sawtooth</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span> <span class="n">envelope</span><span class="o">=</span><span class="n">adsr</span><span class="p">)</span>
+<span class="n">fm</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">procedural</span><span class="o">.</span><span class="n">FM</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">carrier</span><span class="o">=</span><span class="mi">440</span><span class="p">,</span> <span class="n">modulator</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mod_index</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span> <span class="n">envelope</span><span class="o">=</span><span class="n">adsr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The waveforms you create with the procedural module can be played like any other loaded sound.
+See the next sections for more detail on playback.</p>
+</div>
+<div class="section" id="simple-audio-playback">
+<h2>Simple audio playback<a class="headerlink" href="#simple-audio-playback" title="Permalink to this headline">¶</a></h2>
+<p>Many applications, especially games, need to play sounds in their entirety
+without needing to keep track of them. For example, a sound needs to be
+played when the player’s space ship explodes, but this sound never needs to
+have its volume adjusted, or be rewound, or interrupted.</p>
+<p>pyglet provides a simple interface for this kind of use-case. Call the <a class="reference internal" href="../modules/media.html#pyglet.media.Source.play" title="pyglet.media.Source.play"><code class="xref py py-meth docutils literal"><span class="pre">play()</span></code></a>
+method of any <a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a> to play it immediately and completely:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">explosion</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;explosion.wav&#39;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">explosion</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can call <a class="reference internal" href="../modules/media.html#pyglet.media.Source.play" title="pyglet.media.Source.play"><code class="xref py py-meth docutils literal"><span class="pre">play()</span></code></a> on any
+<a class="reference internal" href="../modules/media.html#pyglet.media.Source" title="pyglet.media.Source"><code class="xref py py-class docutils literal"><span class="pre">Source</span></code></a>, not just
+<a class="reference internal" href="../modules/media.html#pyglet.media.StaticSource" title="pyglet.media.StaticSource"><code class="xref py py-class docutils literal"><span class="pre">StaticSource</span></code></a>.</p>
+<p>The return value of <a class="reference internal" href="../modules/media.html#pyglet.media.Source.play" title="pyglet.media.Source.play"><code class="xref py py-meth docutils literal"><span class="pre">play()</span></code></a> is a
+<a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a>, which can either be
+discarded, or retained to maintain control over the sound’s playback.</p>
+</div>
+<div class="section" id="controlling-playback">
+<h2>Controlling playback<a class="headerlink" href="#controlling-playback" title="Permalink to this headline">¶</a></h2>
+<p>You can implement many functions common to a media player using the
+<a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a>
+class. Use of this class is also necessary for video playback. There are no
+parameters to its construction:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">player</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">Player</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A player will play any source that is <em>queued</em> on it. Any number of sources
+can be queued on a single player, but once queued, a source can never be
+dequeued (until it is removed automatically once complete). The main use of
+this queueing mechanism is to facilitate “gapless” transitions between
+playback of media files.</p>
+<p>A <a class="reference internal" href="../modules/media.html#pyglet.media.StreamingSource" title="pyglet.media.StreamingSource"><code class="xref py py-class docutils literal"><span class="pre">StreamingSource</span></code></a> can only ever be queued on one
+player, and only once on that player. <a class="reference internal" href="../modules/media.html#pyglet.media.StaticSource" title="pyglet.media.StaticSource"><code class="xref py py-class docutils literal"><span class="pre">StaticSource</span></code></a>
+objects can be queued any number of times on any number of players. Recall
+that a <a class="reference internal" href="../modules/media.html#pyglet.media.StaticSource" title="pyglet.media.StaticSource"><code class="xref py py-class docutils literal"><span class="pre">StaticSource</span></code></a> can be created by passing
+<code class="docutils literal"><span class="pre">streaming=False</span></code> to the <a class="reference internal" href="../modules/media.html#pyglet.media.load" title="pyglet.media.load"><code class="xref py py-func docutils literal"><span class="pre">pyglet.media.load()</span></code></a> method.</p>
+<p>In the following example, two sounds are queued onto a player:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">player</span><span class="o">.</span><span class="n">queue</span><span class="p">(</span><span class="n">source1</span><span class="p">)</span>
+<span class="n">player</span><span class="o">.</span><span class="n">queue</span><span class="p">(</span><span class="n">source2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Playback begins with the player’s <code class="xref py py-meth docutils literal"><span class="pre">play()</span></code> method
+is called:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">player</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Standard controls for controlling playback are provided by these methods:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Method</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="xref py py-meth docutils literal"><span class="pre">play()</span></code></td>
+<td>Begin or resume playback of the current source.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-meth docutils literal"><span class="pre">pause()</span></code></td>
+<td>Pause playback of the current source.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-meth docutils literal"><span class="pre">next_source()</span></code></td>
+<td>Dequeue the current source and move to the next one immediately.
+<code class="xref py py-meth docutils literal"><span class="pre">next()</span></code> can also be used but it is deprecated because of
+incompatibilities with Python 3.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-meth docutils literal"><span class="pre">seek()</span></code></td>
+<td>Seek to a specific time within the current source.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Note that there is no <cite>stop</cite> method. If you do not need to resume playback,
+simply pause playback and discard the player and source objects. Using the
+<code class="xref py py-meth docutils literal"><span class="pre">next_source()</span></code> method does not guarantee gapless playback.</p>
+<p>There are several properties that describe the player’s current state:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Property</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="xref py py-attr docutils literal"><span class="pre">time</span></code></td>
+<td>The current playback position within the current source, in
+seconds. This is read-only (but see the <code class="xref py py-meth docutils literal"><span class="pre">seek()</span></code> method).</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-attr docutils literal"><span class="pre">playing</span></code></td>
+<td>True if the player is currently playing, False if there are no
+sources queued or the player is paused. This is read-only (but
+see the <code class="xref py py-meth docutils literal"><span class="pre">pause()</span></code> and <code class="xref py py-meth docutils literal"><span class="pre">play()</span></code> methods).</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-attr docutils literal"><span class="pre">source</span></code></td>
+<td>A reference to the current source being played. This is
+read-only (but see the <code class="xref py py-meth docutils literal"><span class="pre">queue()</span></code> method).</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-attr docutils literal"><span class="pre">volume</span></code></td>
+<td>The audio level, expressed as a float from 0 (mute) to 1 (normal
+volume). This can be set at any time.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../modules/media.html#pyglet.media.player.Player.loop" title="pyglet.media.player.Player.loop"><code class="xref py py-attr docutils literal"><span class="pre">loop</span></code></a></td>
+<td><code class="docutils literal"><span class="pre">True</span></code> if the current source must be repeated when reaching the
+end. If set to <code class="docutils literal"><span class="pre">False</span></code>, the next queued source will play when
+reaching the end.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>When a player reaches the end of the current source, by default it will move
+immediately to the next queued source. If there are no more sources, playback
+stops until another source is queued. The <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a>
+has a <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player.loop" title="pyglet.media.player.Player.loop"><code class="xref py py-attr docutils literal"><span class="pre">loop</span></code></a> attribute which determines
+the player behaviour when the current source reaches the end. If
+<a class="reference internal" href="../modules/media.html#pyglet.media.player.Player.loop" title="pyglet.media.player.Player.loop"><code class="xref py py-attr docutils literal"><span class="pre">loop</span></code></a> is <code class="docutils literal"><span class="pre">False</span></code> (default) the
+<a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a> starts to play the next queued source.
+Otherwise the <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a> re-plays the current source
+until either <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player.loop" title="pyglet.media.player.Player.loop"><code class="xref py py-attr docutils literal"><span class="pre">loop</span></code></a> is set to <code class="docutils literal"><span class="pre">False</span></code>
+or <code class="xref py py-meth docutils literal"><span class="pre">next_source()</span></code> is called.</p>
+<p>You can change the <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player.loop" title="pyglet.media.player.Player.loop"><code class="xref py py-attr docutils literal"><span class="pre">loop</span></code></a> attribute at
+any time,  but be aware that unless sufficient time is given for the future
+data to be  decoded and buffered there may be a stutter or gap in playback.
+If set well  in advance of the end of the source (say, several seconds), there
+will be no  disruption.</p>
+</div>
+<div class="section" id="incorporating-video">
+<h2>Incorporating video<a class="headerlink" href="#incorporating-video" title="Permalink to this headline">¶</a></h2>
+<p>When a <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a> is playing back a source with
+video, use the <code class="xref py py-attr docutils literal"><span class="pre">texture</span></code> property to obtain the
+video frame image. This can be used to display the current video image
+syncronised with the audio track, for example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nd">@window</span><span class="o">.</span><span class="n">event</span>
+<span class="k">def</span> <span class="nf">on_draw</span><span class="p">():</span>
+    <span class="n">player</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The texture is an instance of <a class="reference internal" href="../modules/image/index.html#pyglet.image.Texture" title="pyglet.image.Texture"><code class="xref py py-class docutils literal"><span class="pre">pyglet.image.Texture</span></code></a>, with an internal
+format of either <code class="docutils literal"><span class="pre">GL_TEXTURE_2D</span></code> or <code class="docutils literal"><span class="pre">GL_TEXTURE_RECTANGLE_ARB</span></code>. While the
+texture will typically be created only once and subsequentally updated each
+frame, you should make no such assumption in your application – future
+versions of pyglet may use multiple texture objects.</p>
+</div>
+<div class="section" id="positional-audio">
+<h2>Positional audio<a class="headerlink" href="#positional-audio" title="Permalink to this headline">¶</a></h2>
+<p>pyglet includes features for positioning sound within a 3D space. This is
+particularly effective with a surround-sound setup, but is also applicable to
+stereo systems.</p>
+<p>A <a class="reference internal" href="../modules/media.html#pyglet.media.player.Player" title="pyglet.media.player.Player"><code class="xref py py-class docutils literal"><span class="pre">Player</span></code></a> in pyglet has an associated position
+in 3D space – that is, it is equivalent to an OpenAL “source”. The properties
+for setting these parameters are described in more detail in the API
+documentation; see for example <code class="xref py py-attr docutils literal"><span class="pre">position</span></code> and
+<code class="xref py py-attr docutils literal"><span class="pre">pitch</span></code>.</p>
+<p>A “listener” object is provided by the audio driver. To obtain the listener
+for the current audio driver:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pyglet</span><span class="o">.</span><span class="n">media</span><span class="o">.</span><span class="n">get_audio_driver</span><span class="p">()</span><span class="o">.</span><span class="n">get_listener</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This provides similar properties such as
+<a class="reference internal" href="../modules/media.html#pyglet.media.listener.AbstractListener.position" title="pyglet.media.listener.AbstractListener.position"><code class="xref py py-attr docutils literal"><span class="pre">position</span></code></a>,
+<a class="reference internal" href="../modules/media.html#pyglet.media.listener.AbstractListener.forward_orientation" title="pyglet.media.listener.AbstractListener.forward_orientation"><code class="xref py py-attr docutils literal"><span class="pre">forward_orientation</span></code></a> and
+<a class="reference internal" href="../modules/media.html#pyglet.media.listener.AbstractListener.up_orientation" title="pyglet.media.listener.AbstractListener.up_orientation"><code class="xref py py-attr docutils literal"><span class="pre">up_orientation</span></code></a> that
+describe the  position of the user in 3D space.</p>
+<p>Note that only mono sounds can be positioned. Stereo sounds will play back as
+normal, and only their volume and pitch properties will affect the sound.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Sound and video</a><ul>
+<li><a class="reference internal" href="#audio-drivers">Audio drivers</a><ul>
+<li><a class="reference internal" href="#directsound">DirectSound</a></li>
+<li><a class="reference internal" href="#openal">OpenAL</a></li>
+<li><a class="reference internal" href="#pulse">Pulse</a></li>
+<li><a class="reference internal" href="#linux-issues">Linux Issues</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#supported-media-types">Supported media types</a></li>
+<li><a class="reference internal" href="#ffmpeg-installation">FFmpeg installation</a></li>
+<li><a class="reference internal" href="#loading-media">Loading media</a></li>
+<li><a class="reference internal" href="#procedural-audio">Procedural Audio</a></li>
+<li><a class="reference internal" href="#simple-audio-playback">Simple audio playback</a></li>
+<li><a class="reference internal" href="#controlling-playback">Controlling playback</a></li>
+<li><a class="reference internal" href="#incorporating-video">Incorporating video</a></li>
+<li><a class="reference internal" href="#positional-audio">Positional audio</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="image.html"
+                        title="previous chapter">Images</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="resources.html"
+                        title="next chapter">Application resources</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="resources.html" title="Application resources"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="image.html" title="Images"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

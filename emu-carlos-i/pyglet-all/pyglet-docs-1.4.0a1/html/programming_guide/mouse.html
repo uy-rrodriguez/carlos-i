@@ -1,0 +1,430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Working with the mouse &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="next" title="Working with other input devices" href="input.html" />
+    <link rel="prev" title="Working with the keyboard" href="keyboard.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="input.html" title="Working with other input devices"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="keyboard.html" title="Working with the keyboard"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="working-with-the-mouse">
+<h1>Working with the mouse<a class="headerlink" href="#working-with-the-mouse" title="Permalink to this headline">¶</a></h1>
+<p>All pyglet windows can recieve input from a 3 button mouse with a
+2 dimensional scroll wheel.  The mouse pointer is typically drawn by the
+operating system, but you can override this and request either a different
+cursor shape or provide your own image or animation.</p>
+<div class="section" id="mouse-events">
+<h2>Mouse events<a class="headerlink" href="#mouse-events" title="Permalink to this headline">¶</a></h2>
+<p>All mouse events are dispatched by the window which receives the event from
+the operating system.  Typically this is the window over which the mouse
+cursor is, however mouse exclusivity and drag operations mean this is not
+always the case.</p>
+<p>The coordinate space for the mouse pointer’s location is relative to the
+bottom-left corner of the window, with increasing Y values approaching the top
+of the screen (note that this is “upside-down” compared with many other
+windowing toolkits, but is consistent with the default OpenGL projection in
+pyglet).</p>
+<div class="figure" id="id1">
+<img alt="../_images/mouse_coordinates.png" src="../_images/mouse_coordinates.png" />
+<p class="caption"><span class="caption-text">The coordinate space for the mouse pointer.</span></p>
+</div>
+<p>The most basic mouse event is <a class="reference internal" href="../modules/window.html#pyglet.window.Window.on_mouse_motion" title="pyglet.window.Window.on_mouse_motion"><code class="xref py py-meth docutils literal"><span class="pre">on_mouse_motion()</span></code></a>
+which is dispatched every time the mouse moves:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">on_mouse_motion</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The <cite>x</cite> and <cite>y</cite> parameters give the coordinates of the mouse pointer, relative
+to the bottom-left corner of the window.</p>
+<p>The event is dispatched every time the operating system registers a mouse
+movement.  This is not necessarily once for every pixel moved – the operating
+system typically samples the mouse at a fixed frequency, and it is easy to
+move the mouse faster than this.  Conversely, if your application is not
+processing events fast enough you may find that several queued-up mouse events
+are dispatched in a single <a class="reference internal" href="../modules/window.html#pyglet.window.Window.dispatch_events" title="pyglet.window.Window.dispatch_events"><code class="xref py py-meth docutils literal"><span class="pre">dispatch_events()</span></code></a> call.
+There is no need to concern yourself with either of these issues; the latter rarely
+causes problems, and the former can not be avoided.</p>
+<p>Many games are not concerned with the actual position of the mouse cursor, and
+only need to know in which direction the mouse has moved.  For example, the
+mouse in a first-person game typically controls the direction the player
+looks, but the mouse pointer itself is not displayed.</p>
+<p>The <cite>dx</cite> and <cite>dy</cite> parameters are for this purpose: they give the distance the
+mouse travelled along each axis to get to its present position.  This can be
+computed naively by storing the previous <cite>x</cite> and <cite>y</cite> parameters after every
+mouse event, but besides being tiresome to code, it does not take into account
+the effects of other obscuring windows.  It is best to use the <cite>dx</cite> and <cite>dy</cite>
+parameters instead.</p>
+<p>The following events are dispatched when a mouse button is pressed or
+released, or the mouse is moved while any button is held down:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">on_mouse_press</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">modifiers</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">on_mouse_release</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">modifiers</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">on_mouse_drag</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">buttons</span><span class="p">,</span> <span class="n">modifiers</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The <cite>x</cite>, <cite>y</cite>, <cite>dx</cite> and <cite>dy</cite> parameters are as for the
+<a class="reference internal" href="../modules/window.html#pyglet.window.Window.on_mouse_motion" title="pyglet.window.Window.on_mouse_motion"><code class="xref py py-meth docutils literal"><span class="pre">on_mouse_motion()</span></code></a> event.
+The press and release events do not require <cite>dx</cite> and <cite>dy</cite> parameters as they
+would be zero in this case.  The <cite>modifiers</cite> parameter is as for the keyboard
+events, see <a class="reference internal" href="keyboard.html#guide-working-with-the-keyboard"><span class="std std-ref">Working with the keyboard</span></a>.</p>
+<p>The <cite>button</cite> parameter signifies which mouse button was pressed, and is one of
+the following constants:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pyglet</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">LEFT</span>
+<span class="n">pyglet</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">MIDDLE</span>
+<span class="n">pyglet</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">RIGHT</span>
+</pre></div>
+</div>
+<p>The <cite>buttons</cite> parameter in <a class="reference internal" href="../modules/window.html#pyglet.window.Window.on_mouse_drag" title="pyglet.window.Window.on_mouse_drag"><code class="xref py py-meth docutils literal"><span class="pre">on_mouse_drag()</span></code></a>
+is a bitwise combination of all the mouse buttons currently held down.  For example,
+to test if the user is performing a drag gesture with the left button:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyglet.window</span> <span class="k">import</span> <span class="n">mouse</span>
+
+<span class="k">def</span> <span class="nf">on_mouse_drag</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">buttons</span><span class="p">,</span> <span class="n">modifiers</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">buttons</span> <span class="o">&amp;</span> <span class="n">mouse</span><span class="o">.</span><span class="n">LEFT</span><span class="p">:</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>When the user begins a drag operation (i.e., pressing and holding a mouse
+button and then moving the mouse), the window in which they began the drag
+will continue to receive the <a class="reference internal" href="../modules/window.html#pyglet.window.Window.on_mouse_drag" title="pyglet.window.Window.on_mouse_drag"><code class="xref py py-meth docutils literal"><span class="pre">on_mouse_drag()</span></code></a>
+event as long as the button is held down.  This is true even if the mouse leaves
+the window.  You generally do not need to handle this specially: it is a convention
+among all operating systems that dragging is a gesture rather than a direct
+manipulation of the user interface widget.</p>
+<p>There are events for when the mouse enters or leaves a window:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">on_mouse_enter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">on_mouse_leave</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The coordinates for <a class="reference internal" href="../modules/window.html#pyglet.window.Window.on_mouse_leave" title="pyglet.window.Window.on_mouse_leave"><code class="xref py py-meth docutils literal"><span class="pre">on_mouse_leave()</span></code></a> will lie outside of your window.
+These events are not dispatched while a drag operation is taking place.</p>
+<p>The mouse scroll wheel generates the <a class="reference internal" href="../modules/window.html#pyglet.window.Window.on_mouse_scroll" title="pyglet.window.Window.on_mouse_scroll"><code class="xref py py-meth docutils literal"><span class="pre">on_mouse_scroll()</span></code></a> event:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">on_mouse_scroll</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">scroll_x</span><span class="p">,</span> <span class="n">scroll_y</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The <cite>scroll_y</cite> parameter gives the number of “clicks” the wheel moved, with
+positive numbers indicating the wheel was pushed forward.  The <cite>scroll_x</cite>
+parameter is 0 for most mice, however some new mice such as the Apple Mighty
+Mouse use a ball instead of a wheel; the <cite>scroll_x</cite> parameter gives the
+horizontal movement in this case.  The scale of these numbers is not known; it
+is typically set by the user in their operating system preferences.</p>
+</div>
+<div class="section" id="changing-the-mouse-cursor">
+<h2>Changing the mouse cursor<a class="headerlink" href="#changing-the-mouse-cursor" title="Permalink to this headline">¶</a></h2>
+<p>The mouse cursor can be set to one of the operating system cursors, a custom
+image, or hidden completely.  The change to the cursor will be applicable only
+to the window you make the change to.  To hide the mouse cursor, call
+<a class="reference internal" href="../modules/window.html#pyglet.window.Window.set_mouse_visible" title="pyglet.window.Window.set_mouse_visible"><code class="xref py py-meth docutils literal"><span class="pre">set_mouse_visible()</span></code></a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">window</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">Window</span><span class="p">()</span>
+<span class="n">window</span><span class="o">.</span><span class="n">set_mouse_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This can be useful if the mouse would obscure text that the user is typing.
+If you are hiding the mouse cursor for use in a game environment, consider
+making the mouse exclusive instead; see <a class="reference internal" href="#guide-mouse-exclusivity"><span class="std std-ref">Mouse exclusivity</span></a>, below.</p>
+<p>Use <a class="reference internal" href="../modules/window.html#pyglet.window.Window.set_mouse_cursor" title="pyglet.window.Window.set_mouse_cursor"><code class="xref py py-meth docutils literal"><span class="pre">set_mouse_cursor()</span></code></a> to change the appearance of the mouse cursor.
+A mouse cursor is an instance of <a class="reference internal" href="../modules/window.html#pyglet.window.MouseCursor" title="pyglet.window.MouseCursor"><code class="xref py py-class docutils literal"><span class="pre">MouseCursor</span></code></a>.  You can obtain the operating
+system-defined cursors with <a class="reference internal" href="../modules/window.html#pyglet.window.Window.get_system_mouse_cursor" title="pyglet.window.Window.get_system_mouse_cursor"><code class="xref py py-meth docutils literal"><span class="pre">get_system_mouse_cursor()</span></code></a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cursor</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">get_system_mouse_cursor</span><span class="p">(</span><span class="n">win</span><span class="o">.</span><span class="n">CURSOR_HELP</span><span class="p">)</span>
+<span class="n">window</span><span class="o">.</span><span class="n">set_mouse_cursor</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The cursors that pyglet defines are listed below, along with their typical
+appearance on Windows and Mac OS X.  The pointer image on Linux is dependent
+on the window manager.</p>
+<blockquote>
+<div><table border="1" class="images docutils">
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head stub">Constant</th>
+<th class="head">Windows XP</th>
+<th class="head">Mac OS X</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><th class="stub"><cite>CURSOR_DEFAULT</cite></th>
+<td><img alt="../_images/cursor_win_default.png" class="first last" src="../_images/cursor_win_default.png" />
+</td>
+<td><img alt="../_images/cursor_mac_default.png" class="first last" src="../_images/cursor_mac_default.png" />
+</td>
+</tr>
+<tr class="row-odd"><th class="stub"><cite>CURSOR_CROSSHAIR</cite></th>
+<td><img alt="../_images/cursor_win_crosshair.png" class="first last" src="../_images/cursor_win_crosshair.png" />
+</td>
+<td><img alt="../_images/cursor_mac_crosshair.png" class="first last" src="../_images/cursor_mac_crosshair.png" />
+</td>
+</tr>
+<tr class="row-even"><th class="stub"><cite>CURSOR_HAND</cite></th>
+<td><img alt="../_images/cursor_win_hand.png" class="first last" src="../_images/cursor_win_hand.png" />
+</td>
+<td><img alt="../_images/cursor_mac_hand.png" class="first last" src="../_images/cursor_mac_hand.png" />
+</td>
+</tr>
+<tr class="row-odd"><th class="stub"><cite>CURSOR_HELP</cite></th>
+<td><img alt="../_images/cursor_win_help.png" class="first last" src="../_images/cursor_win_help.png" />
+</td>
+<td><img alt="../_images/cursor_mac_default.png" class="first last" src="../_images/cursor_mac_default.png" />
+</td>
+</tr>
+<tr class="row-even"><th class="stub"><cite>CURSOR_NO</cite></th>
+<td><img alt="../_images/cursor_win_no.png" class="first last" src="../_images/cursor_win_no.png" />
+</td>
+<td><img alt="../_images/cursor_mac_no.png" class="first last" src="../_images/cursor_mac_no.png" />
+</td>
+</tr>
+<tr class="row-odd"><th class="stub"><cite>CURSOR_SIZE</cite></th>
+<td><img alt="../_images/cursor_win_size.png" class="first last" src="../_images/cursor_win_size.png" />
+</td>
+<td><img alt="../_images/cursor_mac_default.png" class="first last" src="../_images/cursor_mac_default.png" />
+</td>
+</tr>
+<tr class="row-even"><th class="stub"><cite>CURSOR_SIZE_DOWN</cite></th>
+<td><img alt="../_images/cursor_win_size_up_down.png" class="first last" src="../_images/cursor_win_size_up_down.png" />
+</td>
+<td><img alt="../_images/cursor_mac_size_down.png" class="first last" src="../_images/cursor_mac_size_down.png" />
+</td>
+</tr>
+<tr class="row-odd"><th class="stub"><cite>CURSOR_SIZE_DOWN_LEFT</cite></th>
+<td><img alt="../_images/cursor_win_size_nesw.png" class="first last" src="../_images/cursor_win_size_nesw.png" />
+</td>
+<td><img alt="../_images/cursor_mac_default.png" class="first last" src="../_images/cursor_mac_default.png" />
+</td>
+</tr>
+<tr class="row-even"><th class="stub"><cite>CURSOR_SIZE_DOWN_RIGHT</cite></th>
+<td><img alt="../_images/cursor_win_size_nwse.png" class="first last" src="../_images/cursor_win_size_nwse.png" />
+</td>
+<td><img alt="../_images/cursor_mac_default.png" class="first last" src="../_images/cursor_mac_default.png" />
+</td>
+</tr>
+<tr class="row-odd"><th class="stub"><cite>CURSOR_SIZE_LEFT</cite></th>
+<td><img alt="../_images/cursor_win_size_left_right.png" class="first last" src="../_images/cursor_win_size_left_right.png" />
+</td>
+<td><img alt="../_images/cursor_mac_size_left.png" class="first last" src="../_images/cursor_mac_size_left.png" />
+</td>
+</tr>
+<tr class="row-even"><th class="stub"><cite>CURSOR_SIZE_LEFT_RIGHT</cite></th>
+<td><img alt="../_images/cursor_win_size_left_right.png" class="first last" src="../_images/cursor_win_size_left_right.png" />
+</td>
+<td><img alt="../_images/cursor_mac_size_left_right.png" class="first last" src="../_images/cursor_mac_size_left_right.png" />
+</td>
+</tr>
+<tr class="row-odd"><th class="stub"><cite>CURSOR_SIZE_RIGHT</cite></th>
+<td><img alt="../_images/cursor_win_size_left_right.png" class="first last" src="../_images/cursor_win_size_left_right.png" />
+</td>
+<td><img alt="../_images/cursor_mac_size_right.png" class="first last" src="../_images/cursor_mac_size_right.png" />
+</td>
+</tr>
+<tr class="row-even"><th class="stub"><cite>CURSOR_SIZE_UP</cite></th>
+<td><img alt="../_images/cursor_win_size_up_down.png" class="first last" src="../_images/cursor_win_size_up_down.png" />
+</td>
+<td><img alt="../_images/cursor_mac_size_up.png" class="first last" src="../_images/cursor_mac_size_up.png" />
+</td>
+</tr>
+<tr class="row-odd"><th class="stub"><cite>CURSOR_SIZE_UP_DOWN</cite></th>
+<td><img alt="../_images/cursor_win_size_up_down.png" class="first last" src="../_images/cursor_win_size_up_down.png" />
+</td>
+<td><img alt="../_images/cursor_mac_size_up_down.png" class="first last" src="../_images/cursor_mac_size_up_down.png" />
+</td>
+</tr>
+<tr class="row-even"><th class="stub"><cite>CURSOR_SIZE_UP_LEFT</cite></th>
+<td><img alt="../_images/cursor_win_size_nwse.png" class="first last" src="../_images/cursor_win_size_nwse.png" />
+</td>
+<td><img alt="../_images/cursor_mac_default.png" class="first last" src="../_images/cursor_mac_default.png" />
+</td>
+</tr>
+<tr class="row-odd"><th class="stub"><cite>CURSOR_SIZE_UP_RIGHT</cite></th>
+<td><img alt="../_images/cursor_win_size_nesw.png" class="first last" src="../_images/cursor_win_size_nesw.png" />
+</td>
+<td><img alt="../_images/cursor_mac_default.png" class="first last" src="../_images/cursor_mac_default.png" />
+</td>
+</tr>
+<tr class="row-even"><th class="stub"><cite>CURSOR_TEXT</cite></th>
+<td><img alt="../_images/cursor_win_text.png" class="first last" src="../_images/cursor_win_text.png" />
+</td>
+<td><img alt="../_images/cursor_mac_text.png" class="first last" src="../_images/cursor_mac_text.png" />
+</td>
+</tr>
+<tr class="row-odd"><th class="stub"><cite>CURSOR_WAIT</cite></th>
+<td><img alt="../_images/cursor_win_wait.png" class="first last" src="../_images/cursor_win_wait.png" />
+</td>
+<td><img alt="../_images/cursor_mac_wait.png" class="first last" src="../_images/cursor_mac_wait.png" />
+</td>
+</tr>
+<tr class="row-even"><th class="stub"><cite>CURSOR_WAIT_ARROW</cite></th>
+<td><img alt="../_images/cursor_win_wait_arrow.png" class="first last" src="../_images/cursor_win_wait_arrow.png" />
+</td>
+<td><img alt="../_images/cursor_mac_default.png" class="first last" src="../_images/cursor_mac_default.png" />
+</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Alternatively, you can use your own image as the mouse cursor.  Use
+<a class="reference internal" href="../modules/image/index.html#pyglet.image.load" title="pyglet.image.load"><code class="xref py py-func docutils literal"><span class="pre">pyglet.image.load()</span></code></a> to load the image, then create an
+<a class="reference internal" href="../modules/window.html#pyglet.window.ImageMouseCursor" title="pyglet.window.ImageMouseCursor"><code class="xref py py-class docutils literal"><span class="pre">ImageMouseCursor</span></code></a> with
+the image and “hot-spot” of the cursor.  The hot-spot is the point of the
+image that corresponds to the actual pointer location on screen, for example,
+the point of the arrow:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;cursor.png&#39;</span><span class="p">)</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">ImageMouseCursor</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">window</span><span class="o">.</span><span class="n">set_mouse_cursor</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can even render a mouse cursor directly with OpenGL.  You could draw a
+3-dimensional cursor, or a particle trail, for example.  To do this, subclass
+<a class="reference internal" href="../modules/window.html#pyglet.window.MouseCursor" title="pyglet.window.MouseCursor"><code class="xref py py-class docutils literal"><span class="pre">MouseCursor</span></code></a> and implement your own draw method.  The draw method will be
+called with the default pyglet window projection, even if you are using
+another projection in the rest of your application.</p>
+</div>
+<div class="section" id="mouse-exclusivity">
+<span id="guide-mouse-exclusivity"></span><h2>Mouse exclusivity<a class="headerlink" href="#mouse-exclusivity" title="Permalink to this headline">¶</a></h2>
+<p>It is possible to take complete control of the mouse for your own application,
+preventing it being used to activate other applications.  This is most useful
+for immersive games such as first-person shooters.</p>
+<p>When you enable mouse-exclusive mode, the mouse cursor is no longer available.
+It is not merely hidden – no amount of mouse movement will make it leave your
+application.  Because there is no longer a mouse cursor, the <cite>x</cite> and <cite>y</cite>
+parameters of the mouse events are meaningless; you should use only the <cite>dx</cite>
+and <cite>dy</cite> parameters to determine how the mouse was moved.</p>
+<p>Activate mouse exclusive mode with <a class="reference internal" href="../modules/window.html#pyglet.window.Window.set_exclusive_mouse" title="pyglet.window.Window.set_exclusive_mouse"><code class="xref py py-meth docutils literal"><span class="pre">set_exclusive_mouse()</span></code></a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">window</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">Window</span><span class="p">()</span>
+<span class="n">window</span><span class="o">.</span><span class="n">set_exclusive_mouse</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You should activate mouse exclusive mode even if your window is full-screen:
+it will prevent the window “hitting” the edges of the screen, and behave
+correctly in multi-monitor setups (a common problem with commercial
+full-screen games is that the mouse is only hidden, meaning it can
+accidentally travel onto the other monitor where applications are still
+visible).</p>
+<p>Note that on Linux setting exclusive mouse also disables Alt+Tab and other
+hotkeys for switching applications.  No workaround for this has yet been
+discovered.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Working with the mouse</a><ul>
+<li><a class="reference internal" href="#mouse-events">Mouse events</a></li>
+<li><a class="reference internal" href="#changing-the-mouse-cursor">Changing the mouse cursor</a></li>
+<li><a class="reference internal" href="#mouse-exclusivity">Mouse exclusivity</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="keyboard.html"
+                        title="previous chapter">Working with the keyboard</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="input.html"
+                        title="next chapter">Working with other input devices</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="input.html" title="Working with other input devices"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="keyboard.html" title="Working with the keyboard"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

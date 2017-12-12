@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.graphics.allocation &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../../index.html" />
+    <link rel="up" title="pyglet.graphics" href="index.html" />
+    <link rel="next" title="pyglet.graphics.vertexattribute" href="vertexattribute.html" />
+    <link rel="prev" title="pyglet.graphics" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="vertexattribute.html" title="pyglet.graphics.vertexattribute"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="pyglet.graphics"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">pyglet.graphics</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyglet.graphics.allocation">
+<span id="pyglet-graphics-allocation"></span><h1>pyglet.graphics.allocation<a class="headerlink" href="#module-pyglet.graphics.allocation" title="Permalink to this headline">¶</a></h1>
+<p>Memory allocation algorithm for vertex arrays and buffers.</p>
+<p>The region allocator is used to allocate vertex indices within a vertex
+domain’s  multiple buffers.  (“Buffer” refers to any abstract buffer presented
+by <a class="reference internal" href="vertexbuffer.html#module-pyglet.graphics.vertexbuffer" title="pyglet.graphics.vertexbuffer"><code class="xref py py-mod docutils literal"><span class="pre">pyglet.graphics.vertexbuffer</span></code></a>.</p>
+<p>The allocator will at times request more space from the buffers. The current
+policy is to double the buffer size when there is not enough room to fulfil an
+allocation.  The buffer is never resized smaller.</p>
+<p>The allocator maintains references to free space only; it is the caller’s
+responsibility to maintain the allocated regions.</p>
+<dl class="exception">
+<dt id="pyglet.graphics.allocation.AllocatorMemoryException">
+<em class="property">exception </em><code class="descname">AllocatorMemoryException</code><span class="sig-paren">(</span><em>requested_capacity</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.allocation.AllocatorMemoryException" title="Permalink to this definition">¶</a></dt>
+<dd><p>The buffer is not large enough to fulfil an allocation.</p>
+<p>Raised by <cite>Allocator</cite> methods when the operation failed due to lack of
+buffer space.  The buffer should be increased to at least
+requested_capacity and then the operation retried (guaranteed to
+pass second time).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.allocation.Allocator">
+<em class="property">class </em><code class="descname">Allocator</code><span class="sig-paren">(</span><em>capacity</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.allocation.Allocator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Buffer space allocation implementation.</p>
+<dl class="method">
+<dt id="pyglet.graphics.allocation.Allocator.alloc">
+<code class="descname">alloc</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.allocation.Allocator.alloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate memory in the buffer.</p>
+<p>Raises <cite>AllocatorMemoryException</cite> if the allocation cannot be
+fulfilled.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> (<em>int</em>) – Size of region to allocate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Starting index of the allocated region.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.allocation.Allocator.dealloc">
+<code class="descname">dealloc</code><span class="sig-paren">(</span><em>start</em>, <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.allocation.Allocator.dealloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free a region of the buffer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>start</strong> (<em>int</em>) – Starting index of the region.</li>
+<li><strong>size</strong> (<em>int</em>) – Size of the region.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.allocation.Allocator.get_allocated_regions">
+<code class="descname">get_allocated_regions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.allocation.Allocator.get_allocated_regions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of (aggregate) allocated regions.</p>
+<p>The result of this method is <code class="docutils literal"><span class="pre">(starts,</span> <span class="pre">sizes)</span></code>, where <code class="docutils literal"><span class="pre">starts</span></code> is
+a list of starting indices of the regions and <code class="docutils literal"><span class="pre">sizes</span></code> their
+corresponding lengths.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(list, list)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.allocation.Allocator.get_fragmentation">
+<code class="descname">get_fragmentation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.allocation.Allocator.get_fragmentation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return fraction of free space that is not expandable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.allocation.Allocator.get_fragmented_free_size">
+<code class="descname">get_fragmented_free_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.allocation.Allocator.get_fragmented_free_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the amount of space unused, not including the final
+free block.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.allocation.Allocator.get_free_size">
+<code class="descname">get_free_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.allocation.Allocator.get_free_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the amount of space unused.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.allocation.Allocator.get_usage">
+<code class="descname">get_usage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.allocation.Allocator.get_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return fraction of capacity currently allocated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.allocation.Allocator.realloc">
+<code class="descname">realloc</code><span class="sig-paren">(</span><em>start</em>, <em>size</em>, <em>new_size</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.allocation.Allocator.realloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reallocate a region of the buffer.</p>
+<p>This is more efficient than separate <cite>dealloc</cite> and <cite>alloc</cite> calls, as
+the region can often be resized in-place.</p>
+<p>Raises <cite>AllocatorMemoryException</cite> if the allocation cannot be
+fulfilled.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>start</strong> (<em>int</em>) – Current starting index of the region.</li>
+<li><strong>size</strong> (<em>int</em>) – Current size of the region.</li>
+<li><strong>new_size</strong> (<em>int</em>) – New size of the region.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.allocation.Allocator.set_capacity">
+<code class="descname">set_capacity</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.allocation.Allocator.set_capacity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resize the maximum buffer size.</p>
+<p>The capaity cannot be reduced.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> (<em>int</em>) – New maximum size of the buffer.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">pyglet.graphics</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="vertexattribute.html"
+                        title="next chapter">pyglet.graphics.vertexattribute</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="vertexattribute.html" title="pyglet.graphics.vertexattribute"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="pyglet.graphics"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="index.html" >pyglet.graphics</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

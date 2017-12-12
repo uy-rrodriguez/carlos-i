@@ -1,0 +1,807 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.input &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="next" title="pyglet.media" href="media.html" />
+    <link rel="prev" title="pyglet.info" href="info.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="media.html" title="pyglet.media"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="info.html" title="pyglet.info"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyglet.input">
+<span id="pyglet-input"></span><h1>pyglet.input<a class="headerlink" href="#module-pyglet.input" title="Permalink to this headline">¶</a></h1>
+<p>Joystick, tablet and USB HID device support.</p>
+<p>This module provides a unified interface to almost any input device, besides
+the regular mouse and keyboard support provided by
+<a class="reference internal" href="window.html#pyglet.window.Window" title="pyglet.window.Window"><code class="xref py py-class docutils literal"><span class="pre">Window</span></code></a>.  At the lowest
+level, <a class="reference internal" href="#pyglet.input.get_devices" title="pyglet.input.get_devices"><code class="xref py py-func docutils literal"><span class="pre">get_devices()</span></code></a> can be used to retrieve a list of all supported
+devices, including joysticks, tablets, space controllers, wheels, pedals, remote
+controls, keyboards and mice.  The set of returned devices varies greatly
+depending on the operating system (and, of course, what’s plugged in).</p>
+<p>At this level pyglet does not try to interpret <em>what</em> a particular device is,
+merely what controls it provides.  A <a class="reference internal" href="#pyglet.input.Control" title="pyglet.input.Control"><code class="xref py py-class docutils literal"><span class="pre">Control</span></code></a> can be either a button,
+whose value is either <code class="docutils literal"><span class="pre">True</span></code> or <code class="docutils literal"><span class="pre">False</span></code>, or a relative or absolute-valued
+axis, whose value is a float.  Sometimes the name of a control can be provided
+(for example, <code class="docutils literal"><span class="pre">x</span></code>, representing the horizontal axis of a joystick), but often
+not.  In these cases the device API may still be useful – the user will have
+to be asked to press each button in turn or move each axis separately to
+identify them.</p>
+<p>Higher-level interfaces are provided for joysticks, tablets and the Apple
+remote control.  These devices can usually be identified by pyglet positively,
+and a base level of functionality for each one provided through a common
+interface.</p>
+<p>To use an input device:</p>
+<ol class="arabic simple">
+<li>Call <a class="reference internal" href="#pyglet.input.get_devices" title="pyglet.input.get_devices"><code class="xref py py-func docutils literal"><span class="pre">get_devices()</span></code></a>, <a class="reference internal" href="#pyglet.input.get_apple_remote" title="pyglet.input.get_apple_remote"><code class="xref py py-func docutils literal"><span class="pre">get_apple_remote()</span></code></a> or
+<a class="reference internal" href="#pyglet.input.get_joysticks" title="pyglet.input.get_joysticks"><code class="xref py py-func docutils literal"><span class="pre">get_joysticks()</span></code></a>
+to retrieve and identify the device.</li>
+<li>For low-level devices (retrieved by <a class="reference internal" href="#pyglet.input.get_devices" title="pyglet.input.get_devices"><code class="xref py py-func docutils literal"><span class="pre">get_devices()</span></code></a>), query the
+devices list of controls and determine which ones you are interested in. For
+high-level interfaces the set of controls is provided by the interface.</li>
+<li>Optionally attach event handlers to controls on the device.</li>
+<li>Call <a class="reference internal" href="#pyglet.input.Device.open" title="pyglet.input.Device.open"><code class="xref py py-meth docutils literal"><span class="pre">Device.open()</span></code></a> to begin receiving events on the device.  You can
+begin querying the control values after this time; they will be updated
+asynchronously.</li>
+<li>Call <a class="reference internal" href="#pyglet.input.Device.close" title="pyglet.input.Device.close"><code class="xref py py-meth docutils literal"><span class="pre">Device.close()</span></code></a> when you are finished with the device (not
+needed if your application quits at this time).</li>
+</ol>
+<p>To use a tablet, follow the procedure above using <a class="reference internal" href="#pyglet.input.get_tablets" title="pyglet.input.get_tablets"><code class="xref py py-func docutils literal"><span class="pre">get_tablets()</span></code></a>, but
+note that no control list is available; instead, calling <code class="xref py py-meth docutils literal"><span class="pre">Tablet.open()</span></code>
+returns a <code class="xref py py-class docutils literal"><span class="pre">TabletCanvas</span></code> onto which you should set your event
+handlers.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyglet.input.Device">
+<em class="property">class </em><code class="descname">Device</code><span class="sig-paren">(</span><em>display</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Input device.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="canvas.html#pyglet.canvas.Screen.display" title="pyglet.canvas.Screen.display"><strong>display</strong></a> (<a class="reference internal" href="canvas.html#pyglet.canvas.Display" title="pyglet.canvas.Display"><em>pyglet.canvas.Display</em></a>) – Display this device is connected to.</li>
+<li><a class="reference internal" href="canvas.html#pyglet.canvas.Display.name" title="pyglet.canvas.Display.name"><strong>name</strong></a> (<em>str</em>) – Name of the device, as described by the device firmware.</li>
+<li><strong>manufacturer</strong> (<em>str</em>) – Name of the device manufacturer, or <code class="docutils literal"><span class="pre">None</span></code> if the information is
+not available.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyglet.input.Device.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Device.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the device.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.input.Device.get_controls">
+<code class="descname">get_controls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Device.get_controls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of controls provided by the device.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of <cite>Control</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.input.Device.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>window=None</em>, <em>exclusive=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Device.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open the device to begin receiving input from it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>window</strong> (<a class="reference internal" href="window.html#pyglet.window.Window" title="pyglet.window.Window"><em>Window</em></a>) – Optional window to associate with the device.  The behaviour
+of this parameter is device and operating system dependant.
+It can usually be omitted for most devices.</li>
+<li><strong>exclusive</strong> (<em>bool</em>) – If <code class="docutils literal"><span class="pre">True</span></code> the device will be opened exclusively so that no
+other application can use it.  The method will raise
+<cite>DeviceExclusiveException</cite> if the device cannot be opened this
+way (for example, because another application has already
+opened it).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.input.Control">
+<em class="property">class </em><code class="descname">Control</code><span class="sig-paren">(</span><em>name</em>, <em>raw_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Control" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="event.html#pyglet.event.EventDispatcher" title="pyglet.event.EventDispatcher"><code class="xref py py-class docutils literal"><span class="pre">pyglet.event.EventDispatcher</span></code></a></p>
+<p>Single value input provided by a device.</p>
+<p>A control’s value can be queried when the device is open.  Event handlers
+can be attached to the control to be called when the value changes.</p>
+<p>The <cite>min</cite> and <cite>max</cite> properties are provided as advertised by the
+device; in some cases the control’s value will be outside this range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="canvas.html#pyglet.canvas.Display.name" title="pyglet.canvas.Display.name"><strong>name</strong></a> (<em>str</em>) – Name of the control, or <code class="docutils literal"><span class="pre">None</span></code> if unknown</li>
+<li><strong>raw_name</strong> (<em>str</em>) – Unmodified name of the control, as presented by the operating
+system; or <code class="docutils literal"><span class="pre">None</span></code> if unknown.</li>
+<li><strong>inverted</strong> (<em>bool</em>) – If <code class="docutils literal"><span class="pre">True</span></code>, the value reported is actually inverted from what the
+device reported; usually this is to provide consistency across
+operating systems.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Events</p>
+<dl class="method">
+<dt id="pyglet.input.Control.on_change">
+<code class="descname">on_change</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Control.on_change" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value changed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>float</em>) – Current value of the control.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p class="rubric">Attributes</p>
+<dl class="attribute">
+<dt id="pyglet.input.Control.value">
+<code class="descname">value</code><a class="headerlink" href="#pyglet.input.Control.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Current value of the control.</p>
+<p>The range of the value is device-dependent; for absolute controls
+the range is given by <code class="docutils literal"><span class="pre">min</span></code> and <code class="docutils literal"><span class="pre">max</span></code> (however the value may exceed
+this range); for relative controls the range is undefined.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.input.RelativeAxis">
+<em class="property">class </em><code class="descname">RelativeAxis</code><span class="sig-paren">(</span><em>name</em>, <em>raw_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.RelativeAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyglet.input.base.Control</span></code></p>
+<p>An axis whose value represents a relative change from the previous
+value.</p>
+<dl class="attribute">
+<dt id="pyglet.input.RelativeAxis.RX">
+<code class="descname">RX</code><em class="property"> = 'rx'</em><a class="headerlink" href="#pyglet.input.RelativeAxis.RX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the rotational-X axis control</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.RelativeAxis.RY">
+<code class="descname">RY</code><em class="property"> = 'ry'</em><a class="headerlink" href="#pyglet.input.RelativeAxis.RY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the rotational-Y axis control</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.RelativeAxis.RZ">
+<code class="descname">RZ</code><em class="property"> = 'rz'</em><a class="headerlink" href="#pyglet.input.RelativeAxis.RZ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the rotational-Z axis control</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.RelativeAxis.WHEEL">
+<code class="descname">WHEEL</code><em class="property"> = 'wheel'</em><a class="headerlink" href="#pyglet.input.RelativeAxis.WHEEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the scroll wheel control</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.RelativeAxis.X">
+<code class="descname">X</code><em class="property"> = 'x'</em><a class="headerlink" href="#pyglet.input.RelativeAxis.X" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the horizontal axis control</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.RelativeAxis.Y">
+<code class="descname">Y</code><em class="property"> = 'y'</em><a class="headerlink" href="#pyglet.input.RelativeAxis.Y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the vertical axis control</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.RelativeAxis.Z">
+<code class="descname">Z</code><em class="property"> = 'z'</em><a class="headerlink" href="#pyglet.input.RelativeAxis.Z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the Z axis control.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.RelativeAxis.value">
+<code class="descname">value</code><a class="headerlink" href="#pyglet.input.RelativeAxis.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.input.AbsoluteAxis">
+<em class="property">class </em><code class="descname">AbsoluteAxis</code><span class="sig-paren">(</span><em>name</em>, <em>min</em>, <em>max</em>, <em>raw_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.AbsoluteAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyglet.input.base.Control</span></code></p>
+<p>An axis whose value represents a physical measurement from the device.</p>
+<p>The value is advertised to range over <code class="docutils literal"><span class="pre">min</span></code> and <code class="docutils literal"><span class="pre">max</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>min</strong> (<em>float</em>) – Minimum advertised value.</li>
+<li><strong>max</strong> (<em>float</em>) – Maximum advertised value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pyglet.input.AbsoluteAxis.HAT">
+<code class="descname">HAT</code><em class="property"> = 'hat'</em><a class="headerlink" href="#pyglet.input.AbsoluteAxis.HAT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the hat (POV) control, when a single control enumerates all of
+the hat’s positions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.AbsoluteAxis.HAT_X">
+<code class="descname">HAT_X</code><em class="property"> = 'hat_x'</em><a class="headerlink" href="#pyglet.input.AbsoluteAxis.HAT_X" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the hat’s (POV’s) horizontal control, when the hat position is
+described by two orthogonal controls.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.AbsoluteAxis.HAT_Y">
+<code class="descname">HAT_Y</code><em class="property"> = 'hat_y'</em><a class="headerlink" href="#pyglet.input.AbsoluteAxis.HAT_Y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the hat’s (POV’s) vertical control, when the hat position is
+described by two orthogonal controls.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.AbsoluteAxis.RX">
+<code class="descname">RX</code><em class="property"> = 'rx'</em><a class="headerlink" href="#pyglet.input.AbsoluteAxis.RX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the rotational-X axis control</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.AbsoluteAxis.RY">
+<code class="descname">RY</code><em class="property"> = 'ry'</em><a class="headerlink" href="#pyglet.input.AbsoluteAxis.RY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the rotational-Y axis control</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.AbsoluteAxis.RZ">
+<code class="descname">RZ</code><em class="property"> = 'rz'</em><a class="headerlink" href="#pyglet.input.AbsoluteAxis.RZ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the rotational-Z axis control</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.AbsoluteAxis.X">
+<code class="descname">X</code><em class="property"> = 'x'</em><a class="headerlink" href="#pyglet.input.AbsoluteAxis.X" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the horizontal axis control</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.AbsoluteAxis.Y">
+<code class="descname">Y</code><em class="property"> = 'y'</em><a class="headerlink" href="#pyglet.input.AbsoluteAxis.Y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the vertical axis control</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.input.AbsoluteAxis.Z">
+<code class="descname">Z</code><em class="property"> = 'z'</em><a class="headerlink" href="#pyglet.input.AbsoluteAxis.Z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the Z axis control.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.input.Button">
+<em class="property">class </em><code class="descname">Button</code><span class="sig-paren">(</span><em>name</em>, <em>raw_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Button" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyglet.input.base.Control</span></code></p>
+<p>A control whose value is boolean.</p>
+<p class="rubric">Events</p>
+<dl class="method">
+<dt id="pyglet.input.Button.on_press">
+<code class="descname">on_press</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Button.on_press" title="Permalink to this definition">¶</a></dt>
+<dd><p>The button was pressed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.input.Button.on_release">
+<code class="descname">on_release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Button.on_release" title="Permalink to this definition">¶</a></dt>
+<dd><p>The button was released.</p>
+</dd></dl>
+
+<p class="rubric">Attributes</p>
+<dl class="attribute">
+<dt id="pyglet.input.Button.value">
+<code class="descname">value</code><a class="headerlink" href="#pyglet.input.Button.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.input.Joystick">
+<em class="property">class </em><code class="descname">Joystick</code><span class="sig-paren">(</span><em>device</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Joystick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="event.html#pyglet.event.EventDispatcher" title="pyglet.event.EventDispatcher"><code class="xref py py-class docutils literal"><span class="pre">pyglet.event.EventDispatcher</span></code></a></p>
+<p>High-level interface for joystick-like devices.  This includes analogue
+and digital joysticks, gamepads, game controllers, and possibly even
+steering wheels and other input devices.  There is unfortunately no way to
+distinguish between these different device types.</p>
+<p>To use a joystick, first call <cite>open</cite>, then in your game loop examine
+the values of <cite>x</cite>, <cite>y</cite>, and so on.  These values are normalized to the
+range [-1.0, 1.0].</p>
+<p>To receive events when the value of an axis changes, attach an
+on_joyaxis_motion event handler to the joystick.  The <a class="reference internal" href="#pyglet.input.Joystick" title="pyglet.input.Joystick"><code class="xref py py-class docutils literal"><span class="pre">Joystick</span></code></a> instance,
+axis name, and current value are passed as parameters to this event.</p>
+<p>To handle button events, you should attach on_joybutton_press and
+on_joy_button_release event handlers to the joystick.  Both the <a class="reference internal" href="#pyglet.input.Joystick" title="pyglet.input.Joystick"><code class="xref py py-class docutils literal"><span class="pre">Joystick</span></code></a>
+instance and the index of the changed button are passed as parameters to
+these events.</p>
+<p>Alternately, you may attach event handlers to each individual button in
+<cite>button_controls</cite> to receive on_press or on_release events.</p>
+<p>To use the hat switch, attach an on_joyhat_motion event handler to the
+joystick.  The handler will be called with both the hat_x and hat_y values
+whenever the value of the hat switch changes.</p>
+<p>The device name can be queried to get the name of the joystick.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>device</strong> (<a class="reference internal" href="#pyglet.input.Device" title="pyglet.input.Device"><em>Device</em></a>) – The underlying device used by this joystick interface.</li>
+<li><a class="reference internal" href="canvas.html#pyglet.canvas.Screen.x" title="pyglet.canvas.Screen.x"><strong>x</strong></a> (<em>float</em>) – Current X (horizontal) value ranging from -1.0 (left) to 1.0
+(right).</li>
+<li><a class="reference internal" href="canvas.html#pyglet.canvas.Screen.y" title="pyglet.canvas.Screen.y"><strong>y</strong></a> (<em>float</em>) – Current y (vertical) value ranging from -1.0 (top) to 1.0
+(bottom).</li>
+<li><a class="reference internal" href="font.html#pyglet.font.Text.z" title="pyglet.font.Text.z"><strong>z</strong></a> (<em>float</em>) – Current Z value ranging from -1.0 to 1.0.  On joysticks the Z
+value is usually the throttle control.  On game controllers the Z
+value is usually the secondary thumb vertical axis.</li>
+<li><strong>rx</strong> (<em>float</em>) – Current rotational X value ranging from -1.0 to 1.0.</li>
+<li><strong>ry</strong> (<em>float</em>) – Current rotational Y value ranging from -1.0 to 1.0.</li>
+<li><strong>rz</strong> (<em>float</em>) – Current rotational Z value ranging from -1.0 to 1.0.  On joysticks
+the RZ value is usually the twist of the stick.  On game
+controllers the RZ value is usually the secondary thumb horizontal
+axis.</li>
+<li><strong>hat_x</strong> (<em>int</em>) – Current hat (POV) horizontal position; one of -1 (left), 0
+(centered) or 1 (right).</li>
+<li><strong>hat_y</strong> (<em>int</em>) – Current hat (POV) vertical position; one of -1 (bottom), 0
+(centered) or 1 (top).</li>
+<li><strong>buttons</strong> (<em>list of bool</em>) – List of boolean values representing current states of the buttons.
+These are in order, so that button 1 has value at <code class="docutils literal"><span class="pre">buttons[0]</span></code>,
+and so on.</li>
+<li><strong>x_control</strong> (<a class="reference internal" href="#pyglet.input.AbsoluteAxis" title="pyglet.input.AbsoluteAxis"><em>AbsoluteAxis</em></a>) – Underlying control for <cite>x</cite> value, or <code class="docutils literal"><span class="pre">None</span></code> if not available.</li>
+<li><strong>y_control</strong> (<a class="reference internal" href="#pyglet.input.AbsoluteAxis" title="pyglet.input.AbsoluteAxis"><em>AbsoluteAxis</em></a>) – Underlying control for <cite>y</cite> value, or <code class="docutils literal"><span class="pre">None</span></code> if not available.</li>
+<li><strong>z_control</strong> (<a class="reference internal" href="#pyglet.input.AbsoluteAxis" title="pyglet.input.AbsoluteAxis"><em>AbsoluteAxis</em></a>) – Underlying control for <cite>z</cite> value, or <code class="docutils literal"><span class="pre">None</span></code> if not available.</li>
+<li><strong>rx_control</strong> (<a class="reference internal" href="#pyglet.input.AbsoluteAxis" title="pyglet.input.AbsoluteAxis"><em>AbsoluteAxis</em></a>) – Underlying control for <cite>rx</cite> value, or <code class="docutils literal"><span class="pre">None</span></code> if not available.</li>
+<li><strong>ry_control</strong> (<a class="reference internal" href="#pyglet.input.AbsoluteAxis" title="pyglet.input.AbsoluteAxis"><em>AbsoluteAxis</em></a>) – Underlying control for <cite>ry</cite> value, or <code class="docutils literal"><span class="pre">None</span></code> if not available.</li>
+<li><strong>rz_control</strong> (<a class="reference internal" href="#pyglet.input.AbsoluteAxis" title="pyglet.input.AbsoluteAxis"><em>AbsoluteAxis</em></a>) – Underlying control for <cite>rz</cite> value, or <code class="docutils literal"><span class="pre">None</span></code> if not available.</li>
+<li><strong>hat_x_control</strong> (<a class="reference internal" href="#pyglet.input.AbsoluteAxis" title="pyglet.input.AbsoluteAxis"><em>AbsoluteAxis</em></a>) – Underlying control for <cite>hat_x</cite> value, or <code class="docutils literal"><span class="pre">None</span></code> if not available.</li>
+<li><strong>hat_y_control</strong> (<a class="reference internal" href="#pyglet.input.AbsoluteAxis" title="pyglet.input.AbsoluteAxis"><em>AbsoluteAxis</em></a>) – Underlying control for <cite>hat_y</cite> value, or <code class="docutils literal"><span class="pre">None</span></code> if not available.</li>
+<li><strong>button_controls</strong> (<em>list of Button</em>) – Underlying controls for <cite>buttons</cite> values.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="pyglet.input.Joystick.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>window=None</em>, <em>exclusive=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Joystick.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open the joystick device.  See <cite>Device.open</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.input.Joystick.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Joystick.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the joystick device.  See <cite>Device.close</cite>.</p>
+</dd></dl>
+
+<p class="rubric">Events</p>
+<dl class="method">
+<dt id="pyglet.input.Joystick.on_joyaxis_motion">
+<code class="descname">on_joyaxis_motion</code><span class="sig-paren">(</span><em>joystick</em>, <em>axis</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Joystick.on_joyaxis_motion" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value of a joystick axis changed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>joystick</strong> (<a class="reference internal" href="#pyglet.input.Joystick" title="pyglet.input.Joystick"><em>Joystick</em></a>) – The joystick device whose axis changed.</li>
+<li><strong>axis</strong> (<em>string</em>) – The name of the axis that changed.</li>
+<li><strong>value</strong> (<em>float</em>) – The current value of the axis, normalized to [-1, 1].</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.input.Joystick.on_joyhat_motion">
+<code class="descname">on_joyhat_motion</code><span class="sig-paren">(</span><em>joystick</em>, <em>hat_x</em>, <em>hat_y</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Joystick.on_joyhat_motion" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value of the joystick hat switch changed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>joystick</strong> (<a class="reference internal" href="#pyglet.input.Joystick" title="pyglet.input.Joystick"><em>Joystick</em></a>) – The joystick device whose hat control changed.</li>
+<li><strong>hat_x</strong> (<em>int</em>) – Current hat (POV) horizontal position; one of -1 (left), 0
+(centered) or 1 (right).</li>
+<li><strong>hat_y</strong> (<em>int</em>) – Current hat (POV) vertical position; one of -1 (bottom), 0
+(centered) or 1 (top).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.input.Joystick.on_joybutton_press">
+<code class="descname">on_joybutton_press</code><span class="sig-paren">(</span><em>joystick</em>, <em>button</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Joystick.on_joybutton_press" title="Permalink to this definition">¶</a></dt>
+<dd><p>A button on the joystick was pressed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>joystick</strong> (<a class="reference internal" href="#pyglet.input.Joystick" title="pyglet.input.Joystick"><em>Joystick</em></a>) – The joystick device whose button was pressed.</li>
+<li><strong>button</strong> (<em>int</em>) – The index (in <cite>button_controls</cite>) of the button that was pressed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.input.Joystick.on_joybutton_release">
+<code class="descname">on_joybutton_release</code><span class="sig-paren">(</span><em>joystick</em>, <em>button</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.Joystick.on_joybutton_release" title="Permalink to this definition">¶</a></dt>
+<dd><p>A button on the joystick was released.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>joystick</strong> (<a class="reference internal" href="#pyglet.input.Joystick" title="pyglet.input.Joystick"><em>Joystick</em></a>) – The joystick device whose button was released.</li>
+<li><strong>button</strong> (<em>int</em>) – The index (in <cite>button_controls</cite>) of the button that was released.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.input.AppleRemote">
+<em class="property">class </em><code class="descname">AppleRemote</code><span class="sig-paren">(</span><em>device</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.AppleRemote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="event.html#pyglet.event.EventDispatcher" title="pyglet.event.EventDispatcher"><code class="xref py py-class docutils literal"><span class="pre">pyglet.event.EventDispatcher</span></code></a></p>
+<p>High-level interface for Apple remote control.</p>
+<p>This interface provides access to the 6 button controls on the remote.
+Pressing and holding certain buttons on the remote is interpreted as
+a separate control.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>device</strong> (<a class="reference internal" href="#pyglet.input.Device" title="pyglet.input.Device"><em>Device</em></a>) – The underlying device used by this interface.</li>
+<li><strong>left_control</strong> (<a class="reference internal" href="#pyglet.input.Button" title="pyglet.input.Button"><em>Button</em></a>) – Button control for the left (prev) button.</li>
+<li><strong>left_hold_control</strong> (<a class="reference internal" href="#pyglet.input.Button" title="pyglet.input.Button"><em>Button</em></a>) – Button control for holding the left button (rewind).</li>
+<li><strong>right_control</strong> (<a class="reference internal" href="#pyglet.input.Button" title="pyglet.input.Button"><em>Button</em></a>) – Button control for the right (next) button.</li>
+<li><strong>right_hold_control</strong> (<a class="reference internal" href="#pyglet.input.Button" title="pyglet.input.Button"><em>Button</em></a>) – Button control for holding the right button (fast forward).</li>
+<li><strong>up_control</strong> (<a class="reference internal" href="#pyglet.input.Button" title="pyglet.input.Button"><em>Button</em></a>) – Button control for the up (volume increase) button.</li>
+<li><strong>down_control</strong> (<a class="reference internal" href="#pyglet.input.Button" title="pyglet.input.Button"><em>Button</em></a>) – Button control for the down (volume decrease) button.</li>
+<li><strong>select_control</strong> (<a class="reference internal" href="#pyglet.input.Button" title="pyglet.input.Button"><em>Button</em></a>) – Button control for the select (play/pause) button.</li>
+<li><strong>select_hold_control</strong> (<a class="reference internal" href="#pyglet.input.Button" title="pyglet.input.Button"><em>Button</em></a>) – Button control for holding the select button.</li>
+<li><strong>menu_control</strong> (<a class="reference internal" href="#pyglet.input.Button" title="pyglet.input.Button"><em>Button</em></a>) – Button control for the menu button.</li>
+<li><strong>menu_hold_control</strong> (<a class="reference internal" href="#pyglet.input.Button" title="pyglet.input.Button"><em>Button</em></a>) – Button control for holding the menu button.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="pyglet.input.AppleRemote.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>window=None</em>, <em>exclusive=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.AppleRemote.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open the device.  See <cite>Device.open</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.input.AppleRemote.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.AppleRemote.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the device.  See <cite>Device.close</cite>.</p>
+</dd></dl>
+
+<p class="rubric">Events</p>
+<dl class="method">
+<dt id="pyglet.input.AppleRemote.on_button_press">
+<code class="descname">on_button_press</code><span class="sig-paren">(</span><em>button</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.AppleRemote.on_button_press" title="Permalink to this definition">¶</a></dt>
+<dd><p>A button on the remote was pressed.</p>
+<p>Only the ‘up’ and ‘down’ buttons will generate an event when the
+button is first pressed.  All other buttons on the remote will wait
+until the button is released and then send both the press and release
+events at the same time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>button</strong> (<em>unicode</em>) – The name of the button that was pressed. The valid names are
+‘up’, ‘down’, ‘left’, ‘right’, ‘left_hold’, ‘right_hold’,
+‘menu’, ‘menu_hold’, ‘select’, and ‘select_hold’</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.input.AppleRemote.on_button_release">
+<code class="descname">on_button_release</code><span class="sig-paren">(</span><em>button</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.AppleRemote.on_button_release" title="Permalink to this definition">¶</a></dt>
+<dd><p>A button on the remote was released.</p>
+<p>The ‘select_hold’ and ‘menu_hold’ button release events are sent
+immediately after the corresponding press events regardless of
+whether or not the user has released the button.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>button</strong> (<em>unicode</em>) – The name of the button that was released. The valid names are
+‘up’, ‘down’, ‘left’, ‘right’, ‘left_hold’, ‘right_hold’,
+‘menu’, ‘menu_hold’, ‘select’, and ‘select_hold’</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.input.Tablet">
+<em class="property">class </em><code class="descname">Tablet</code><a class="headerlink" href="#pyglet.input.Tablet" title="Permalink to this definition">¶</a></dt>
+<dd><p>High-level interface to tablet devices.</p>
+<p>Unlike other devices, tablets must be opened for a specific window,
+and cannot be opened exclusively.  The <cite>open</cite> method returns a
+<cite>TabletCanvas</cite> object, which supports the events provided by the tablet.</p>
+<p>Currently only one tablet device can be used, though it can be opened on
+multiple windows.  If more than one tablet is connected, the behaviour is
+undefined.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pyglet.input.get_apple_remote">
+<code class="descname">get_apple_remote</code><span class="sig-paren">(</span><em>display=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.get_apple_remote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Apple remote control device.</p>
+<p>The Apple remote is the small white 6-button remote control that
+accompanies most recent Apple desktops and laptops.  The remote can only
+be used with Mac OS X.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>display</strong> (<a class="reference internal" href="canvas.html#pyglet.canvas.Display" title="pyglet.canvas.Display"><em>Display</em></a>) – Currently ignored.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#pyglet.input.AppleRemote" title="pyglet.input.AppleRemote">AppleRemote</a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The remote device, or <cite>None</cite> if the computer does not support it.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.input.get_devices">
+<code class="descname">get_devices</code><span class="sig-paren">(</span><em>display=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.get_devices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of all attached input devices.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>display</strong> (<a class="reference internal" href="canvas.html#pyglet.canvas.Display" title="pyglet.canvas.Display"><em>Display</em></a>) – The display device to query for input devices.  Ignored on Mac
+OS X and Windows.  On Linux, defaults to the default display
+device.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="#pyglet.input.Device" title="pyglet.input.Device"><code class="xref py py-class docutils literal"><span class="pre">Device</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.input.get_joysticks">
+<code class="descname">get_joysticks</code><span class="sig-paren">(</span><em>display=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.get_joysticks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of attached joysticks.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>display</strong> (<a class="reference internal" href="canvas.html#pyglet.canvas.Display" title="pyglet.canvas.Display"><em>Display</em></a>) – The display device to query for input devices.  Ignored on Mac
+OS X and Windows.  On Linux, defaults to the default display
+device.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="#pyglet.input.Joystick" title="pyglet.input.Joystick"><code class="xref py py-class docutils literal"><span class="pre">Joystick</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.input.get_tablets">
+<code class="descname">get_tablets</code><span class="sig-paren">(</span><em>display=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.input.get_tablets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of tablets.</p>
+<p>This function may return a valid tablet device even if one is not
+attached (for example, it is not possible on Mac OS X to determine if
+a tablet device is connected).  Despite returning a list of tablets,
+pyglet does not currently support multiple tablets, and the behaviour
+is undefined if more than one is attached.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>display</strong> (<a class="reference internal" href="canvas.html#pyglet.canvas.Display" title="pyglet.canvas.Display"><em>Display</em></a>) – The display device to query for input devices.  Ignored on Mac
+OS X and Windows.  On Linux, defaults to the default display
+device.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="#pyglet.input.Tablet" title="pyglet.input.Tablet"><code class="xref py py-class docutils literal"><span class="pre">Tablet</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyglet.input.DeviceException">
+<em class="property">class </em><code class="descname">DeviceException</code><a class="headerlink" href="#pyglet.input.DeviceException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="pyglet.input.DeviceOpenException">
+<em class="property">class </em><code class="descname">DeviceOpenException</code><a class="headerlink" href="#pyglet.input.DeviceOpenException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="pyglet.input.DeviceExclusiveException">
+<em class="property">class </em><code class="descname">DeviceExclusiveException</code><a class="headerlink" href="#pyglet.input.DeviceExclusiveException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyglet.input</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="info.html"
+                        title="previous chapter">pyglet.info</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="media.html"
+                        title="next chapter">pyglet.media</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="media.html" title="pyglet.media"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="info.html" title="pyglet.info"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

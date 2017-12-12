@@ -1,0 +1,541 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.app &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="next" title="pyglet.canvas" href="canvas.html" />
+    <link rel="prev" title="pyglet" href="pyglet.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="canvas.html" title="pyglet.canvas"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pyglet.html" title="pyglet"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyglet.app">
+<span id="pyglet-app"></span><h1>pyglet.app<a class="headerlink" href="#module-pyglet.app" title="Permalink to this headline">¶</a></h1>
+<p>Application-wide functionality.</p>
+<div class="section" id="applications">
+<h2>Applications<a class="headerlink" href="#applications" title="Permalink to this headline">¶</a></h2>
+<p>Most applications need only call <a class="reference internal" href="#pyglet.app.run" title="pyglet.app.run"><code class="xref py py-func docutils literal"><span class="pre">run()</span></code></a> after creating one or more
+windows to begin processing events.  For example, a simple application
+consisting of one window is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyglet</span>
+
+<span class="n">win</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">Window</span><span class="p">()</span>
+<span class="n">pyglet</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="events">
+<h3>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h3>
+<p>To handle events on the main event loop, instantiate it manually.  The
+following example exits the application as soon as any window is closed (the
+default policy is to wait until all windows are closed):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">event_loop</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">EventLoop</span><span class="p">()</span>
+
+<span class="nd">@event_loop</span><span class="o">.</span><span class="n">event</span>
+<span class="k">def</span> <span class="nf">on_window_close</span><span class="p">(</span><span class="n">window</span><span class="p">):</span>
+    <span class="n">event_loop</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+</div>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyglet.app.EventLoop">
+<em class="property">class </em><code class="descname">EventLoop</code><a class="headerlink" href="#pyglet.app.EventLoop" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main run loop of the application.</p>
+<p>Calling <cite>run</cite> begins the application event loop, which processes
+operating system events, calls <a class="reference internal" href="clock.html#pyglet.clock.tick" title="pyglet.clock.tick"><code class="xref py py-func docutils literal"><span class="pre">pyglet.clock.tick()</span></code></a> to call
+scheduled functions and calls <a class="reference internal" href="window.html#pyglet.window.Window.on_draw" title="pyglet.window.Window.on_draw"><code class="xref py py-meth docutils literal"><span class="pre">pyglet.window.Window.on_draw()</span></code></a> and
+<a class="reference internal" href="window.html#pyglet.window.Window.flip" title="pyglet.window.Window.flip"><code class="xref py py-meth docutils literal"><span class="pre">pyglet.window.Window.flip()</span></code></a> to update window contents.</p>
+<p>Applications can subclass <a class="reference internal" href="#pyglet.app.EventLoop" title="pyglet.app.EventLoop"><code class="xref py py-class docutils literal"><span class="pre">EventLoop</span></code></a> and override certain methods
+to integrate another framework’s run loop, or to customise processing
+in some other way.  You should not in general override <a class="reference internal" href="#pyglet.app.run" title="pyglet.app.run"><code class="xref py py-meth docutils literal"><span class="pre">run()</span></code></a>, as
+this method contains platform-specific code that ensures the application
+remains responsive to the user while keeping CPU usage to a minimum.</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="pyglet.app.EventLoop.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.EventLoop.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begin processing events, scheduled functions and window updates.</p>
+<p>This method returns when <a class="reference internal" href="#pyglet.app.EventLoop.has_exit" title="pyglet.app.EventLoop.has_exit"><code class="xref py py-attr docutils literal"><span class="pre">has_exit</span></code></a> is set to True.</p>
+<p>Developers are discouraged from overriding this method, as the
+implementation is platform-specific.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.EventLoop.exit">
+<code class="descname">exit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.EventLoop.exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Safely exit the event loop at the end of the current iteration.</p>
+<p>This method is a thread-safe equivalent for for setting
+<a class="reference internal" href="#pyglet.app.EventLoop.has_exit" title="pyglet.app.EventLoop.has_exit"><code class="xref py py-attr docutils literal"><span class="pre">has_exit</span></code></a> to <code class="docutils literal"><span class="pre">True</span></code>.  All waiting threads will be
+interrupted (see <a class="reference internal" href="#pyglet.app.EventLoop.sleep" title="pyglet.app.EventLoop.sleep"><code class="xref py py-meth docutils literal"><span class="pre">sleep()</span></code></a>).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.EventLoop.sleep">
+<code class="descname">sleep</code><span class="sig-paren">(</span><em>timeout</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.EventLoop.sleep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for some amount of time, or until the <a class="reference internal" href="#pyglet.app.EventLoop.has_exit" title="pyglet.app.EventLoop.has_exit"><code class="xref py py-attr docutils literal"><span class="pre">has_exit</span></code></a> flag
+is set or <a class="reference internal" href="#pyglet.app.exit" title="pyglet.app.exit"><code class="xref py py-meth docutils literal"><span class="pre">exit()</span></code></a> is called.</p>
+<p>This method is thread-safe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> (<em>float</em>) – Time to wait, in seconds.</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">True</span></code> if the <cite>has_exit</cite> flag is set, otherwise <code class="docutils literal"><span class="pre">False</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p class="rubric">Events</p>
+<dl class="method">
+<dt id="pyglet.app.EventLoop.on_enter">
+<code class="descname">on_enter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.EventLoop.on_enter" title="Permalink to this definition">¶</a></dt>
+<dd><p>The event loop is about to begin.</p>
+<p>This is dispatched when the event loop is prepared to enter
+the main run loop, and represents the last chance for an
+application to initialise itself.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.EventLoop.on_exit">
+<code class="descname">on_exit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.EventLoop.on_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>The event loop is about to exit.</p>
+<p>After dispatching this event, the <a class="reference internal" href="#pyglet.app.run" title="pyglet.app.run"><code class="xref py py-meth docutils literal"><span class="pre">run()</span></code></a> method returns (the
+application may not actually exit if you have more code
+following the <a class="reference internal" href="#pyglet.app.run" title="pyglet.app.run"><code class="xref py py-meth docutils literal"><span class="pre">run()</span></code></a> invocation).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.EventLoop.on_window_close">
+<code class="descname">on_window_close</code><span class="sig-paren">(</span><em>window</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.EventLoop.on_window_close" title="Permalink to this definition">¶</a></dt>
+<dd><p>A window was closed.</p>
+<p>This event is dispatched when a window is closed.  It is not
+dispatched if the window’s close button was pressed but the
+window did not close.</p>
+<p>The default handler calls <a class="reference internal" href="#pyglet.app.exit" title="pyglet.app.exit"><code class="xref py py-meth docutils literal"><span class="pre">exit()</span></code></a> if no more windows are
+open.  You can override this handler to base your application exit
+on some other policy.</p>
+</dd></dl>
+
+<p class="rubric">Attributes</p>
+<dl class="attribute">
+<dt id="pyglet.app.EventLoop.has_exit">
+<code class="descname">has_exit</code><a class="headerlink" href="#pyglet.app.EventLoop.has_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag indicating if the event loop will exit in
+the next iteration.  When set, all waiting threads are interrupted (see
+<a class="reference internal" href="#pyglet.app.EventLoop.sleep" title="pyglet.app.EventLoop.sleep"><code class="xref py py-meth docutils literal"><span class="pre">sleep()</span></code></a>).</p>
+<p>Thread-safe since pyglet 1.2.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">See:</th><td class="field-body"><cite>exit</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p class="rubric">Methods (internal)</p>
+<dl class="method">
+<dt id="pyglet.app.EventLoop.enter_blocking">
+<code class="descname">enter_blocking</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.EventLoop.enter_blocking" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by pyglet internal processes when the operating system
+is about to block due to a user interaction.  For example, this
+is common when the user begins resizing or moving a window.</p>
+<p>This method provides the event loop with an opportunity to set up
+an OS timer on the platform event loop, which will continue to
+be invoked during the blocking operation.</p>
+<p>The default implementation ensures that <a class="reference internal" href="#pyglet.app.EventLoop.idle" title="pyglet.app.EventLoop.idle"><code class="xref py py-meth docutils literal"><span class="pre">idle()</span></code></a> continues to be
+called as documented.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.EventLoop.exit_blocking">
+<code class="descname">exit_blocking</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.EventLoop.exit_blocking" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by pyglet internal processes when the blocking operation
+completes.  See <a class="reference internal" href="#pyglet.app.EventLoop.enter_blocking" title="pyglet.app.EventLoop.enter_blocking"><code class="xref py py-meth docutils literal"><span class="pre">enter_blocking()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.EventLoop.idle">
+<code class="descname">idle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.EventLoop.idle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called during each iteration of the event loop.</p>
+<p>The method is called immediately after any window events (i.e., after
+any user input).  The method can return a duration after which
+the idle method will be called again.  The method may be called
+earlier if the user creates more input events.  The method
+can return <cite>None</cite> to only wait for user events.</p>
+<p>For example, return <code class="docutils literal"><span class="pre">1.0</span></code> to have the idle method called every
+second, or immediately after any user events.</p>
+<p>The default implementation dispatches the
+<a class="reference internal" href="window.html#pyglet.window.Window.on_draw" title="pyglet.window.Window.on_draw"><code class="xref py py-meth docutils literal"><span class="pre">pyglet.window.Window.on_draw()</span></code></a> event for all windows and uses
+<a class="reference internal" href="clock.html#pyglet.clock.tick" title="pyglet.clock.tick"><code class="xref py py-func docutils literal"><span class="pre">pyglet.clock.tick()</span></code></a> and <a class="reference internal" href="clock.html#pyglet.clock.get_sleep_time" title="pyglet.clock.get_sleep_time"><code class="xref py py-func docutils literal"><span class="pre">pyglet.clock.get_sleep_time()</span></code></a>
+on the default clock to determine the return value.</p>
+<p>This method should be overridden by advanced users only.  To have
+code execute at regular intervals, use the
+<a class="reference internal" href="clock.html#pyglet.clock.schedule" title="pyglet.clock.schedule"><code class="xref py py-func docutils literal"><span class="pre">pyglet.clock.schedule()</span></code></a> methods.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of seconds before the idle method should
+be called again, or <cite>None</cite> to block for user input.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.app.PlatformEventLoop">
+<em class="property">class </em><code class="descname">PlatformEventLoop</code><a class="headerlink" href="#pyglet.app.PlatformEventLoop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract class, implementation depends on platform.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+<dl class="method">
+<dt id="pyglet.app.PlatformEventLoop.dispatch_posted_events">
+<code class="descname">dispatch_posted_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.PlatformEventLoop.dispatch_posted_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Immediately dispatch all pending events.</p>
+<p>Normally this is called automatically by the runloop iteration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.PlatformEventLoop.is_running">
+<code class="descname">is_running</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.PlatformEventLoop.is_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the event loop is currently processing, or False
+if it is blocked or not activated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.PlatformEventLoop.notify">
+<code class="descname">notify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.PlatformEventLoop.notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Notify the event loop that something needs processing.</p>
+<p>If the event loop is blocked, it will unblock and perform an iteration
+immediately.  If the event loop is running, another iteration is
+scheduled for immediate execution afterwards.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.PlatformEventLoop.post_event">
+<code class="descname">post_event</code><span class="sig-paren">(</span><em>dispatcher</em>, <em>event</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.PlatformEventLoop.post_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post an event into the main application thread.</p>
+<p>The event is queued internally until the <a class="reference internal" href="#pyglet.app.run" title="pyglet.app.run"><code class="xref py py-meth docutils literal"><span class="pre">run()</span></code></a> method’s thread
+is able to dispatch the event.  This method can be safely called
+from any thread.</p>
+<p>If the method is called from the <a class="reference internal" href="#pyglet.app.run" title="pyglet.app.run"><code class="xref py py-meth docutils literal"><span class="pre">run()</span></code></a> method’s thread (for
+example, from within an event handler), the event may be dispatched
+within the same runloop iteration or the next one; the choice is
+nondeterministic.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dispatcher</strong> (<a class="reference internal" href="event.html#pyglet.event.EventDispatcher" title="pyglet.event.EventDispatcher"><em>EventDispatcher</em></a>) – Dispatcher to process the event.</li>
+<li><strong>event</strong> (<em>str</em>) – Event name.</li>
+<li><strong>args</strong> (<em>sequence</em>) – Arguments to pass to the event handlers.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.PlatformEventLoop.set_timer">
+<code class="descname">set_timer</code><span class="sig-paren">(</span><em>func</em>, <em>interval</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.PlatformEventLoop.set_timer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.PlatformEventLoop.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.PlatformEventLoop.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.PlatformEventLoop.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.PlatformEventLoop.step" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">TODO:</th><td class="field-body">in mac/linux: return True if didn’t time out</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.PlatformEventLoop.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.PlatformEventLoop.stop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.app.WeakSet">
+<em class="property">class </em><code class="descname">WeakSet</code><a class="headerlink" href="#pyglet.app.WeakSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set of objects, referenced weakly.</p>
+<p>Adding an object to this set does not prevent it from being garbage
+collected.  Upon being garbage collected, the object is automatically
+removed from the set.</p>
+<dl class="method">
+<dt id="pyglet.app.WeakSet.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.WeakSet.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.WeakSet.pop">
+<code class="descname">pop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.WeakSet.pop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.app.WeakSet.remove">
+<code class="descname">remove</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.WeakSet.remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pyglet.app.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begin processing events, scheduled functions and window updates.</p>
+<p>This is a convenience function, equivalent to:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pyglet</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">event_loop</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.app.exit">
+<code class="descname">exit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.app.exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exit the application event loop.</p>
+<p>Causes the application event loop to finish, if an event loop is currently
+running.  The application may not necessarily exit (for example, there may
+be additional code following the <cite>run</cite> invocation).</p>
+<p>This is a convenience function, equivalent to:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">event_loop</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="pyglet.app.displays">
+<code class="descname">displays</code><em class="property"> = &lt;pyglet.app.WeakSet object&gt;</em><a class="headerlink" href="#pyglet.app.displays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set of all open displays.  Instances of <a class="reference internal" href="canvas.html#pyglet.canvas.Display" title="pyglet.canvas.Display"><code class="xref py py-class docutils literal"><span class="pre">pyglet.canvas.Display</span></code></a>
+are automatically added to this set upon construction.  The set uses weak
+references, so displays are removed from the set when they are no longer
+referenced.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Deprecated. Use <a class="reference internal" href="canvas.html#pyglet.canvas.get_display" title="pyglet.canvas.get_display"><code class="xref py py-func docutils literal"><span class="pre">pyglet.canvas.get_display()</span></code></a>.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#pyglet.app.WeakSet" title="pyglet.app.WeakSet"><code class="xref py py-class docutils literal"><span class="pre">WeakSet</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="pyglet.app.event_loop">
+<code class="descname">event_loop</code><em class="property"> = &lt;pyglet.app.base.EventLoop object&gt;</em><a class="headerlink" href="#pyglet.app.event_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main run loop of the application.</p>
+<p>Calling <cite>run</cite> begins the application event loop, which processes
+operating system events, calls <a class="reference internal" href="clock.html#pyglet.clock.tick" title="pyglet.clock.tick"><code class="xref py py-func docutils literal"><span class="pre">pyglet.clock.tick()</span></code></a> to call
+scheduled functions and calls <a class="reference internal" href="window.html#pyglet.window.Window.on_draw" title="pyglet.window.Window.on_draw"><code class="xref py py-meth docutils literal"><span class="pre">pyglet.window.Window.on_draw()</span></code></a> and
+<a class="reference internal" href="window.html#pyglet.window.Window.flip" title="pyglet.window.Window.flip"><code class="xref py py-meth docutils literal"><span class="pre">pyglet.window.Window.flip()</span></code></a> to update window contents.</p>
+<p>Applications can subclass <a class="reference internal" href="#pyglet.app.EventLoop" title="pyglet.app.EventLoop"><code class="xref py py-class docutils literal"><span class="pre">EventLoop</span></code></a> and override certain methods
+to integrate another framework’s run loop, or to customise processing
+in some other way.  You should not in general override <a class="reference internal" href="#pyglet.app.run" title="pyglet.app.run"><code class="xref py py-meth docutils literal"><span class="pre">run()</span></code></a>, as
+this method contains platform-specific code that ensures the application
+remains responsive to the user while keeping CPU usage to a minimum.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="pyglet.app.platform_event_loop">
+<code class="descname">platform_event_loop</code><em class="property"> = &lt;pyglet.app.base.PlatformEventLoop object&gt;</em><a class="headerlink" href="#pyglet.app.platform_event_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract class, implementation depends on platform.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="pyglet.app.windows">
+<code class="descname">windows</code><em class="property"> = &lt;pyglet.app.WeakSet object&gt;</em><a class="headerlink" href="#pyglet.app.windows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set of all open windows (including invisible windows).  Instances of
+<a class="reference internal" href="window.html#pyglet.window.Window" title="pyglet.window.Window"><code class="xref py py-class docutils literal"><span class="pre">pyglet.window.Window</span></code></a> are automatically added to this set upon
+construction. The set uses weak references, so windows are removed from
+the set when they are no longer referenced or are closed explicitly.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyglet.app.AppException">
+<em class="property">class </em><code class="descname">AppException</code><a class="headerlink" href="#pyglet.app.AppException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyglet.app</a><ul>
+<li><a class="reference internal" href="#applications">Applications</a><ul>
+<li><a class="reference internal" href="#events">Events</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#attributes">Attributes</a></li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pyglet.html"
+                        title="previous chapter">pyglet</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="canvas.html"
+                        title="next chapter">pyglet.canvas</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="canvas.html" title="pyglet.canvas"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pyglet.html" title="pyglet"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

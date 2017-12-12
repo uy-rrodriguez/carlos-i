@@ -1,0 +1,759 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.window.key &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="up" title="pyglet.window" href="window.html" />
+    <link rel="next" title="Contributing" href="../internal/contributing.html" />
+    <link rel="prev" title="pyglet.window" href="window.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../internal/contributing.html" title="Contributing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="window.html" title="pyglet.window"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="window.html" accesskey="U">pyglet.window</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyglet.window.key">
+<span id="pyglet-window-key"></span><h1>pyglet.window.key<a class="headerlink" href="#module-pyglet.window.key" title="Permalink to this headline">¶</a></h1>
+<p>Key constants and utilities for pyglet.window.</p>
+<p>Usage:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyglet.window</span> <span class="k">import</span> <span class="n">Window</span>
+<span class="kn">from</span> <span class="nn">pyglet.window</span> <span class="k">import</span> <span class="n">key</span>
+
+<span class="n">window</span> <span class="o">=</span> <span class="n">Window</span><span class="p">()</span>
+
+<span class="nd">@window</span><span class="o">.</span><span class="n">event</span>
+<span class="k">def</span> <span class="nf">on_key_press</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">modifiers</span><span class="p">):</span>
+    <span class="c1"># Symbolic names:</span>
+    <span class="k">if</span> <span class="n">symbol</span> <span class="o">==</span> <span class="n">key</span><span class="o">.</span><span class="n">RETURN</span><span class="p">:</span>
+
+    <span class="c1"># Alphabet keys:</span>
+    <span class="k">elif</span> <span class="n">symbol</span> <span class="o">==</span> <span class="n">key</span><span class="o">.</span><span class="n">Z</span><span class="p">:</span>
+
+    <span class="c1"># Number keys:</span>
+    <span class="k">elif</span> <span class="n">symbol</span> <span class="o">==</span> <span class="n">key</span><span class="o">.</span><span class="n">_1</span><span class="p">:</span>
+
+    <span class="c1"># Number keypad keys:</span>
+    <span class="k">elif</span> <span class="n">symbol</span> <span class="o">==</span> <span class="n">key</span><span class="o">.</span><span class="n">NUM_1</span><span class="p">:</span>
+
+    <span class="c1"># Modifiers:</span>
+    <span class="k">if</span> <span class="n">modifiers</span> <span class="o">&amp;</span> <span class="n">key</span><span class="o">.</span><span class="n">MOD_CTRL</span><span class="p">:</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="pyglet.window.key.KeyStateHandler">
+<em class="property">class </em><code class="descname">KeyStateHandler</code><a class="headerlink" href="#pyglet.window.key.KeyStateHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple handler that tracks the state of keys on the keyboard. If a
+key is pressed then this handler holds a True value for it.</p>
+<p>For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">win</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">Window</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keyboard</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">KeyStateHandler</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">win</span><span class="o">.</span><span class="n">push_handlers</span><span class="p">(</span><span class="n">keyboard</span><span class="p">)</span>
+
+<span class="go"># Hold down the &quot;up&quot; arrow...</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keyboard</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">UP</span><span class="p">]</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keyboard</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">DOWN</span><span class="p">]</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.window.key.modifiers_string">
+<code class="descname">modifiers_string</code><span class="sig-paren">(</span><em>modifiers</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.window.key.modifiers_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string describing a set of modifiers.</p>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modifiers_string</span><span class="p">(</span><span class="n">MOD_SHIFT</span> <span class="o">|</span> <span class="n">MOD_CTRL</span><span class="p">)</span>
+<span class="go">&#39;MOD_SHIFT|MOD_CTRL&#39;</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>modifiers</strong> (<em>int</em>) – Bitwise combination of modifier constants.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.window.key.symbol_string">
+<code class="descname">symbol_string</code><span class="sig-paren">(</span><em>symbol</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.window.key.symbol_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string describing a key symbol.</p>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">symbol_string</span><span class="p">(</span><span class="n">BACKSPACE</span><span class="p">)</span>
+<span class="go">&#39;BACKSPACE&#39;</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>symbol</strong> (<em>int</em>) – Symbolic key constant.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.window.key.motion_string">
+<code class="descname">motion_string</code><span class="sig-paren">(</span><em>motion</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.window.key.motion_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string describing a text motion.</p>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">motion_string</span><span class="p">(</span><span class="n">MOTION_NEXT_WORD</span><span class="p">)</span>
+<span class="go">&#39;MOTION_NEXT_WORD&#39;</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>motion</strong> (<em>int</em>) – Text motion constant.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.window.key.user_key">
+<code class="descname">user_key</code><span class="sig-paren">(</span><em>scancode</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.window.key.user_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a key symbol for a key not supported by pyglet.</p>
+<p>This can be used to map virtual keys or scancodes from unsupported
+keyboard layouts into a machine-specific symbol.  The symbol will
+be meaningless on any other machine, or under a different keyboard layout.</p>
+<p>Applications should use user-keys only when user explicitly binds them
+(for example, mapping keys to actions in a game options screen).</p>
+</dd></dl>
+
+<div class="section" id="key-constants">
+<h2>Key Constants<a class="headerlink" href="#key-constants" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="modifier-mask-constants">
+<h3>Modifier mask constants<a class="headerlink" href="#modifier-mask-constants" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOD_SHIFT</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOD_CTRL</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOD_ALT</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOD_CAPSLOCK</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOD_NUMLOCK</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOD_WINDOWS</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOD_COMMAND</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOD_OPTION</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOD_SCROLLLOCK</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOD_FUNCTION</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOD_ACCEL</span></code> (<code class="docutils literal"><span class="pre">MOD_CTRL</span></code> on Windows &amp; Linux, <code class="docutils literal"><span class="pre">MOD_CMD</span></code> on OS X)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ascii-commands">
+<h3>ASCII commands<a class="headerlink" href="#ascii-commands" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">BACKSPACE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">TAB</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">LINEFEED</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">CLEAR</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">RETURN</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ENTER</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PAUSE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">SCROLLLOCK</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">SYSREQ</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ESCAPE</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">SPACE</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="cursor-control-and-motion">
+<h3>Cursor control and motion<a class="headerlink" href="#cursor-control-and-motion" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">HOME</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">LEFT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">UP</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">RIGHT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">DOWN</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">PAGEUP</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PAGEDOWN</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">END</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">BEGIN</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="misc-functions">
+<h3>Misc functions<a class="headerlink" href="#misc-functions" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">DELETE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">SELECT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PRINT</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">EXECUTE</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">INSERT</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">UNDO</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">REDO</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MENU</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">FIND</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">CANCEL</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">HELP</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">BREAK</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MODESWITCH</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">SCRIPTSWITCH</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">FUNCTION</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="text-motion-constants">
+<h3>Text motion constants<a class="headerlink" href="#text-motion-constants" title="Permalink to this headline">¶</a></h3>
+<p>These are allowed to clash with key constants.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOTION_UP</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOTION_RIGHT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOTION_DOWN</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOTION_LEFT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOTION_NEXT_WORD</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOTION_PREVIOUS_WORD</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOTION_BEGINNING_OF_LINE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOTION_END_OF_LINE</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOTION_NEXT_PAGE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOTION_PREVIOUS_PAGE</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOTION_BEGINNING_OF_FILE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOTION_END_OF_FILE</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MOTION_BACKSPACE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">MOTION_DELETE</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="number-pad">
+<h3>Number pad<a class="headerlink" href="#number-pad" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUMLOCK</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_SPACE</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_TAB</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_ENTER</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_F1</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_F2</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_F3</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_F4</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_HOME</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_LEFT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_UP</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_RIGHT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_DOWN</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_PRIOR</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_PAGE_UP</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_NEXT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_PAGE_DOWN</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_END</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_BEGIN</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_INSERT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_DELETE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_EQUAL</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_MULTIPLY</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_ADD</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_SEPARATOR</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_SUBTRACT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_DECIMAL</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_DIVIDE</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_0</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_1</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_2</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_3</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_4</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_5</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_6</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_7</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">NUM_8</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">NUM_9</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="function-keys">
+<h3>Function keys<a class="headerlink" href="#function-keys" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">F1</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">F2</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">F3</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">F4</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">F5</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">F6</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">F7</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">F8</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">F9</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">F10</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">F11</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">F12</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">F13</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">F14</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">F15</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">F16</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">F17</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">F18</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">F19</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">F20</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="modifiers">
+<h3>Modifiers<a class="headerlink" href="#modifiers" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">LSHIFT</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">RSHIFT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">LCTRL</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">RCTRL</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">CAPSLOCK</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">LMETA</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">RMETA</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">LALT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">RALT</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">LWINDOWS</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">RWINDOWS</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">LCOMMAND</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">RCOMMAND</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">LOPTION</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ROPTION</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="latin-1">
+<h3>Latin-1<a class="headerlink" href="#latin-1" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">SPACE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">EXCLAMATION</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">DOUBLEQUOTE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">HASH</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">POUND</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">DOLLAR</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PERCENT</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">AMPERSAND</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">APOSTROPHE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">PARENLEFT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PARENRIGHT</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ASTERISK</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">PLUS</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">COMMA</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">MINUS</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">PERIOD</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">SLASH</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">_0</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">_1</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">_2</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">_3</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">_4</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">_5</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">_6</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">_7</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">_8</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">_9</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">COLON</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">SEMICOLON</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">LESS</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">EQUAL</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">GREATER</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">QUESTION</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">AT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">BRACKETLEFT</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">BACKSLASH</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">BRACKETRIGHT</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">ASCIICIRCUM</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">UNDERSCORE</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">GRAVE</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">QUOTELEFT</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">A</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">B</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">C</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">D</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">E</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">F</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">G</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">H</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">I</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">J</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">K</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">L</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">M</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">N</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">O</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">P</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">Q</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">R</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">S</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">T</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">U</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">V</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">W</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">X</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">Y</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">Z</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">BRACELEFT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">BAR</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">BRACERIGHT</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ASCIITILDE</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyglet.window.key</a><ul>
+<li><a class="reference internal" href="#key-constants">Key Constants</a><ul>
+<li><a class="reference internal" href="#modifier-mask-constants">Modifier mask constants</a></li>
+<li><a class="reference internal" href="#ascii-commands">ASCII commands</a></li>
+<li><a class="reference internal" href="#cursor-control-and-motion">Cursor control and motion</a></li>
+<li><a class="reference internal" href="#misc-functions">Misc functions</a></li>
+<li><a class="reference internal" href="#text-motion-constants">Text motion constants</a></li>
+<li><a class="reference internal" href="#number-pad">Number pad</a></li>
+<li><a class="reference internal" href="#function-keys">Function keys</a></li>
+<li><a class="reference internal" href="#modifiers">Modifiers</a></li>
+<li><a class="reference internal" href="#latin-1">Latin-1</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="window.html"
+                        title="previous chapter">pyglet.window</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../internal/contributing.html"
+                        title="next chapter">Contributing</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../internal/contributing.html" title="Contributing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="window.html" title="pyglet.window"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="window.html" >pyglet.window</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../index.html" />
+    <link rel="next" title="pyglet.app" href="app.html" />
+    <link rel="prev" title="In-depth game example" href="../programming_guide/examplegame.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="app.html" title="pyglet.app"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../programming_guide/examplegame.html" title="In-depth game example"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pyglet">
+<h1>pyglet<a class="headerlink" href="#pyglet" title="Permalink to this headline">¶</a></h1>
+<p>pyglet is a cross-platform games and multimedia package.</p>
+<p>Detailed documentation is available at <a class="reference external" href="http://www.pyglet.org">http://www.pyglet.org</a></p>
+<dl class="data">
+<dt>
+<code class="descname">options</code><em class="property"> = {'audio': ('directsound', 'pulse', 'openal', 'silent'), 'font': ('gdiplus', 'win32'), 'debug_font': False, 'debug_gl': True, 'debug_gl_trace': False, 'debug_gl_trace_args': False, 'debug_graphics_batch': False, 'debug_lib': False, 'debug_media': False, 'debug_texture': False, 'debug_trace': False, 'debug_trace_args': False, 'debug_trace_depth': 1, 'debug_trace_flush': True, 'debug_win32': False, 'debug_x11': False, 'graphics_vbo': True, 'shadow_window': True, 'vsync': None, 'xsync': True, 'xlib_fullscreen_override_redirect': False, 'darwin_cocoa': True, 'search_local_libs': True}</em></dt>
+<dd><p>Global dict of pyglet options.  To change an option from its default, you
+must import <code class="docutils literal"><span class="pre">pyglet</span></code> before any sub-packages.  For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyglet</span>
+<span class="n">pyglet</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;debug_gl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+<p>The default options can be overridden from the OS environment.  The
+corresponding environment variable for each option key is prefaced by
+<code class="docutils literal"><span class="pre">PYGLET_</span></code>.  For example, in Bash you can set the <code class="docutils literal"><span class="pre">debug_gl</span></code> option with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">PYGLET_DEBUG_GL</span><span class="o">=</span><span class="kc">True</span><span class="p">;</span> <span class="n">export</span> <span class="n">PYGLET_DEBUG_GL</span>
+</pre></div>
+</div>
+<p>For options requiring a tuple of values, separate each value with a comma.</p>
+<p>The non-development options are:</p>
+<dl class="docutils">
+<dt>audio</dt>
+<dd><p class="first">A sequence of the names of audio modules to attempt to load, in
+order of preference.  Valid driver names are:</p>
+<ul class="last simple">
+<li>directsound, the Windows DirectSound audio module (Windows only)</li>
+<li>pulse, the PulseAudio module (Linux only)</li>
+<li>openal, the OpenAL audio module</li>
+<li>silent, no audio</li>
+</ul>
+</dd>
+<dt>debug_lib</dt>
+<dd>If True, prints the path of each dynamic library loaded.</dd>
+<dt>debug_gl</dt>
+<dd>If True, all calls to OpenGL functions are checked afterwards for
+errors using <code class="docutils literal"><span class="pre">glGetError</span></code>.  This will severely impact performance,
+but provides useful exceptions at the point of failure.  By default,
+this option is enabled if <code class="docutils literal"><span class="pre">__debug__</span></code> is (i.e., if Python was not run
+with the -O option).  It is disabled by default when pyglet is “frozen”
+within a py2exe or py2app library archive.</dd>
+<dt>shadow_window</dt>
+<dd><p class="first">By default, pyglet creates a hidden window with a GL context when
+pyglet.gl is imported.  This allows resources to be loaded before
+the application window is created, and permits GL objects to be
+shared between windows even after they’ve been closed.  You can
+disable the creation of the shadow window by setting this option to
+False.</p>
+<p>Some OpenGL driver implementations may not support shared OpenGL
+contexts and may require disabling the shadow window (and all resources
+must be loaded after the window using them was created).  Recommended
+for advanced developers only.</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+</dd>
+<dt>vsync</dt>
+<dd>If set, the <cite>pyglet.window.Window.vsync</cite> property is ignored, and
+this option overrides it (to either force vsync on or off).  If unset,
+or set to None, the <cite>pyglet.window.Window.vsync</cite> property behaves
+as documented.</dd>
+<dt>xsync</dt>
+<dd><p class="first">If set (the default), pyglet will attempt to synchronise the drawing of
+double-buffered windows to the border updates of the X11 window
+manager.  This improves the appearance of the window during resize
+operations.  This option only affects double-buffered windows on
+X11 servers supporting the Xsync extension with a window manager
+that implements the _NET_WM_SYNC_REQUEST protocol.</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+</dd>
+<dt>darwin_cocoa</dt>
+<dd><p class="first">If True, the Cocoa-based pyglet implementation is used as opposed to
+the 32-bit Carbon implementation.  When python is running in 64-bit mode
+on Mac OS X 10.6 or later, this option is set to True by default.
+Otherwise the Carbon implementation is preferred.</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+</dd>
+<dt>search_local_libs</dt>
+<dd><p class="first">If False, pyglet won’t try to search for libraries in the script
+directory and its <cite>lib</cite> subdirectory. This is useful to load a local
+library instead of the system installed version. This option is set
+to True by default.</p>
+<div class="last versionadded">
+<p><span class="versionmodified">New in version 1.2.</span></p>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="data">
+<dt>
+<code class="descname">version</code><em class="property"> = '1.4.0a1'</em></dt>
+<dd><p>The release version of this pyglet installation.</p>
+<p>Valid only if pyglet was installed from a source or binary distribution
+(i.e. not in a checked-out copy from SVN).</p>
+<p>Use setuptools if you need to check for a specific release version, e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyglet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="k">import</span> <span class="n">parse_version</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parse_version</span><span class="p">(</span><span class="n">pyglet</span><span class="o">.</span><span class="n">version</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;1.1&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../programming_guide/examplegame.html"
+                        title="previous chapter">In-depth game example</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="app.html"
+                        title="next chapter">pyglet.app</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="app.html" title="pyglet.app"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../programming_guide/examplegame.html" title="In-depth game example"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../index.html">Documentation Index</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

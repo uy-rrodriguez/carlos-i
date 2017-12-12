@@ -1,0 +1,506 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.graphics.vertexdomain &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../../index.html" />
+    <link rel="up" title="pyglet.graphics" href="index.html" />
+    <link rel="next" title="pyglet.image" href="../image/index.html" />
+    <link rel="prev" title="pyglet.graphics.vertexbuffer" href="vertexbuffer.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../image/index.html" title="pyglet.image"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vertexbuffer.html" title="pyglet.graphics.vertexbuffer"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">pyglet.graphics</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyglet.graphics.vertexdomain">
+<span id="pyglet-graphics-vertexdomain"></span><h1>pyglet.graphics.vertexdomain<a class="headerlink" href="#module-pyglet.graphics.vertexdomain" title="Permalink to this headline">¶</a></h1>
+<p>Manage related vertex attributes within a single vertex domain.</p>
+<p>A vertex “domain” consists of a set of attribute descriptions that together
+describe the layout of one or more vertex buffers which are used together to
+specify the vertices in a primitive.  Additionally, the domain manages the
+buffers used to store the data and will resize them as necessary to accommodate
+new vertices.</p>
+<p>Domains can optionally be indexed, in which case they also manage a buffer
+containing vertex indices.  This buffer is grown separately and has no size
+relation to the attribute buffers.</p>
+<p>Applications can create vertices (and optionally, indices) within a domain
+with the <a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexDomain.create" title="pyglet.graphics.vertexdomain.VertexDomain.create"><code class="xref py py-meth docutils literal"><span class="pre">VertexDomain.create()</span></code></a> method.  This returns a
+<a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexList" title="pyglet.graphics.vertexdomain.VertexList"><code class="xref py py-class docutils literal"><span class="pre">VertexList</span></code></a> representing the list of vertices created.  The vertex
+attribute data within the group can be modified, and the changes will be made
+to the underlying buffers automatically.</p>
+<p>The entire domain can be efficiently drawn in one step with the
+<a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexDomain.draw" title="pyglet.graphics.vertexdomain.VertexDomain.draw"><code class="xref py py-meth docutils literal"><span class="pre">VertexDomain.draw()</span></code></a> method, assuming all the vertices comprise
+primitives of the same OpenGL primitive mode.</p>
+<dl class="class">
+<dt id="pyglet.graphics.vertexdomain.IndexedVertexDomain">
+<em class="property">class </em><code class="descname">IndexedVertexDomain</code><span class="sig-paren">(</span><em>attribute_usages</em>, <em>index_gl_type=5125</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.IndexedVertexDomain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Management of a set of indexed vertex lists.</p>
+<p>Construction of an indexed vertex domain is usually done with the
+<cite>create_indexed_domain</cite> function.</p>
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.IndexedVertexDomain.create">
+<code class="descname">create</code><span class="sig-paren">(</span><em>count</em>, <em>index_count</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.IndexedVertexDomain.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an <a class="reference internal" href="#pyglet.graphics.vertexdomain.IndexedVertexList" title="pyglet.graphics.vertexdomain.IndexedVertexList"><code class="xref py py-class docutils literal"><span class="pre">IndexedVertexList</span></code></a> in this domain.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>count</strong> (<em>int</em>) – Number of vertices to create</li>
+<li><strong>index_count</strong> – Number of indices to create</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.IndexedVertexDomain.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>mode</em>, <em>vertex_list=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.IndexedVertexDomain.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw vertices in the domain.</p>
+<p>If <cite>vertex_list</cite> is not specified, all vertices in the domain are
+drawn.  This is the most efficient way to render primitives.</p>
+<p>If <cite>vertex_list</cite> specifies a <a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexList" title="pyglet.graphics.vertexdomain.VertexList"><code class="xref py py-class docutils literal"><span class="pre">VertexList</span></code></a>, only primitives in
+that list will be drawn.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mode</strong> (<em>int</em>) – OpenGL drawing mode, e.g. <code class="docutils literal"><span class="pre">GL_POINTS</span></code>, <code class="docutils literal"><span class="pre">GL_LINES</span></code>, etc.</li>
+<li><strong>vertex_list</strong> (<a class="reference internal" href="#pyglet.graphics.vertexdomain.IndexedVertexList" title="pyglet.graphics.vertexdomain.IndexedVertexList"><em>IndexedVertexList</em></a>) – Vertex list to draw, or <code class="docutils literal"><span class="pre">None</span></code> for all lists in this domain.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.IndexedVertexDomain.get_index_region">
+<code class="descname">get_index_region</code><span class="sig-paren">(</span><em>start</em>, <em>count</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.IndexedVertexDomain.get_index_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a region of the index buffer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> (<em>int</em>) – Start of the region to map.</li>
+<li><strong>count</strong> (<em>int</em>) – Number of indices to map.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Array of int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.vertexdomain.IndexedVertexList">
+<em class="property">class </em><code class="descname">IndexedVertexList</code><span class="sig-paren">(</span><em>domain</em>, <em>start</em>, <em>count</em>, <em>index_start</em>, <em>index_count</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.IndexedVertexList" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of vertices within an <a class="reference internal" href="#pyglet.graphics.vertexdomain.IndexedVertexDomain" title="pyglet.graphics.vertexdomain.IndexedVertexDomain"><code class="xref py py-class docutils literal"><span class="pre">IndexedVertexDomain</span></code></a> that are
+indexed. Use <a class="reference internal" href="#pyglet.graphics.vertexdomain.IndexedVertexDomain.create" title="pyglet.graphics.vertexdomain.IndexedVertexDomain.create"><code class="xref py py-meth docutils literal"><span class="pre">IndexedVertexDomain.create()</span></code></a> to construct this list.</p>
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.IndexedVertexList.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.IndexedVertexList.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this group.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.IndexedVertexList.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.IndexedVertexList.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.IndexedVertexList.migrate">
+<code class="descname">migrate</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.IndexedVertexList.migrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move this group from its current indexed domain and add to the
+specified one.  Attributes on domains must match.  (In practice, used
+to change parent state of some vertices).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>domain</strong> (<a class="reference internal" href="#pyglet.graphics.vertexdomain.IndexedVertexDomain" title="pyglet.graphics.vertexdomain.IndexedVertexDomain"><em>IndexedVertexDomain</em></a>) – Indexed domain to migrate this vertex list to.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.IndexedVertexList.resize">
+<code class="descname">resize</code><span class="sig-paren">(</span><em>count</em>, <em>index_count</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.IndexedVertexList.resize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resize this group.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>count</strong> (<em>int</em>) – New number of vertices in the list.</li>
+<li><strong>index_count</strong> (<em>int</em>) – New number of indices in the list.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.graphics.vertexdomain.IndexedVertexList.indices">
+<code class="descname">indices</code><a class="headerlink" href="#pyglet.graphics.vertexdomain.IndexedVertexList.indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of index data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.vertexdomain.VertexDomain">
+<em class="property">class </em><code class="descname">VertexDomain</code><span class="sig-paren">(</span><em>attribute_usages</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexDomain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Management of a set of vertex lists.</p>
+<p>Construction of a vertex domain is usually done with the
+<a class="reference internal" href="#pyglet.graphics.vertexdomain.create_domain" title="pyglet.graphics.vertexdomain.create_domain"><code class="xref py py-func docutils literal"><span class="pre">create_domain()</span></code></a> function.</p>
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.VertexDomain.create">
+<code class="descname">create</code><span class="sig-paren">(</span><em>count</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexDomain.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a <a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexList" title="pyglet.graphics.vertexdomain.VertexList"><code class="xref py py-class docutils literal"><span class="pre">VertexList</span></code></a> in this domain.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>count</strong> (<em>int</em>) – Number of vertices to create.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexList" title="pyglet.graphics.vertexdomain.VertexList"><code class="xref py py-class docutils literal"><span class="pre">VertexList</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.VertexDomain.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>mode</em>, <em>vertex_list=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexDomain.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw vertices in the domain.</p>
+<p>If <cite>vertex_list</cite> is not specified, all vertices in the domain are
+drawn.  This is the most efficient way to render primitives.</p>
+<p>If <cite>vertex_list</cite> specifies a <a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexList" title="pyglet.graphics.vertexdomain.VertexList"><code class="xref py py-class docutils literal"><span class="pre">VertexList</span></code></a>, only primitives in
+that list will be drawn.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mode</strong> (<em>int</em>) – OpenGL drawing mode, e.g. <code class="docutils literal"><span class="pre">GL_POINTS</span></code>, <code class="docutils literal"><span class="pre">GL_LINES</span></code>, etc.</li>
+<li><strong>vertex_list</strong> (<a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexList" title="pyglet.graphics.vertexdomain.VertexList"><em>VertexList</em></a>) – Vertex list to draw, or <code class="docutils literal"><span class="pre">None</span></code> for all lists in this domain.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyglet.graphics.vertexdomain.VertexList">
+<em class="property">class </em><code class="descname">VertexList</code><span class="sig-paren">(</span><em>domain</em>, <em>start</em>, <em>count</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of vertices within a <a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexDomain" title="pyglet.graphics.vertexdomain.VertexDomain"><code class="xref py py-class docutils literal"><span class="pre">VertexDomain</span></code></a>.  Use
+<a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexDomain.create" title="pyglet.graphics.vertexdomain.VertexDomain.create"><code class="xref py py-meth docutils literal"><span class="pre">VertexDomain.create()</span></code></a> to construct this list.</p>
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.VertexList.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this group.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.VertexList.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw this vertex list in the given OpenGL mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mode</strong> (<em>int</em>) – OpenGL drawing mode, e.g. <code class="docutils literal"><span class="pre">GL_POINTS</span></code>, <code class="docutils literal"><span class="pre">GL_LINES</span></code>, etc.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.VertexList.get_domain">
+<code class="descname">get_domain</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.get_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the domain this vertex list belongs to.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexDomain" title="pyglet.graphics.vertexdomain.VertexDomain"><code class="xref py py-class docutils literal"><span class="pre">VertexDomain</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.VertexList.get_size">
+<code class="descname">get_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.get_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of vertices in the list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.VertexList.migrate">
+<code class="descname">migrate</code><span class="sig-paren">(</span><em>domain</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.migrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move this group from its current domain and add to the specified
+one.  Attributes on domains must match.  (In practice, used to change
+parent state of some vertices).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>domain</strong> (<a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexDomain" title="pyglet.graphics.vertexdomain.VertexDomain"><em>VertexDomain</em></a>) – Domain to migrate this vertex list to.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.graphics.vertexdomain.VertexList.resize">
+<code class="descname">resize</code><span class="sig-paren">(</span><em>count</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.resize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resize this group.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>count</strong> (<em>int</em>) – New number of vertices in the list.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.graphics.vertexdomain.VertexList.colors">
+<code class="descname">colors</code><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.colors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of color data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.graphics.vertexdomain.VertexList.edge_flags">
+<code class="descname">edge_flags</code><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.edge_flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of edge flag data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.graphics.vertexdomain.VertexList.fog_coords">
+<code class="descname">fog_coords</code><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.fog_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of fog coordinate data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.graphics.vertexdomain.VertexList.multi_tex_coords">
+<code class="descname">multi_tex_coords</code><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.multi_tex_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multi-array texture coordinate data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.graphics.vertexdomain.VertexList.normals">
+<code class="descname">normals</code><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.normals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of normal vector data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.graphics.vertexdomain.VertexList.secondary_colors">
+<code class="descname">secondary_colors</code><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.secondary_colors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of secondary color data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.graphics.vertexdomain.VertexList.tex_coords">
+<code class="descname">tex_coords</code><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.tex_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of texture coordinate data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.graphics.vertexdomain.VertexList.vertices">
+<code class="descname">vertices</code><a class="headerlink" href="#pyglet.graphics.vertexdomain.VertexList.vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array of vertex coordinate data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.graphics.vertexdomain.create_attribute_usage">
+<code class="descname">create_attribute_usage</code><span class="sig-paren">(</span><em>format</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.create_attribute_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an attribute and usage pair from a format string.  The
+format string is as documented in <cite>pyglet.graphics.vertexattribute</cite>, with
+the addition of an optional usage component:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>usage ::= attribute ( &#39;/&#39; (&#39;static&#39; | &#39;dynamic&#39; | &#39;stream&#39; | &#39;none&#39;) )?
+</pre></div>
+</div>
+<p>If the usage is not given it defaults to ‘dynamic’.  The usage corresponds
+to the OpenGL VBO usage hint, and for <code class="docutils literal"><span class="pre">static</span></code> also indicates a
+preference for interleaved arrays.  If <code class="docutils literal"><span class="pre">none</span></code> is specified a buffer
+object is not created, and vertex data is stored in system memory.</p>
+<p>Some examples:</p>
+<dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">v3f/stream</span></code></dt>
+<dd>3D vertex position using floats, for stream usage</dd>
+<dt><code class="docutils literal"><span class="pre">c4b/static</span></code></dt>
+<dd>4-byte color attribute, for static usage</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">attribute, usage</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.graphics.vertexdomain.create_domain">
+<code class="descname">create_domain</code><span class="sig-paren">(</span><em>*attribute_usage_formats</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.create_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a vertex domain covering the given attribute usage formats.
+See documentation for <a class="reference internal" href="#pyglet.graphics.vertexdomain.create_attribute_usage" title="pyglet.graphics.vertexdomain.create_attribute_usage"><code class="xref py py-func docutils literal"><span class="pre">create_attribute_usage()</span></code></a> and
+<a class="reference internal" href="vertexattribute.html#pyglet.graphics.vertexattribute.create_attribute" title="pyglet.graphics.vertexattribute.create_attribute"><code class="xref py py-func docutils literal"><span class="pre">pyglet.graphics.vertexattribute.create_attribute()</span></code></a> for the grammar
+of these format strings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexDomain" title="pyglet.graphics.vertexdomain.VertexDomain"><code class="xref py py-class docutils literal"><span class="pre">VertexDomain</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyglet.graphics.vertexdomain.create_indexed_domain">
+<code class="descname">create_indexed_domain</code><span class="sig-paren">(</span><em>*attribute_usage_formats</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.graphics.vertexdomain.create_indexed_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an indexed vertex domain covering the given attribute usage
+formats.  See documentation for <a class="reference internal" href="#pyglet.graphics.vertexdomain.create_attribute_usage" title="pyglet.graphics.vertexdomain.create_attribute_usage"><code class="xref py py-class docutils literal"><span class="pre">create_attribute_usage</span></code></a> and
+<a class="reference internal" href="vertexattribute.html#pyglet.graphics.vertexattribute.create_attribute" title="pyglet.graphics.vertexattribute.create_attribute"><code class="xref py py-func docutils literal"><span class="pre">pyglet.graphics.vertexattribute.create_attribute()</span></code></a> for the grammar
+of these format strings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#pyglet.graphics.vertexdomain.VertexDomain" title="pyglet.graphics.vertexdomain.VertexDomain"><code class="xref py py-class docutils literal"><span class="pre">VertexDomain</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="vertexbuffer.html"
+                        title="previous chapter">pyglet.graphics.vertexbuffer</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../image/index.html"
+                        title="next chapter">pyglet.image</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../image/index.html" title="pyglet.image"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vertexbuffer.html" title="pyglet.graphics.vertexbuffer"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="index.html" >pyglet.graphics</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

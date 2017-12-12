@@ -1,0 +1,450 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyglet.text.caret &mdash; pyglet v1.4.0a1</title>
+    
+    <link rel="stylesheet" href="../../_static/pyglet.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.4.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="pyglet v1.4.0a1" href="../../index.html" />
+    <link rel="up" title="pyglet.text" href="index.html" />
+    <link rel="next" title="pyglet.text.document" href="document.html" />
+    <link rel="prev" title="pyglet.text" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="document.html" title="pyglet.text.document"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="pyglet.text"
+             accesskey="P">previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">pyglet.text</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-pyglet.text.caret">
+<span id="pyglet-text-caret"></span><h1>pyglet.text.caret<a class="headerlink" href="#module-pyglet.text.caret" title="Permalink to this headline">¶</a></h1>
+<p>Provides keyboard and mouse editing procedures for text layout.</p>
+<p>Example usage:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyglet</span> <span class="k">import</span> <span class="n">window</span>
+<span class="kn">from</span> <span class="nn">pyglet.text</span> <span class="k">import</span> <span class="n">layout</span><span class="p">,</span> <span class="n">caret</span>
+
+<span class="n">my_window</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">Window</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">my_layout</span> <span class="o">=</span> <span class="n">layout</span><span class="o">.</span><span class="n">IncrementalTextLayout</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">my_caret</span> <span class="o">=</span> <span class="n">caret</span><span class="o">.</span><span class="n">Caret</span><span class="p">(</span><span class="n">my_layout</span><span class="p">)</span>
+<span class="n">my_window</span><span class="o">.</span><span class="n">push_handlers</span><span class="p">(</span><span class="n">my_caret</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+<dl class="class">
+<dt id="pyglet.text.caret.Caret">
+<em class="property">class </em><code class="descname">Caret</code><span class="sig-paren">(</span><em>layout</em>, <em>batch=None</em>, <em>color=(0</em>, <em>0</em>, <em>0)</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visible text insertion marker for
+<cite>pyglet.text.layout.IncrementalTextLayout</cite>.</p>
+<p>The caret is drawn as a single vertical bar at the document <cite>position</cite>
+on a text layout object.  If <cite>mark</cite> is not None, it gives the unmoving
+end of the current text selection.  The visible text selection on the
+layout is updated along with <cite>mark</cite> and <cite>position</cite>.</p>
+<p>By default the layout’s graphics batch is used, so the caret does not need
+to be drawn explicitly.  Even if a different graphics batch is supplied,
+the caret will be correctly positioned and clipped within the layout.</p>
+<p>Updates to the document (and so the layout) are automatically propagated
+to the caret.</p>
+<p>The caret object can be pushed onto a window event handler stack with
+<cite>Window.push_handlers</cite>.  The caret will respond correctly to keyboard,
+text, mouse and activation events, including double- and triple-clicks.
+If the text layout is being used alongside other graphical widgets, a
+GUI toolkit will be needed to delegate keyboard and mouse events to the
+appropriate widget.  pyglet does not provide such a toolkit at this stage.</p>
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the caret from its batch.</p>
+<p>Also disconnects the caret from further layout events.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.get_style">
+<code class="descname">get_style</code><span class="sig-paren">(</span><em>attribute</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.get_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the document’s named style at the caret’s current position.</p>
+<p>If there is a text selection and the style varies over the selection,
+<cite>pyglet.text.document.STYLE_INDETERMINATE</cite> is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attribute</strong> (<em>str</em>) – Name of style attribute to retrieve.  See
+<cite>pyglet.text.document</cite> for a list of recognised attribute
+names.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.move_to_point">
+<code class="descname">move_to_point</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.move_to_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move the caret close to the given window coordinate.</p>
+<p>The <cite>mark</cite> will be reset to <code class="docutils literal"><span class="pre">None</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<em>int</em>) – X coordinate.</li>
+<li><strong>y</strong> (<em>int</em>) – Y coordinate.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.on_activate">
+<code class="descname">on_activate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.on_activate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the <cite>pyglet.window.Window.on_activate</cite> event.</p>
+<p>The caret is hidden when the window is not active.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.on_deactivate">
+<code class="descname">on_deactivate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.on_deactivate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the <cite>pyglet.window.Window.on_deactivate</cite> event.</p>
+<p>The caret is hidden when the window is not active.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.on_layout_update">
+<code class="descname">on_layout_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.on_layout_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.on_mouse_drag">
+<code class="descname">on_mouse_drag</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>dx</em>, <em>dy</em>, <em>buttons</em>, <em>modifiers</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.on_mouse_drag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the <cite>pyglet.window.Window.on_mouse_drag</cite> event.</p>
+<p>Mouse handlers do not check the bounds of the coordinates: GUI
+toolkits should filter events that do not intersect the layout
+before invoking this handler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.on_mouse_press">
+<code class="descname">on_mouse_press</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>button</em>, <em>modifiers</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.on_mouse_press" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the <cite>pyglet.window.Window.on_mouse_press</cite> event.</p>
+<p>Mouse handlers do not check the bounds of the coordinates: GUI
+toolkits should filter events that do not intersect the layout
+before invoking this handler.</p>
+<p>This handler keeps track of the number of mouse presses within
+a short span of time and uses this to reconstruct double- and
+triple-click events for selecting words and paragraphs.  This
+technique is not suitable when a GUI toolkit is in use, as the active
+widget must also be tracked.  Do not use this mouse handler if
+a GUI toolkit is being used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.on_mouse_scroll">
+<code class="descname">on_mouse_scroll</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>scroll_x</em>, <em>scroll_y</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.on_mouse_scroll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the <cite>pyglet.window.Window.on_mouse_scroll</cite> event.</p>
+<p>Mouse handlers do not check the bounds of the coordinates: GUI
+toolkits should filter events that do not intersect the layout
+before invoking this handler.</p>
+<p>The layout viewport is scrolled by <cite>SCROLL_INCREMENT</cite> pixels per
+“click”.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.on_text">
+<code class="descname">on_text</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.on_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the <cite>pyglet.window.Window.on_text</cite> event.</p>
+<p>Caret keyboard handlers assume the layout always has keyboard focus.
+GUI toolkits should filter keyboard and text events by widget focus
+before invoking this handler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.on_text_motion">
+<code class="descname">on_text_motion</code><span class="sig-paren">(</span><em>motion</em>, <em>select=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.on_text_motion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the <cite>pyglet.window.Window.on_text_motion</cite> event.</p>
+<p>Caret keyboard handlers assume the layout always has keyboard focus.
+GUI toolkits should filter keyboard and text events by widget focus
+before invoking this handler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.on_text_motion_select">
+<code class="descname">on_text_motion_select</code><span class="sig-paren">(</span><em>motion</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.on_text_motion_select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the <cite>pyglet.window.Window.on_text_motion_select</cite> event.</p>
+<p>Caret keyboard handlers assume the layout always has keyboard focus.
+GUI toolkits should filter keyboard and text events by widget focus
+before invoking this handler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.select_paragraph">
+<code class="descname">select_paragraph</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.select_paragraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the paragraph at the given window coordinate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<em>int</em>) – X coordinate.</li>
+<li><strong>y</strong> (<em>int</em>) – Y coordinate.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.select_to_point">
+<code class="descname">select_to_point</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.select_to_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move the caret close to the given window coordinate while
+maintaining the <cite>mark</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<em>int</em>) – X coordinate.</li>
+<li><strong>y</strong> (<em>int</em>) – Y coordinate.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.select_word">
+<code class="descname">select_word</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.select_word" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the word at the given window coordinate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<em>int</em>) – X coordinate.</li>
+<li><strong>y</strong> (<em>int</em>) – Y coordinate.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyglet.text.caret.Caret.set_style">
+<code class="descname">set_style</code><span class="sig-paren">(</span><em>attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#pyglet.text.caret.Caret.set_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the document style at the caret’s current position.</p>
+<p>If there is a text selection the style is modified immediately.
+Otherwise, the next text that is entered before the position is
+modified will take on the given style.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attributes</strong> (<em>dict</em>) – Dict mapping attribute names to style values.  See
+<cite>pyglet.text.document</cite> for a list of recognised attribute
+names.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.caret.Caret.PERIOD">
+<code class="descname">PERIOD</code><em class="property"> = 0.5</em><a class="headerlink" href="#pyglet.text.caret.Caret.PERIOD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blink period, in seconds.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.caret.Caret.SCROLL_INCREMENT">
+<code class="descname">SCROLL_INCREMENT</code><em class="property"> = 16</em><a class="headerlink" href="#pyglet.text.caret.Caret.SCROLL_INCREMENT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pixels to scroll viewport per mouse scroll wheel movement.  Defaults
+to 12pt at 96dpi.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.caret.Caret.color">
+<code class="descname">color</code><a class="headerlink" href="#pyglet.text.caret.Caret.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Caret color.</p>
+<p>The default caret color is <code class="docutils literal"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0]</span></code> (black).  Each RGB color
+component is in the range 0 to 255.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">(int, int, int)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.caret.Caret.line">
+<code class="descname">line</code><a class="headerlink" href="#pyglet.text.caret.Caret.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of line containing the caret’s position.</p>
+<p>When set, <cite>position</cite> is modified to place the caret on requested line
+while maintaining the closest possible X offset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.caret.Caret.mark">
+<code class="descname">mark</code><a class="headerlink" href="#pyglet.text.caret.Caret.mark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Position of immovable end of text selection within
+document.</p>
+<p>An interactive text selection is determined by its immovable end (the
+caret’s position when a mouse drag begins) and the caret’s position, which
+moves interactively by mouse and keyboard input.</p>
+<p>This property is <code class="docutils literal"><span class="pre">None</span></code> when there is no selection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.caret.Caret.position">
+<code class="descname">position</code><a class="headerlink" href="#pyglet.text.caret.Caret.position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Position of caret within document.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyglet.text.caret.Caret.visible">
+<code class="descname">visible</code><a class="headerlink" href="#pyglet.text.caret.Caret.visible" title="Permalink to this definition">¶</a></dt>
+<dd><p>Caret visibility.</p>
+<p>The caret may be hidden despite this property due to the periodic blinking
+or by <cite>on_deactivate</cite> if the event handler is attached to a window.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">pyglet.text</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="document.html"
+                        title="next chapter">pyglet.text.document</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="document.html" title="pyglet.text.document"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="pyglet.text"
+             >previous</a> |</li>
+		<li><a href="http://pyglet.org/">pyglet.org</a> |</li>
+		<li><a href="../../index.html">Documentation Index</a> &raquo;</li>
+          <li><a href="index.html" >pyglet.text</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2006-2017, Alex Holkner.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>
