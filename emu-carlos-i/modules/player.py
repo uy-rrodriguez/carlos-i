@@ -21,6 +21,7 @@ class Player(physicalobject.PhysicalObject):
         self.thrust = 300.0
         self.rotate_speed = 200.0
         self.rotation = -90.0
+        self.velocity_coeff = 50
         #self.default_angle_radians = 0.0 #-90.0
         #self.keys = dict(left=False, right=False, up=False, down=False)
         self.key_handler = key.KeyStateHandler()
@@ -70,8 +71,8 @@ class Player(physicalobject.PhysicalObject):
             angle_radians = -math.radians(self.rotation)
             force_x = math.cos(angle_radians) * self.thrust * dt
             force_y = math.sin(angle_radians) * self.thrust * dt
-            self.velocity_x += force_x
-            self.velocity_y += force_y
+            self.velocity_x = self.velocity_coeff * force_x
+            self.velocity_y = self.velocity_coeff * force_y
         else:
             self.velocity_x = self.velocity_y = 0
 
