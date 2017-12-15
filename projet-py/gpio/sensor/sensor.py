@@ -41,7 +41,7 @@ class Sensor:
     def get_from(self):
         cmd = "gpio read " + str(self.gpio_in)
         print(cmd)
-        return os.popen(cmd).read()
+        return int(os.popen(cmd).read()[0:-1])
         
 def send_echo(sensor):
     sensor.write_to(1)
@@ -49,7 +49,8 @@ def send_echo(sensor):
     sensor.write_to(0)
         
 def get_distance(sensor):
-    Process(target=send_echo, args=(sensor,)).start()
+    #Process(target=send_echo, args=(sensor,)).start()
+    send_echo(sensor)
     echo = 0
     while echo == 0:
         echo = sensor.get_from()
@@ -73,10 +74,10 @@ if __name__ == "__main__":
     print("Back sensor's configuration")
     back_sensor.configure()
     
-    print("Distance from front sensor")
-    front_distance = get_distance(front_sensor)
-    print("Front distance: " + str(front_distance))
+    #print("Distance from front sensor")
+    #front_distance = get_distance(front_sensor)
+    #print("Front distance: " + str(front_distance))
     
-    print("Distance from back sensor")
-    back_distance = get_distance(back_sensor)
-    print("Back distance: " + str(back_distance))
+    #print("Distance from back sensor")
+    #back_distance = get_distance(back_sensor)
+    #print("Back distance: " + str(back_distance))

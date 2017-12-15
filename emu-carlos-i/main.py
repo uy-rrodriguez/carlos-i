@@ -3,7 +3,9 @@
 
 import pyglet
 import physicalobject
-import player
+#import player
+#import emurobot
+from emurobot import Player
 
 # Path vers les ressources
 pyglet.resource.path = ['./resources']
@@ -30,7 +32,7 @@ main_batch = pyglet.graphics.Batch()
 
 
 # Création du sprite avec le robot
-robot_sprite = player.Player(img=robot_image, x=400, y=300, batch=main_batch)
+robot_sprite = Player(img=robot_image, x=400, y=300, batch=main_batch)
 
 # Traitement des événements par l'objet du robot
 game_window.push_handlers(robot_sprite)

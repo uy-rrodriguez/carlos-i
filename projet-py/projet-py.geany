@@ -24,9 +24,9 @@ long_line_column=72
 
 [files]
 current_page=0
-FILE_NAME_0=5178;Python;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Fgpio%2Fwheels.py;0;4
-FILE_NAME_1=2829;Python;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Fws%2Fws.py;0;4
-FILE_NAME_2=20;Python;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Fgpio%2F__init__.py;0;4
+FILE_NAME_0=311;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Femu-carlos-i%2Fmodules%2Femurobot.py;0;4
+FILE_NAME_1=2987;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Femu-carlos-i%2Fmodules%2Frobot.py;0;4
+FILE_NAME_2=774;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Femu-carlos-i%2Fmain.py;0;4
 
 [VTE]
 last_dir=/home/pi
