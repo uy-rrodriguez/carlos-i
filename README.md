@@ -1,4 +1,4 @@
-<center><img src="https://github.com/uy-rrodriguez/carlos-i/blob/master/logo/logo.png" height="256px" alt="Logo Carlos-I"/></center>
+<div style="text-align:center"><img src="https://github.com/uy-rrodriguez/carlos-i/blob/master/logo/logo.png" height="200px" alt="Logo Carlos-I"/></div>
 
 # carlos-i
 Carlos-I, une plate-forme robotique pour la détection autmatique d'objets.
