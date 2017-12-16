@@ -2,7 +2,7 @@
 Carlos-I, une plate-forme robotique pour la détection autmatique d'objets.
 CERI. Université d'Avignon 2017-2018.
 
-<img src="https://github.com/uy-rrodriguez/carlos-i/blob/master/logo/logo.png" height="350px" alt="Logo Carlos-I"/>
+<img src="https://github.com/uy-rrodriguez/carlos-i/blob/master/logo/logo.png" height="256px" alt="Logo Carlos-I"/>
 
 ## Cahier de charges
 https://e-uapv2017.univ-avignon.fr/pluginfile.php/5566/mod_resource/content/3/CDC_RobotMobile_ILSEN_V08Sep17.pdf
