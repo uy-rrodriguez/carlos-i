@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/lib")
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/lib/pyglet")
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/lib/pyglet/libs")
+
 import pyglet
 import emurobot
 
