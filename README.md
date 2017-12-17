@@ -93,3 +93,7 @@ MP4Box -add pivideo.h264 pivideo.mp4
 \# Remove the source raw file, leaving the remaining pivideo.mp4 file to play
 
 rm pivideo.h264
+
+## Télé-mètres
+
+https://electrosome.com/hc-sr04-ultrasonic-sensor-raspberry-pi/
