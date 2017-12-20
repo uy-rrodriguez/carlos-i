@@ -11,19 +11,19 @@ from wheel import *
 
 
 # Wheels' wPi numbers
-FRONT_RIGHT_PWM    =    12
-FRONT_RIGHT_IN1    =    13
-FRONT_RIGHT_IN2    =    14
+FRONT_RIGHT_PWM    =    10 #=BCM #wPi=12
+FRONT_RIGHT_IN1    =    13 #=wPi
+FRONT_RIGHT_IN2    =    14 #=wPi
 
-FRONT_LEFT_PWM     =    27
+FRONT_LEFT_PWM     =    16 #=BCM #wPi=27
 FRONT_LEFT_IN1     =    28
 FRONT_LEFT_IN2     =    29
 
-BACK_RIGHT_PWM     =    6
+BACK_RIGHT_PWM     =    25 #=BCM #wPi=6
 BACK_RIGHT_IN1     =    10
 BACK_RIGHT_IN2     =    11
 
-BACK_LEFT_PWM      =    0
+BACK_LEFT_PWM      =    17 #=BCM #wPi=0
 BACK_LEFT_IN1      =    2
 BACK_LEFT_IN2      =    3
 
@@ -78,15 +78,17 @@ class Robot(object):
         # linéaire et un direction de rotation
         self.linear_direction = 0
         self.rotation_direction = 0
+        self.previous_rotation = False
     
     def config(self):
         [w.set_all_mode(GPIO_MODE_OUT) for w in self.wheels]
     
     def init(self):
-        [w.set_pin_values(VALUE_ON, VALUE_OFF, VALUE_OFF) for w in self.wheels]
+        [w.set_pin_values(0.0, VALUE_OFF, VALUE_OFF) for w in self.wheels]
     
     def clean(self):
-        [w.set_pin_values(VALUE_OFF, VALUE_OFF, VALUE_OFF) and w.set_all_mode(GPIO_MODE_IN) for w in self.wheels]
+        [w.set_pin_values(0.0, VALUE_OFF, VALUE_OFF) for w in self.wheels]
+        [w.set_all_mode(GPIO_MODE_IN) for w in self.wheels]
     
     def on_key_press(self, key):
         self.keys[key] = True
@@ -113,28 +115,37 @@ class Robot(object):
 
         
         # Modification des pins des roues
-        #[w.stop() for w in self.robot.wheels]
+        #[w.set_pin_values(w.wpm_value, VALUE_OFF, VALUE_OFF) for w in self.robot.wheels]
         if self.rotation_direction == 0:
+            if self.previous_rotation:
+                self.previous_rotation = False
+                # Restart PWM
+                [w.set_pwm(wheel.MIN_PWM) for w in self.wheels]
+                
             if self.linear_direction > 0:
-                [w.forward() for w in self.wheels]
+                self.forward()
             elif self.linear_direction < 0:
-                [w.backward() for w in self.wheels]
+                self.backward()
             else:
-                [w.stop() for w in self.wheels]
-                
-        elif self.rotation_direction > 0:
-            self.wheels[0].forward()
-            self.wheels[2].forward()
-            self.wheels[1].backward()
-            self.wheels[3].backward()
-                
-        elif self.rotation_direction < 0:
-            self.wheels[0].backward()
-            self.wheels[2].backward()
-            self.wheels[1].forward()
-            self.wheels[3].forward()
+                self.stop()
+        
+        else :
+            self.linear_direction = 0
+            self.previous_rotation = True
+            [w.set_pwm(wheel.MAX_PWM) for w in self.wheels]
+            
+            if self.rotation_direction > 0:
+                self.wheels[0].forward()
+                self.wheels[2].forward()
+                self.wheels[1].backward()
+                self.wheels[3].backward()
+                    
+            else: #self.rotation_direction < 0:
+                self.wheels[0].backward()
+                self.wheels[2].backward()
+                self.wheels[1].forward()
+                self.wheels[3].forward()
 
-    '''
     def stop(self):
         [w.stop() for w in self.wheels]
     
@@ -143,57 +154,58 @@ class Robot(object):
     
     def backward(self):
         [w.backward() for w in self.wheels]
-    '''
             
     def test_fwd_bkw(self):
         self.log.log_info("Test Robot Forward - Backward")
-        r = Robot()
         
-        self.log.log_debug("Config"); r.config()
+        self.log.log_debug("Config"); self.config()
         
-        self.log.log_debug("Init"); r.init()
+        self.log.log_debug("Init"); self.init()
         
-        self.log.log_debug("Forward"); w.forward(); time.sleep(1)
+        self.log.log_debug("Forward"); self.forward(); time.sleep(1)
         
-        self.log.log_debug("Stop"); r.stop(); time.sleep(1)
+        self.log.log_debug("Stop"); self.stop(); time.sleep(1)
         
-        self.log.log_debug("Backward"); r.backward(); time.sleep(1)
+        self.log.log_debug("Backward"); self.backward(); time.sleep(1)
         
-        self.log.log_debug("Stop"); r.stop()
+        self.log.log_debug("Stop"); self.stop()
+
             
             
     def test_detect(self):
         self.log.log_info("Test Detect Wheels")
-        r = Robot()
-        r.debug = True
         
-        self.log.log_debug("Config"); r.config()
-        self.log.log_debug("Init"); r.init()
+        self.log.log_debug("Config"); self.config()
+        self.log.log_debug("Init"); self.init()
         
         self.log.log_debug("Front Left -> Forward")
-        r.stop()
-        self.wheels[0].set_pin_values(VALUE_OFF, VALUE_OFF, VALUE_ON)
-        time.sleep(1)
+        self.stop()
+        self.wheels[0].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
+        raw_input("Press Enter to continue...")
         
         self.log.log_debug("Front Right -> Forward")
-        r.stop()
-        self.wheels[1].set_pin_values(VALUE_OFF, VALUE_OFF, VALUE_ON)
-        time.sleep(1)
+        self.stop()
+        self.wheels[1].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
+        raw_input("Press Enter to continue...")
         
         self.log.log_debug("Back Left -> Forward")
-        r.stop()
-        self.wheels[2].set_pin_values(VALUE_OFF, VALUE_OFF, VALUE_ON)
-        time.sleep(1)
+        self.stop()
+        self.wheels[2].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
+        raw_input("Press Enter to continue...")
         
         self.log.log_debug("Back Right -> Forward")
-        r.stop()
-        self.wheels[3].set_pin_values(VALUE_OFF, VALUE_OFF, VALUE_ON)
-        time.sleep(1)
+        self.stop()
+        self.wheels[3].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
+        raw_input("Press Enter to continue...")
         
-        self.log.log_debug("Stop"); r.stop()
+        self.log.log_debug("Stop");
+        self.stop()
 
         
 if __name__ == "__main__":
-    #Robot().test_fwd_bkw()
-    Robot().test_detect()
-    pass
+    r = Robot()
+    #r.test_fwd_bkw()
+    r.test_detect()
+        
+    r.log.log_debug("Clean");
+    r.clean()

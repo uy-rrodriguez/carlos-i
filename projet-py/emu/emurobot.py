@@ -10,8 +10,8 @@ from gpio import wheel
 from gpio import robot
 
 
-LINEAR_SPEED = 100.0 #15.0
-ROTATION_SPEED = 30.0 #13.0
+LINEAR_SPEED = 15.0 #100.0
+ROTATION_SPEED = 13.0 #30.0
 
 class Robot(physicalobject.PhysicalObject):
 
@@ -28,10 +28,10 @@ class Robot(physicalobject.PhysicalObject):
         
         # Création d'un objet pour accéder au vrai robot
         self.robot = robot.Robot()
+        self.robot.config()
+        self.robot.init()
         #self.robot.test_detect()
-        #self.robot.test_fwd_bkw()
-        #self.robot.config()
-        #self.robot.init()
+        self.robot.test_fwd_bkw()
         
         # Traduction de touches du clavier à commandes du robot
         self.translate_keys = {
@@ -50,13 +50,20 @@ class Robot(physicalobject.PhysicalObject):
             self.robot.on_key_release(self.translate_keys[symbol])
 
     def update_pwm(self, dt):
+        '''
         # Si on ne bouge plus, le PWM revient à zéro
-        if self.robot.linear_direction == 0 or self.robot.rotation_direction != 0:
+        if self.robot.linear_direction == 0 and self.robot.rotation_direction == 0:
             [w.set_pwm(wheel.MIN_PWM) for w in self.robot.wheels]
         
-        # Si on bouge, le PWM va augmenter petit à petit
+        elif self.robot.rotation_direction != 0:
+            [w.set_pwm(wheel.MAX_PWM) for w in self.robot.wheels]
+        
+        # Si on se déplace, le PWM va augmenter petit à petit
         else:
-            [w.set_pwm(w.pwm + wheel.DELTA_PWM) for w in self.robot.wheels]
+            [w.increment_pwm() for w in self.robot.wheels]
+        '''
+        if self.robot.linear_direction != 0:
+            [w.increment_pwm() for w in self.robot.wheels]
 
     
     def get_linear_speed(self, w):
@@ -64,7 +71,7 @@ class Robot(physicalobject.PhysicalObject):
         elif w.is_backward():   dir = -1
         else:                   dir = 0
         
-        return dir * w.pwm * LINEAR_SPEED
+        return dir * w.pwm_value * LINEAR_SPEED
     
     def get_rotation_speed(self, w):
         if w.is_forward():      dir = 1

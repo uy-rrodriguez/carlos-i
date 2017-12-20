@@ -23,10 +23,11 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=0
-FILE_NAME_0=311;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Femu-carlos-i%2Fmodules%2Femurobot.py;0;4
-FILE_NAME_1=2987;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Femu-carlos-i%2Fmodules%2Frobot.py;0;4
-FILE_NAME_2=774;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Femu-carlos-i%2Fmain.py;0;4
+current_page=3
+FILE_NAME_0=214;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Frun-emu.py;0;4
+FILE_NAME_1=3538;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Fgpio%2Frobot.py;0;4
+FILE_NAME_2=2506;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Fgpio%2Fwheel.py;0;4
+FILE_NAME_3=881;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Femu%2Femurobot.py;0;4
 
 [VTE]
 last_dir=/home/pi
