@@ -54,6 +54,12 @@ def on_draw():
     main_batch.draw()
 
 
+# Evénement on_close
+@game_window.event
+def on_close():
+    robot_sprite.clean()
+        
+        
 # Actualisation d'objets
 def update(dt):
     for obj in game_objects:

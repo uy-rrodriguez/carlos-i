@@ -120,3 +120,7 @@ class Robot(physicalobject.PhysicalObject):
         super(Robot, self).update(dt)
 
 
+    def clean(self):
+        self.robot.clean()
+
+

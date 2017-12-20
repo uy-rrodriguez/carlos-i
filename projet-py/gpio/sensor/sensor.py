@@ -1,83 +1,103 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Author: Baptiste BRIOT--RIBEYRE
-# <baptiste.briot@alumni.univ-avignon.fr>
-
 """
-    Classe pour contrôler les capteurs ultrason via les valeurs des pins GPIO.
+    Classe pour contrôler les télémètres via les valeurs des pins GPIO.
+    
+    Devant :
+        TRIG = GPIO 13 => Mode OUT      Phys. 33    wPi 23  BCM 13
+        ECHO = GPIO 05 => Mode IN       Phys. 29    wPi 21  BCM 5
+        
+    Derrière :
+        TRIG = GPIO 19 => Mode OUT      Phys. 35    wPi 24  BCM 19
+        ECHO = GPIO 06 => Mode IN       Phys. 31    wPi 22  BCM 6
 """
 
-import os, time
-from multiprocessing import Process
+import time, traceback
+import RPi.GPIO as GPIO                    #Import GPIO library
 
-# Front sensor wPi numbers
-FRONT_SENSOR_IN     =   21
-BACK_SENSOR_IN      =   22
 
-# Back sensor wPi numbers
-FRONT_SENSOR_OUT    =   13
-BACK_SENSOR_OUT     =   19
+# Limites dans la détection
+MIN_RANGE = 2
+MAX_RANGE = 400
+CALIBRATION = 0.5
+PULSE_MULTIPLIER = 17150    #Multiply pulse duration by 17150 to get distance
 
-class Sensor:
-    
-    def __init__(self, gpio_in, gpio_out):
-        self.gpio_in = gpio_in
-        self.gpio_out = gpio_out
-        
-    def configure(self):
-        cmd = "gpio mode " + str(self.gpio_in) + " in"
-        print(cmd)
-        os.system(cmd)
-        cmd = "gpio mode " + str(self.gpio_out) + " out"
-        print(cmd)
-        os.system(cmd)
-        
-    def write_to(self, value):
-        cmd = "gpio write " + str(self.gpio_out) + " " + str(value)
-        print(cmd)
-        os.system(cmd);
-        
-    def get_from(self):
-        cmd = "gpio read " + str(self.gpio_in)
-        print(cmd)
-        return int(os.popen(cmd).read()[0:-1])
-        
-def send_echo(sensor):
-    sensor.write_to(1)
-    time.sleep(1)
-    sensor.write_to(0)
-        
-def get_distance(sensor):
-    #Process(target=send_echo, args=(sensor,)).start()
-    send_echo(sensor)
-    echo = 0
-    while echo == 0:
-        echo = sensor.get_from()
-    distance = 0
-    while echo == 1:
-        distance += 1
-        echo = sensor.get_from()
-    return distance
+# Valeur out of range
+OUT_RANGE = None
 
-if __name__ == "__main__":
+class Sensor(object):
+    def __init__(self, pin_trigger, pin_echo):
+        self.trigger = pin_trigger
+        self.echo = pin_echo
+
+    def config(self):
+        GPIO.setmode(GPIO.BCM)                  #Set GPIO pin numbering
+        GPIO.setup(self.trigger, GPIO.OUT)      #Set pin as GPIO out
+        GPIO.setup(self.echo, GPIO.IN)          #Set pin as GPIO in
+        
+    def init(self):
+        GPIO.output(self.trigger, False)
     
-    print("Front sensor's initialization")
-    front_sensor = Sensor(FRONT_SENSOR_IN, FRONT_SENSOR_OUT)
-    
-    print("Front sensor's configuration")
-    front_sensor.configure()
-    
-    print("Back sensor's initialization")
-    back_sensor = Sensor(BACK_SENSOR_IN, BACK_SENSOR_OUT)
-    
-    print("Back sensor's configuration")
-    back_sensor.configure()
-    
-    #print("Distance from front sensor")
-    #front_distance = get_distance(front_sensor)
-    #print("Front distance: " + str(front_distance))
-    
-    #print("Distance from back sensor")
-    #back_distance = get_distance(back_sensor)
-    #print("Back distance: " + str(back_distance))
+    def clean(self):
+        GPIO.output(self.trigger, False)
+        GPIO.setup(self.trigger, GPIO.IN)
+        
+        GPIO.setup(self.echo, GPIO.OUT)
+        GPIO.output(self.echo, False)
+        GPIO.setup(self.echo, GPIO.IN)
+        
+    def read(self):
+        try:
+            GPIO.output(self.trigger, True)         #Set TRIG as HIGH
+            time.sleep(0.00001)                     #Delay of 0.00001 seconds
+            GPIO.output(self.trigger, False)        #Set TRIG as LOW
+
+            while GPIO.input(self.echo) == 0:      #Check whether the ECHO is LOW
+                pulse_start = time.time()           #Saves the last known time of LOW pulse
+
+            while GPIO.input(self.echo) == 1:      #Check whether the ECHO is HIGH
+                pulse_end = time.time()             #Saves the last known time of HIGH pulse 
+
+            pulse_duration = pulse_end - pulse_start    #Get pulse duration to a variable
+
+            distance = pulse_duration * PULSE_MULTIPLIER       
+            distance = round(distance, 2)           #Round to two decimal points
+
+            if distance > MIN_RANGE and distance < MAX_RANGE: #Check whether the distance is within range
+                return distance - CALIBRATION     #Print distance with X cm calibration
+            else:
+                return OUT_RANGE                         # Out of range
+
+        except:
+            traceback.print_exc()
+            return OUT_RANGE
+
+
+    """
+    while True:
+
+    GPIO.output(TRIG, False)                 #Set TRIG as LOW
+    print "Waitng For Sensor To Settle"
+    time.sleep(2)                            #Delay of 2 seconds
+
+    GPIO.output(self.trigger, True)                  #Set TRIG as HIGH
+    time.sleep(0.00001)                      #Delay of 0.00001 seconds
+    GPIO.output(self.trigger, False)                 #Set TRIG as LOW
+
+    while GPIO.input(ECHO)==0:               #Check whether the ECHO is LOW
+    pulse_start = time.time()              #Saves the last known time of LOW pulse
+
+    while GPIO.input(ECHO)==1:               #Check whether the ECHO is HIGH
+    pulse_end = time.time()                #Saves the last known time of HIGH pulse 
+
+    pulse_duration = pulse_end - pulse_start #Get pulse duration to a variable
+
+    distance = pulse_duration * 17150        #Multiply pulse duration by 17150 to get distance
+    distance = round(distance, 2)            #Round to two decimal points
+
+    if distance > 2 and distance < 400:      #Check whether the distance is within range
+    print "Distance:",distance - 0.5,"cm"  #Print distance with 0.5 cm calibration
+    else:
+    print "Out Of Range"                   #display out of range
+    """

@@ -23,11 +23,13 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=3
+current_page=5
 FILE_NAME_0=214;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Frun-emu.py;0;4
-FILE_NAME_1=3538;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Fgpio%2Frobot.py;0;4
-FILE_NAME_2=2506;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Fgpio%2Fwheel.py;0;4
-FILE_NAME_3=881;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Femu%2Femurobot.py;0;4
+FILE_NAME_1=3423;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Fgpio%2Frobot.py;0;4
+FILE_NAME_2=241;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Fgpio%2Fwheel.py;0;4
+FILE_NAME_3=4065;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Femu%2Femurobot.py;0;4
+FILE_NAME_4=1579;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Femu%2Femu.py;0;4
+FILE_NAME_5=601;Python;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fcarlos-i%2Fprojet-py%2Fgpio%2Fsensor%2Fsensor.py;0;4
 
 [VTE]
 last_dir=/home/pi

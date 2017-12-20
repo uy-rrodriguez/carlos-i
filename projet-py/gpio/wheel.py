@@ -13,7 +13,7 @@ import RPi.GPIO as GPIO
 POS_LEFT        =   "POS_LEFT"
 POS_RIGHT       =   "POS_RIGHT"
 
-MAX_PWM         =   0.95
+MAX_PWM         =   0.5
 MIN_PWM         =   0.3
 DELTA_PWM       =   0.1
 

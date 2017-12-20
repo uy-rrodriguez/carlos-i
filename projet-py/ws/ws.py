@@ -1,8 +1,17 @@
-# coding: utf8
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
+
+"""
+    Classe pour publier un service web qui recevra des commandes.
+    Les commandes seront ensuite envoyées au robot.
+    
+    Un thread parallèle permet d'actualiser le PWM des roues à
+    intervalles réguliers.
+"""
 
 import sys, traceback, json
-import ws.web
-import gpio
+import web
+import gpio.robot
 
 
 # ############################################################### #
@@ -16,16 +25,17 @@ DEFAULT_IP = "10.3.141.1"
 DEFAULT_PORT = 8080
 
 # Formats d'URLs acceptées
-urls = (
-    "/command/config",      "Config",
-    "/command/init",        "Init",
-    "/command/start",       "Forward",
-    "/command/stop",        "Stop",
-    "/(.*)",                "NotFound"
+URLS = (
+    "/command/press/(.*)",      "Press",
+    "/command/release/(.*)",    "Release",
+    "/(.*)",                    "NotFound"
 )
 
-# Variable qui va stocker l'instance du WS (sera de type MonWebservice)
-instanceWS = None
+# Touches acceptées
+WS_KEY_UP       = "forward"
+WS_KEY_DOWN     = "backward"
+WS_KEY_LEFT     = "left"
+WS_KEY_RIGHT    = "right"
 
 
 
@@ -39,99 +49,68 @@ instanceWS = None
 '''
     Hérite de web.application pour étendre ses fonctionnalités
 '''
-class MonWebservice(ws.web.application, object):
+class MonWebservice(web.application, object):
     instance = None
+    robot = None
+    threadPWM = None
+    translate_keys = None
 
-    def __init__(self, urls, vars_globals):
-        super(MonWebservice, self).__init__(urls, vars_globals)
+    def __init__(self, robot, vars_globals):
+        super(MonWebservice, self).__init__(URLS, vars_globals)
         MonWebservice.instance = self
+        
+        self.robot = robot
+        
+        # Traduction de touches reçues à commandes du robot
+        self.translate_keys = {
+            WS_KEY_UP:      gpio.robot.KEY_FORWARD,
+            WS_KEY_DOWN:    gpio.robot.KEY_BACKWARD,
+            WS_KEY_LEFT:    gpio.robot.KEY_LEFT,
+            WS_KEY_RIGHT:   gpio.robot.KEY_RIGHT,
+        }
+        
 
     def run(self, ip=DEFAULT_IP, port=DEFAULT_PORT, *middleware):
         func = self.wsgifunc(*middleware)
-        serv = ws.web.httpserver.runsimple(func, (ip, port))
+        serv = web.httpserver.runsimple(func, (ip, port))
         return serv
+        
 
 
-
-# -- Config --------------------------------------------- #
+# -- Press -------------------------------------------- #
 
 '''
-    Configuration des modes (OUT) des pins GPIO.
+    Appuie sur une touche de mouvement.
 '''
-class Config:
-    def GET(self):
+class Press:
+    def GET(self, data):
+        inst = MonWebservice.instance
         try:
-            w = gpio.wheels.Wheels()
-            w.config()
-            return "OK"
+            if data in inst.translate_keys:
+                inst.robot.on_key_press(inst.translate_keys[data])
+                return "OK"
+            else:
+                return "KEY NOT FOUND"
 
         except Exception as e:
             traceback.print_exc()
             return "%s" % e
 
 
-# -- Init --------------------------------------------- #
+# -- Release ------------------------------------------ #
 
 '''
-    Initialisation des valeurs pour les GPIO concernés.
+    Arrêt d'appuie sur une touche de mouvement.
 '''
-class Init:
-    def GET(self):
+class Release:
+    def GET(self, data):
+        inst = MonWebservice.instance
         try:
-            w = gpio.wheels.Wheels()
-            w.init()
-            return "OK"
-
-        except Exception as e:
-            traceback.print_exc()
-            return "%s" % e
-
-
-# -- Forward --------------------------------------------- #
-
-'''
-    Démarrage des moteurs, le robot avance.
-'''
-class Forward:
-    def GET(self):
-        try:
-            w = gpio.wheels.Wheels()
-            w.forward()
-            return "OK"
-
-        except Exception as e:
-            traceback.print_exc()
-            return "%s" % e
-
-
-# -- Backward --------------------------------------------- #
-
-'''
-    Démarrage des moteurs, le robot va en arrière.
-'''
-class Backward:
-    def GET(self):
-        try:
-            w = gpio.wheels.Wheels()
-            w.backward()
-            return "OK"
-
-        except Exception as e:
-            traceback.print_exc()
-            return "%s" % e
-
-
-# -- Stop --------------------------------------------- #
-
-'''
-    Le robot s'arrete complètement.
-'''
-class Stop:
-    def GET(self):
-        try:
-            w = gpio.wheels.Wheels()
-            w.stop()
-            return "OK"
+            if data in inst.translate_keys:
+                inst.robot.on_key_release(inst.translate_keys[data])
+                return "OK"
+            else:
+                return "KEY NOT FOUND"
 
         except Exception as e:
             traceback.print_exc()
@@ -155,6 +134,7 @@ class NotFound:
 
 
 
+"""
 # ############################################################### #
 #    Main                                                         #
 #                                                                 #
@@ -162,10 +142,12 @@ class NotFound:
 
 def main():
     status = 0
+    
+    # Démarrage du webservice
+    inst = None
     try:
-        # Démarrage du webservice
-        instanceWS = MonWebservice(urls, globals())
-        instanceWS.run(ip=DEFAULT_IP, port=DEFAULT_PORT)
+        inst = MonWebservice(globals())
+        inst.run(ip=DEFAULT_IP, port=DEFAULT_PORT)
 
     except (KeyboardInterrupt, SystemExit):
         pass
@@ -174,8 +156,26 @@ def main():
         traceback.print_exc()
         status = 1
 
+    # Arrêt du thread pour le PWM
+    try:
+        if inst != None and inst.threadPWM != None:
+            inst.threadPWM.stopped = True
+    except:
+        traceback.print_exc()
+        status = 1
+
+    # Nettoyage des données du robot
+    try:
+        if inst != None and inst.robot != None:
+            inst.robot.clean()
+    except:
+        traceback.print_exc()
+        status = 1
+    
     sys.exit(status)
 
 
 if __name__ == "__main__":
     sys.exit(main())
+"""
+

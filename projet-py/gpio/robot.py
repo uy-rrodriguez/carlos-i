@@ -8,9 +8,10 @@
 import os, time
 import wheel
 from wheel import *
+from sensor import sensor
 
 
-# Wheels' wPi numbers
+# Wheels' pins
 FRONT_RIGHT_PWM    =    10 #=BCM #wPi=12
 FRONT_RIGHT_IN1    =    13 #=wPi
 FRONT_RIGHT_IN2    =    14 #=wPi
@@ -27,10 +28,22 @@ BACK_LEFT_PWM      =    17 #=BCM #wPi=0
 BACK_LEFT_IN1      =    2
 BACK_LEFT_IN2      =    3
 
+# Key codes
 KEY_FORWARD        =    "K_FWD"
 KEY_BACKWARD       =    "K_BKW"
 KEY_LEFT           =    "K_LEFT"
 KEY_RIGHT          =    "K_RIGHT"
+
+# Sensors' pins
+SENSOR_FRONT_TRIG  =    13 #=BCM, wPi=23
+SENSOR_FRONT_ECHO  =    5  #=BCM, wPi=21
+
+SENSOR_BACK_TRIG   =    19 #=BCM, wPi=24
+SENSOR_BACK_ECHO   =    6  #=BCM, wPi=22
+
+# Obstacle detection
+MIN_DISTANCE_FRONT = 10   #=cm
+MIN_DISTANCE_BACK  = 15   #=cm
 
 
 class Log(object):
@@ -58,7 +71,9 @@ class Log(object):
 
 class Robot(object):
     def __init__(self):
-        self.log = Log(Log.DEBUG)
+        #self.log = Log(Log.DEBUG)
+        self.log = Log(Log.INFO)
+        #self.log = Log(Log.ERROR)
         self.wheels = [
             wheel.Wheel(self.log, wheel.POS_LEFT,   FRONT_LEFT_PWM,   FRONT_LEFT_IN1,  FRONT_LEFT_IN2),
             wheel.Wheel(self.log, wheel.POS_RIGHT,  FRONT_RIGHT_PWM,  FRONT_RIGHT_IN1, FRONT_RIGHT_IN2),
@@ -79,22 +94,47 @@ class Robot(object):
         self.linear_direction = 0
         self.rotation_direction = 0
         self.previous_rotation = False
+        
+        # Pour la détection d'objets, on a deux télémètres, devant et derrière
+        self.sensor_front = sensor.Sensor(SENSOR_FRONT_TRIG, SENSOR_FRONT_ECHO)
+        self.sensor_back = sensor.Sensor(SENSOR_BACK_TRIG, SENSOR_BACK_ECHO)
+        self.sensors = [self.sensor_front, self.sensor_back]
+        
     
     def config(self):
         [w.set_all_mode(GPIO_MODE_OUT) for w in self.wheels]
+        [s.config() for s in self.sensors]
     
     def init(self):
         [w.set_pin_values(0.0, VALUE_OFF, VALUE_OFF) for w in self.wheels]
+        [s.init() for s in self.sensors]
     
     def clean(self):
         [w.set_pin_values(0.0, VALUE_OFF, VALUE_OFF) for w in self.wheels]
         [w.set_all_mode(GPIO_MODE_IN) for w in self.wheels]
+        [s.clean() for s in self.sensors]
     
     def on_key_press(self, key):
         self.keys[key] = True
     
     def on_key_release(self, key):
         self.keys[key] = False
+    
+    
+    def is_obstacle(self):
+        if self.linear_direction > 0:
+            distance = self.sensor_front.read()
+            return (distance != sensor.OUT_RANGE
+                    and distance <= MIN_DISTANCE_FRONT)
+            
+        elif self.linear_direction < 0:
+            distance = self.sensor_back.read()
+            return (distance != sensor.OUT_RANGE
+                    and distance <= MIN_DISTANCE_BACK)
+                    
+        else:
+            return False
+
 
     def update(self):
         # Détection de la direction du mouvement
@@ -115,17 +155,23 @@ class Robot(object):
 
         
         # Modification des pins des roues
-        #[w.set_pin_values(w.wpm_value, VALUE_OFF, VALUE_OFF) for w in self.robot.wheels]
         if self.rotation_direction == 0:
             if self.previous_rotation:
                 self.previous_rotation = False
                 # Restart PWM
                 [w.set_pwm(wheel.MIN_PWM) for w in self.wheels]
-                
-            if self.linear_direction > 0:
+            
+            # Avancer
+            if (self.linear_direction > 0
+                    and not self.is_obstacle()):
                 self.forward()
-            elif self.linear_direction < 0:
+            
+            # Aller en arrière
+            elif (self.linear_direction < 0
+                    and not self.is_obstacle()):
                 self.backward()
+            
+            # S'arrêter
             else:
                 self.stop()
         
@@ -146,6 +192,7 @@ class Robot(object):
                 self.wheels[1].forward()
                 self.wheels[3].forward()
 
+
     def stop(self):
         [w.stop() for w in self.wheels]
     
@@ -158,47 +205,78 @@ class Robot(object):
     def test_fwd_bkw(self):
         self.log.log_info("Test Robot Forward - Backward")
         
-        self.log.log_debug("Config"); self.config()
+        self.log.log_info("Config"); self.config()
         
-        self.log.log_debug("Init"); self.init()
+        self.log.log_info("Init"); self.init()
         
-        self.log.log_debug("Forward"); self.forward(); time.sleep(1)
+        self.log.log_info("Stop"); self.stop(); time.sleep(1)
         
-        self.log.log_debug("Stop"); self.stop(); time.sleep(1)
+        self.log.log_info("Forward"); self.forward(); time.sleep(1)
         
-        self.log.log_debug("Backward"); self.backward(); time.sleep(1)
+        self.log.log_info("Stop"); self.stop(); time.sleep(1)
         
-        self.log.log_debug("Stop"); self.stop()
-
+        self.log.log_info("Backward"); self.backward(); time.sleep(1)
+        
+        self.log.log_info("Stop"); self.stop()
+            
+            
+    def test_detect_manual(self):
+        self.log.log_info("Test Detect Wheels")
+        
+        self.log.log_info("Config"); self.config()
+        self.log.log_info("Init"); self.init()
+        
+        self.log.log_info("Front Left -> Forward")
+        self.stop()
+        self.wheels[0].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
+        raw_input("Press Enter to continue...")
+        
+        self.log.log_info("Front Right -> Forward")
+        self.stop()
+        self.wheels[1].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
+        raw_input("Press Enter to continue...")
+        
+        self.log.log_info("Back Left -> Forward")
+        self.stop()
+        self.wheels[2].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
+        raw_input("Press Enter to continue...")
+        
+        self.log.log_info("Back Right -> Forward")
+        self.stop()
+        self.wheels[3].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
+        raw_input("Press Enter to continue...")
+        
+        self.log.log_info("Stop");
+        self.stop()
             
             
     def test_detect(self):
         self.log.log_info("Test Detect Wheels")
         
-        self.log.log_debug("Config"); self.config()
-        self.log.log_debug("Init"); self.init()
+        self.log.log_info("Config"); self.config()
+        self.log.log_info("Init"); self.init()
         
-        self.log.log_debug("Front Left -> Forward")
+        self.log.log_info("Front Left -> Forward")
         self.stop()
         self.wheels[0].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
-        raw_input("Press Enter to continue...")
+        time.sleep(0.5)
         
-        self.log.log_debug("Front Right -> Forward")
+        self.log.log_info("Front Right -> Forward")
         self.stop()
         self.wheels[1].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
-        raw_input("Press Enter to continue...")
+        time.sleep(0.5)
         
-        self.log.log_debug("Back Left -> Forward")
+        self.log.log_info("Back Left -> Forward")
         self.stop()
         self.wheels[2].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
-        raw_input("Press Enter to continue...")
+        time.sleep(0.5)
         
-        self.log.log_debug("Back Right -> Forward")
+        self.log.log_info("Back Right -> Forward")
         self.stop()
         self.wheels[3].set_pin_values(MIN_PWM, VALUE_OFF, VALUE_ON)
-        raw_input("Press Enter to continue...")
+        time.sleep(0.5)
         
-        self.log.log_debug("Stop");
+        self.log.log_info("Stop");
         self.stop()
 
         
