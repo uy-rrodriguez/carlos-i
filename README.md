@@ -77,6 +77,7 @@ raspistill -o image.jpeg
 
 ### Cature et conversion de vidéos
 https://www.raspberrypi.org/documentation/usage/camera/raspicam/raspivid.md
+https://github.com/silvanmelchior/RPi_Cam_Web_Interface
 
 #### Installer l'util MP4Box
 sudo apt-get install -y gpac
