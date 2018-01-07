@@ -75,6 +75,9 @@ Avancer :
 ### Cature d'images
 raspistill -o image.jpeg
 
+### Techniques streaming / flux d'images
+http://www.magdiblog.fr/divers/raspberry-pi-camera-5-facons-de-faire-du-streaming/
+
 ### Cature et conversion de vidéos
 https://www.raspberrypi.org/documentation/usage/camera/raspicam/raspivid.md
 https://github.com/silvanmelchior/RPi_Cam_Web_Interface
