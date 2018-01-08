@@ -29,6 +29,9 @@ URLS = (
     "/command/press/(.*)",      "Press",
     "/command/release/(.*)",    "Release",
     "/(.*)",                    "NotFound"
+    
+    "/command/stream",              "ImageStream",
+    "/command/stream/(start|stop)", "ImageStreamControl",
 )
 
 # Touches acceptées
@@ -36,6 +39,14 @@ WS_KEY_UP       = "forward"
 WS_KEY_DOWN     = "backward"
 WS_KEY_LEFT     = "left"
 WS_KEY_RIGHT    = "right"
+
+# Formats d'image reconnus
+IMAGE_TYPES = {
+    "png": "images/png",
+    "jpg": "images/jpeg",
+    "gif": "images/gif",
+    "ico": "images/x-icon"            
+}
 
 
 
@@ -96,6 +107,7 @@ class Press:
             traceback.print_exc()
             return "%s" % e
 
+            
 
 # -- Release ------------------------------------------ #
 
@@ -116,6 +128,57 @@ class Release:
             traceback.print_exc()
             return "%s" % e
 
+            
+
+# -- ImageStream -------------------------------------- #
+
+'''
+    Récupération d'un stream en forme de flux d'images.
+'''
+class ImageStream:
+    def GET(self):
+        inst = MonWebservice.instance
+        try:
+            img = inst.robot.camera_get_last_frame()
+            ext = img.split(".")[-1]
+            
+            if os.path.exists(img):
+                web.header("Content-Type", IMAGE_TYPES[ext]) # Header pour renvoyer une image
+                return open(img, "rb").read()                # On ouvre l'image et on retourne le binaire, 'rb'
+            else:
+                return "Image '%s' non trouvée ou stream inactif" % (img)
+
+        except Exception as e:
+            traceback.print_exc()
+            return "%s" % e
+
+            
+
+# -- ImageStreamControl ------------------------------- #
+
+'''
+    Activation ou désactivation du stream d'images.
+'''
+class ImageStreamControl:
+    def GET(self, cmd):
+        inst = MonWebservice.instance
+        try:
+            if cmd == "start":
+                inst.robot.camera_start_stream()
+                return "Stream started"
+                
+            elif cmd == "stop":
+                inst.robot.camera_stop_stream()
+                return "Stream stopped"
+                
+            else:
+                return "Command '%s' not found" % (cmd)
+
+        except Exception as e:
+            traceback.print_exc()
+            return "%s" % e
+
+            
 
 # -- NotFound --------------------------------------------- #
 
@@ -131,51 +194,3 @@ class NotFound:
 
     def POST(self, data):
         return self.response()
-
-
-
-"""
-# ############################################################### #
-#    Main                                                         #
-#                                                                 #
-# ############################################################### #
-
-def main():
-    status = 0
-    
-    # Démarrage du webservice
-    inst = None
-    try:
-        inst = MonWebservice(globals())
-        inst.run(ip=DEFAULT_IP, port=DEFAULT_PORT)
-
-    except (KeyboardInterrupt, SystemExit):
-        pass
-
-    except:
-        traceback.print_exc()
-        status = 1
-
-    # Arrêt du thread pour le PWM
-    try:
-        if inst != None and inst.threadPWM != None:
-            inst.threadPWM.stopped = True
-    except:
-        traceback.print_exc()
-        status = 1
-
-    # Nettoyage des données du robot
-    try:
-        if inst != None and inst.robot != None:
-            inst.robot.clean()
-    except:
-        traceback.print_exc()
-        status = 1
-    
-    sys.exit(status)
-
-
-if __name__ == "__main__":
-    sys.exit(main())
-"""
-

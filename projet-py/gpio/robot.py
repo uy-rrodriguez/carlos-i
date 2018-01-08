@@ -100,6 +100,9 @@ class Robot(object):
         self.sensor_back = sensor.Sensor(SENSOR_BACK_TRIG, SENSOR_BACK_ECHO)
         self.sensors = [self.sensor_front, self.sensor_back]
         
+        # On peut assigner une caméra après l'initialisation du robot
+        self.camera = None
+        
     
     def config(self):
         [w.set_all_mode(GPIO_MODE_OUT) for w in self.wheels]
@@ -279,6 +282,30 @@ class Robot(object):
         self.log.log_info("Stop");
         self.stop()
 
+    
+    
+    # ############################################################### #
+    #    Gestion de la caméra                                         #
+    #                                                                 #
+    # ############################################################### #
+    def set_camera(self, camera):
+        self.camera = camera
+    
+    def camera_start_stream(self):
+        if self.camera is not None:
+            self.camera.start_image_stream()
+
+    def camera_stop_stream(self):
+        if self.camera is not None:
+            self.camera.stop_image_stream()
+
+    def camera_get_last_frame(self):
+        if self.camera is not None:
+            return self.camera.get_last_frame()
+        else
+            return ""
+    
+    
         
 if __name__ == "__main__":
     r = Robot()

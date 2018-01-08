@@ -11,6 +11,7 @@ import sys, traceback
 from gpio.robot import Robot
 from ws.ws import *
 from pwm.pwm import UpdatePWM
+from camera.camera import Camera
 
 
 # ############################################################### #
@@ -24,14 +25,21 @@ def main():
     robot = None
     webservice = None
     threadPWM = None
+    cam = None
     
     try:
+        # Création d'un objet pour accéder à la caméra
+        cam = Camera()
+        
         # Création d'un objet pour accéder au vrai robot
         robot = Robot()
         robot.config()
         robot.init()
         robot.test_detect()
         #self.robot.test_fwd_bkw()
+        
+        # Assignation de la caméra au robot
+        robot.set_camera(cam)
         
         # Création du thread pour incrémenter le PWM
         threadPWM = UpdatePWM(robot)
