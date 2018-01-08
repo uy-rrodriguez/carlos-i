@@ -22,23 +22,23 @@ CAMERA_IMG_PARAMS       = "--nopreview -w %i -h %i -q %i -o %s"
     des objets.
 """
 class Camera(object):
-    def __init__(self, dest_path=CAMERA_IMG_PATH):
-        self.dest_path = dest_path
-        self.create_dest_path()
-        self.image_stream = CameraImageStream(self)
+
+    def __init__(self):
+        self.create_dest_path(CAMERA_IMG_PATH)
+        self.image_stream = CameraImageStream()
     
-    def create_dest_path(self):
+    def create_dest_path(self, dest_path):
         # Suppression du répertoire temporaire
-        if os.path.exists(self.dest_path):
-            for root, dirs, files in os.walk(top, topdown=False):
+        if False and os.path.exists(dest_path):
+            for root, dirs, files in os.walk(dest_path, topdown=False):
                 for name in files:
                     os.remove(os.path.join(root, name))
                 for name in dirs:
                     os.rmdir(os.path.join(root, name))
         
         # Création du répertoire temporaire
-        if not os.path.exists(self.dest_path):
-            return os.mkdir(self.dest_path)
+        if not os.path.exists(dest_path):
+            return os.mkdir(dest_path)
 
         return True
 
@@ -51,11 +51,14 @@ class Camera(object):
             self.image_stream.stop()
 
     def get_last_frame(self):
-        output = self.camera.dest_path + CAMERA_IMG_NAME
+        output = CAMERA_IMG_PATH + CAMERA_IMG_NAME
+        print "LOG [Camera] output :", output
         if os.path.exists(output):
             return output
-        else
+        else:
             return ""
+
+
 
 """
     Thread pour gérer un flux d'images.
@@ -67,18 +70,19 @@ class Camera(object):
     on utilise une instance de la classe subprocess.Popen qui va faire l'appel
     système et, quand le flux est arrêté, on execute terminate() sur le subprocess.
 """
-def CameraImageStream(Thread):
-    def __init__(self, camera):
-        self.camera = camera
+class CameraImageStream(Thread):
+
+    def __init__(self):
         self.stopped = True
-        self.process = None
+        self.command_process = None
         super(CameraImageStream, self).__init__()
     
     def run(self):
         self.stopped = False
         
         # Paramètres de base pour une image
-        output = self.camera.dest_path + CAMERA_IMG_NAME
+        #output = self.cam.dest_path + CAMERA_IMG_NAME
+        output = CAMERA_IMG_PATH + CAMERA_IMG_NAME
         params = CAMERA_IMG_PARAMS % (CAMERA_IMG_WIDTH,
                                        CAMERA_IMG_HEIGHT,
                                        CAMERA_IMG_QUALITY,
@@ -94,14 +98,13 @@ def CameraImageStream(Thread):
         cmd = [CAMERA_IMG_COMMAND, params]
         print "LOG [CameraImageStream] :", cmd[0], cmd[1]
         
-        self.process = subprocess.Popen(cmd,
-                                        stdout=subprocess.STDOUT,
-                                        stderr=subprocess.STDOUT)
+        self.command_process = subprocess.Popen(cmd)
 
     def stop(self):
         print "LOG [CameraImageStream] : Trying to stop raspistill"
-        if self.process is not None:
-            self.process.terminate()
-            self.process = None
+        if self.command_process is not None:
+            self.command_process.terminate()
+            self.command_process = None
 
         self.stopped = True
+

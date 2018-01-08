@@ -302,8 +302,8 @@ class Robot(object):
     def camera_get_last_frame(self):
         if self.camera is not None:
             return self.camera.get_last_frame()
-        else
-            return ""
+        else:
+            return "Camera non configuree"
     
     
         

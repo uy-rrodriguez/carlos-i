@@ -43,6 +43,7 @@ def main():
         
         # Création du thread pour incrémenter le PWM
         threadPWM = UpdatePWM(robot)
+        print "Thread PWM : ", threadPWM
         threadPWM.start()
         
         # Démarrage du webservice

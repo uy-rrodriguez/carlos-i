@@ -9,7 +9,7 @@
     intervalles réguliers.
 """
 
-import sys, traceback, json
+import os, sys, traceback, json
 import web
 import gpio.robot
 
@@ -28,10 +28,11 @@ DEFAULT_PORT = 8080
 URLS = (
     "/command/press/(.*)",      "Press",
     "/command/release/(.*)",    "Release",
-    "/(.*)",                    "NotFound"
     
     "/command/stream",              "ImageStream",
     "/command/stream/(start|stop)", "ImageStreamControl",
+
+    "/(.*)",                    "NotFound"
 )
 
 # Touches acceptées
