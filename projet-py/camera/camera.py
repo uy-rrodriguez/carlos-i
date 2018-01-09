@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 
-import os, time, subprocess
+import os, time, shlex, subprocess
 from threading import Thread
 
 
@@ -13,7 +13,7 @@ CAMERA_IMG_HEIGHT       = 480   # Paramètre -h
 CAMERA_IMG_QUALITY      = 5     # Paramètre -q (0 à 100)
 CAMERA_IMG_FPS          = 2     # Nombre de photos par seconde
 CAMERA_IMG_COMMAND      = "raspistill"
-CAMERA_IMG_PARAMS       = "--nopreview -w %i -h %i -q %i -o %s"
+CAMERA_IMG_ARGS         = "--nopreview -w %i -h %i -q %i -o %s"
 
 
 """
@@ -52,7 +52,7 @@ class Camera(object):
 
     def get_last_frame(self):
         output = CAMERA_IMG_PATH + CAMERA_IMG_NAME
-        print "LOG [Camera] output :", output
+        #print "LOG [Camera] output :", output
         if os.path.exists(output):
             return output
         else:
@@ -83,21 +83,25 @@ class CameraImageStream(Thread):
         # Paramètres de base pour une image
         #output = self.cam.dest_path + CAMERA_IMG_NAME
         output = CAMERA_IMG_PATH + CAMERA_IMG_NAME
-        params = CAMERA_IMG_PARAMS % (CAMERA_IMG_WIDTH,
-                                       CAMERA_IMG_HEIGHT,
-                                       CAMERA_IMG_QUALITY,
-                                       output)
+        args = CAMERA_IMG_ARGS % (CAMERA_IMG_WIDTH,
+                                    CAMERA_IMG_HEIGHT,
+                                    CAMERA_IMG_QUALITY,
+                                    output)
 
         # Paramètres pour lancer raspistill en mode timelapse
         timelapse = int(1000 / CAMERA_IMG_FPS)  # Temps en une photo et la prochaine, en ms
-        timeout = 9999999                       # Temps pendant lequel la caméra reste allumée
+        timeout = 30000#9999999                       # Temps pendant lequel la caméra reste allumée
                                                 #   pour continuer à prendre des photos
-        params += " -tl %i -t %i" % (timelapse, timeout)
+        args += " -tl %i -t %i" % (timelapse, timeout)
+        
+        # Ligne avec la  commande
+        cmd_line = CAMERA_IMG_COMMAND + " " + args
+        
+        # Division des arguments à envoyer à Popen
+        cmd = shlex.split(cmd_line)
         
         # Création d'un subprocess avec Popen
-        cmd = [CAMERA_IMG_COMMAND, params]
-        print "LOG [CameraImageStream] :", cmd[0], cmd[1]
-        
+        print "LOG [CameraImageStream] :", cmd_line
         self.command_process = subprocess.Popen(cmd)
 
     def stop(self):
