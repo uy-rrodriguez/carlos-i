@@ -57,6 +57,14 @@ def main():
         traceback.print_exc()
         status = 1
 
+    # Arret du stream
+    try:
+       if cam != None:
+           cam.stop_image_stream()
+    except:
+        traceback.print_exc()
+        status = 1
+
 
     # Arrêt du thread pour le PWM
     try:
