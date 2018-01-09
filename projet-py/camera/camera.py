@@ -100,15 +100,19 @@ class CameraImageStream(Thread):
         # Division des arguments à envoyer à Popen
         cmd = shlex.split(cmd_line)
         
-        # Création d'un subprocess avec Popen
-        print "LOG [CameraImageStream] :", cmd_line
-        self.command_process = subprocess.Popen(cmd)
+        while not self.stopped:
+            # Création d'un subprocess avec Popen
+            print "LOG [CameraImageStream] :", cmd_line
+            self.command_process = subprocess.Popen(cmd)
+            self.command_process = None
+            time.sleep(0.0001) # PEtite attente avant de reprendre
 
     def stop(self):
+        self.stopped = True
+        
         print "LOG [CameraImageStream] : Trying to stop raspistill"
         if self.command_process is not None:
             self.command_process.terminate()
             self.command_process = None
 
-        self.stopped = True
 
