@@ -8,10 +8,10 @@ from threading import Thread
 # Paramètres pour la capture d'images
 CAMERA_IMG_PATH         = "/tmp/carlos_i_images/"
 CAMERA_IMG_NAME         = "stream.jpg" #"stream%02d.jpg"
-CAMERA_IMG_WIDTH        = 640   # Paramètre -w
-CAMERA_IMG_HEIGHT       = 480   # Paramètre -h
-CAMERA_IMG_QUALITY      = 5     # Paramètre -q (0 à 100)
-CAMERA_IMG_FPS          = 2     # Nombre de photos par seconde
+CAMERA_IMG_WIDTH        = 320 #640   # Paramètre -w
+CAMERA_IMG_HEIGHT       = 240 #480   # Paramètre -h
+CAMERA_IMG_QUALITY      = 5          # Paramètre -q (0 à 100)
+CAMERA_IMG_FPS          = 10         # Nombre de photos par seconde
 CAMERA_IMG_COMMAND      = "raspistill"
 CAMERA_IMG_ARGS         = "--nopreview -w %i -h %i -q %i -o %s"
 
@@ -104,15 +104,15 @@ class CameraImageStream(Thread):
             # Création d'un subprocess avec Popen
             print "LOG [CameraImageStream] :", cmd_line
             self.command_process = subprocess.Popen(cmd)
+            self.command_process.wait()
             self.command_process = None
-            time.sleep(0.0001) # PEtite attente avant de reprendre
+            time.sleep(0.0001)
 
     def stop(self):
         self.stopped = True
-        
+
         print "LOG [CameraImageStream] : Trying to stop raspistill"
         if self.command_process is not None:
             self.command_process.terminate()
             self.command_process = None
-
 
