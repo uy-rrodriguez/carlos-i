@@ -42,8 +42,8 @@ SENSOR_BACK_TRIG   =    19 #=BCM, wPi=24
 SENSOR_BACK_ECHO   =    6  #=BCM, wPi=22
 
 # Obstacle detection
-MIN_DISTANCE_FRONT = 10   #=cm
-MIN_DISTANCE_BACK  = 15   #=cm
+MIN_DISTANCE_FRONT = 15   #=cm
+MIN_DISTANCE_BACK  = 20   #=cm
 
 
 class Log(object):
@@ -72,8 +72,8 @@ class Log(object):
 class Robot(object):
     def __init__(self):
         #self.log = Log(Log.DEBUG)
-        self.log = Log(Log.INFO)
-        #self.log = Log(Log.ERROR)
+        #self.log = Log(Log.INFO)
+        self.log = Log(Log.ERROR)
         self.wheels = [
             wheel.Wheel(self.log, wheel.POS_LEFT,   FRONT_LEFT_PWM,   FRONT_LEFT_IN1,  FRONT_LEFT_IN2),
             wheel.Wheel(self.log, wheel.POS_RIGHT,  FRONT_RIGHT_PWM,  FRONT_RIGHT_IN1, FRONT_RIGHT_IN2),
@@ -94,6 +94,10 @@ class Robot(object):
         self.linear_direction = 0
         self.rotation_direction = 0
         self.previous_rotation = False
+        
+        # Pour commencer la reconnaissance d'images, on veut d'abord
+        # savoir si le robot vient de s'arrêter
+        self.is_in_motion = False
         
         # Pour la détection d'objets, on a deux télémètres, devant et derrière
         self.sensor_front = sensor.Sensor(SENSOR_FRONT_TRIG, SENSOR_FRONT_ECHO)
@@ -181,7 +185,7 @@ class Robot(object):
         else :
             self.linear_direction = 0
             self.previous_rotation = True
-            [w.set_pwm(wheel.MAX_PWM) for w in self.wheels]
+            [w.set_pwm(wheel.ROTATION_PWM) for w in self.wheels]
             
             if self.rotation_direction > 0:
                 self.wheels[0].forward()
@@ -194,6 +198,17 @@ class Robot(object):
                 self.wheels[2].backward()
                 self.wheels[1].forward()
                 self.wheels[3].forward()
+        
+        
+        # On détecte si le robot vient de commencer un mouvement
+        if self.linear_direction != 0 or self.rotation_direction != 0:
+            self.is_in_motion = True
+            self.camera_stop_processing()
+        
+        # Ou on détecte s'il vient de s'arrêter    
+        elif self.is_in_motion:
+            self.is_in_motion = False
+            self.camera_start_processing()
 
 
     def stop(self):
@@ -303,7 +318,21 @@ class Robot(object):
         if self.camera is not None:
             return self.camera.get_last_frame()
         else:
-            return "Camera non configuree"
+            return "Camera non configurée"
+
+    def camera_start_processing(self):
+        if self.camera is not None:
+            self.camera.start_processing()
+
+    def camera_stop_processing(self):
+        if self.camera is not None:
+            self.camera.stop_processing()
+
+    def camera_get_processing_result(self):
+        if self.camera is not None:
+            return self.camera.get_processing_result()
+        else:
+            None
     
     
         

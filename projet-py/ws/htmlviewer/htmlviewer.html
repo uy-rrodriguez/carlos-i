@@ -1,0 +1,142 @@
+<html>
+<body>
+    <div>
+        <div>
+            <img id="stream" src="">
+
+            <!--
+            <video id="stream-video" autoplay>
+                <source src="http://10.3.141.1:8090/" type="video/mp4">
+            </video>
+            -->
+
+			<i><span id="recognition">Recognition result</span></i>
+        </div>
+
+        <div>
+            <h2>Stream control:</h2>
+            <div id="btn-stream-result"></div>
+            <button id="btn-stream-start" style="height: 50px; background-color: #6D6">START</button>
+            <button id="btn-stream-stop" style="height: 50px; background-color: #D44">STOP</button>
+        </div>
+
+        <div>
+            <h2>Motion controls:</h2>
+            <div id="btn-motion-result"></div>
+            <table border="0">
+                <tr>
+                    <td></td>
+                    <td><button id="btn-motion-forward" style="height: 40px; background-color: #999">F</button></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><button id="btn-motion-left" style="height: 40px; background-color: #999">L</button></td>
+                    <td></td>
+                    <td><button id="btn-motion-right" style="height: 40px; background-color: #999">R</button></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button id="btn-motion-backward" style="height: 40px; background-color: #999">B</button></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="http://10.3.141.1:8080/stream/htmlviewer/jquery.js"></script>
+    <script>
+        function reloadImage() {
+            $.ajax("/stream" + "?" + Math.random()).done(function(data) {
+                try {
+                    var obj = JSON.parse(data);
+                    
+                    $("#stream").attr("src", "data:image/jpeg;base64," + obj.response.stream);
+                    $("#recognition").html(obj.response.recognition);
+                }
+                catch(e) {
+                    // Do nothing
+                }
+            });
+        }
+        
+        function doMotionAjax(url) {
+            $.ajax(url).done(function(data) {
+                $("#btn-motion-result").html(data);
+            });
+        }
+
+
+        $(document).ready(function() {
+
+            streamActive = false;
+            streamViewerFPS = 15;
+
+            setInterval(function() {
+                if (streamActive) {
+                    reloadImage();
+                }
+            }, (1000 / streamViewerFPS));
+
+
+            /* **************** STREAM CONTROL ********************* */
+            // Start stream
+            $("#btn-stream-start").click(function() {
+                //streamActive = true; return;
+                
+                $.ajax("/stream/start").done(function(data) {
+                    streamActive = true;
+                    $("#btn-stream-result").html(data);
+                });
+            });
+
+
+            // Stop stream
+            $("#btn-stream-stop").click(function() {
+                //streamActive = false; return;
+                
+                $.ajax("/stream/stop").done(function(data) {
+                    streamActive = false;
+                    $("#btn-stream-result").html(data);
+                });
+            });
+
+
+            /* **************** MOTION CONTROL ********************* */
+            // Forward
+            $("#btn-motion-forward").mousedown(function() {
+                doMotionAjax("/command/press/forward");
+            });
+            $("#btn-motion-forward").mouseup(function() {
+                doMotionAjax("/command/release/forward");
+            });
+            
+            
+            // Backward
+            $("#btn-motion-backward").mousedown(function() {
+                doMotionAjax("/command/press/backward");
+            });
+            $("#btn-motion-backward").mouseup(function() {
+                doMotionAjax("/command/release/backward");
+            });
+            
+            
+            // Left
+            $("#btn-motion-left").mousedown(function() {
+                doMotionAjax("/command/press/left");
+            });
+            $("#btn-motion-left").mouseup(function() {
+                doMotionAjax("/command/release/left");
+            });
+            
+            
+            // Right
+            $("#btn-motion-right").mousedown(function() {
+                doMotionAjax("/command/press/right");
+            });
+            $("#btn-motion-right").mouseup(function() {
+                doMotionAjax("/command/release/right");
+            });
+        });
+    </script>
+</body>
+</html>

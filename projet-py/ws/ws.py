@@ -10,6 +10,7 @@
 """
 
 import os, sys, traceback, json
+import base64
 import web
 import gpio.robot
 
@@ -29,8 +30,12 @@ URLS = (
     "/command/press/(.*)",      "Press",
     "/command/release/(.*)",    "Release",
     
-    "/command/stream",              "ImageStream",
-    "/command/stream/(start|stop)", "ImageStreamControl",
+    "/stream",                  "ImageStream",
+    "/stream/(start|stop)",     "ImageStreamControl",
+    "/stream/htmlviewer",       "ImageStreamViewer",
+    "/stream/htmlviewer/jquery.js", "ImageStreamViewerJQuery",
+    
+    "/recognition/(start|stop)", "RecognitionControl",
 
     "/(.*)",                    "NotFound"
 )
@@ -43,10 +48,10 @@ WS_KEY_RIGHT    = "right"
 
 # Formats d'image reconnus
 IMAGE_TYPES = {
-    "png": "images/png",
-    "jpg": "images/jpeg",
-    "gif": "images/gif",
-    "ico": "images/x-icon"            
+    "png": "image/png",
+    "jpg": "image/jpeg",
+    "gif": "image/gif",
+    "ico": "image/x-icon"            
 }
 
 
@@ -135,6 +140,14 @@ class Release:
 
 '''
     Récupération d'un stream en forme de flux d'images.
+    
+    La méthode GET va retourner l'objet JSON suivant :
+        {
+            "response": {
+                "stream": "<image encodé en Base64>",
+                "recognition": "<string vide>" ou "<objet reconnu>"
+            }
+        }
 '''
 class ImageStream:
     def GET(self):
@@ -144,14 +157,35 @@ class ImageStream:
             ext = img.split(".")[-1]
             
             if os.path.exists(img):
-                web.header("Content-Type", IMAGE_TYPES[ext]) # Header pour renvoyer une image
-                return open(img, "rb").read()                # On ouvre l'image et on retourne le binaire, 'rb'
+                #web.header("Content-Type", IMAGE_TYPES[ext]) # Header pour renvoyer une image
+                #return open(img, "rb").read()                # On ouvre l'image et on retourne le binaire, 'rb'
+                
+                # Conversion de l'image à texte
+                image_base64 = ""
+                with open(img, "rb") as image_file:
+                    image_base64 = base64.b64encode(image_file.read())
+                
+                # Obtention de l'objet reconnu par la caméra
+                recognition = inst.robot.camera_get_processing_result()
+                if recognition is None:
+                    recognition = ""
+                
+                # Construction de l'objet JSON résultant
+                response = '{"response":{'
+                response += '"stream":"' + image_base64 + '",'
+                response += '"recognition":"' + recognition + '"'
+                response += '}}'
+                
+                return response
+                
             else:
-                return "Image '%s' non trouvée ou stream inactif" % (img)
+                #return "Image '%s' non trouvée ou stream inactif" % (img)
+                return web.NoContent(data="Image '%s' non trouvée ou stream inactif" % (img))
 
         except Exception as e:
             traceback.print_exc()
-            return "%s" % e
+            #return "%s" % e
+            return web.InternalError("%s" % e)
 
             
 
@@ -181,6 +215,58 @@ class ImageStreamControl:
 
             
 
+# -- ImageStreamViewer -------------------------------- #
+
+'''
+    Activation ou désactivation du stream d'images.
+'''
+class ImageStreamViewer:
+    def GET(self):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        with open(os.path.join(dir_path, "htmlviewer", "htmlviewer.html"), "r") as viewer:
+            return viewer.read()
+
+
+
+# -- ImageStreamViewerJQuery -------------------------- #
+
+'''
+    Bibliothueque JQuery pour le HTMLViewer.
+'''
+class ImageStreamViewerJQuery:
+    def GET(self):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        with open(os.path.join(dir_path, "htmlviewer", "jquery-3.2.1.min.js"), "r") as jquery:
+            return jquery.read()
+            
+
+
+# -- RecognitionControl ------------------------------- #
+
+'''
+    Démarrage et arrêt de la reconnaissance d'images.
+'''
+class RecognitionControl:
+    def GET(self, cmd):
+        inst = MonWebservice.instance
+        try:
+            if cmd == "start":
+                inst.robot.camera_start_processing()
+                return "Recognition started"
+                
+            elif cmd == "stop":
+                inst.robot.camera_stop_processing()
+                return "Recognition stopped"
+                
+            else:
+                return "Command '%s' not found" % (cmd)
+
+        except Exception as e:
+            traceback.print_exc()
+            return "%s" % e
+            
+            
+
 # -- NotFound --------------------------------------------- #
 
 '''
@@ -188,7 +274,7 @@ class ImageStreamControl:
 '''
 class NotFound:
     def response(self):
-        return "404"
+        return web.notfound()
 
     def GET(self, data):
         return self.response()

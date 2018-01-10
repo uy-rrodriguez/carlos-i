@@ -15,6 +15,7 @@ POS_RIGHT       =   "POS_RIGHT"
 
 MAX_PWM         =   0.5
 MIN_PWM         =   0.3
+ROTATION_PWM    =   0.3
 DELTA_PWM       =   0.1
 
 VALUE_ON        =   1

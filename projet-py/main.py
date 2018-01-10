@@ -29,9 +29,14 @@ def main():
     
     try:
         # Création d'un objet pour accéder à la caméra
+        print "Démarrage caméra"
         cam = Camera()
         
+        print "Démarrage streaming"
+        cam.start_image_stream()
+        
         # Création d'un objet pour accéder au vrai robot
+        print "Démarrage robot"
         robot = Robot()
         robot.config()
         robot.init()
@@ -42,11 +47,12 @@ def main():
         robot.set_camera(cam)
         
         # Création du thread pour incrémenter le PWM
+        print "Démarrage thread PWM"
         threadPWM = UpdatePWM(robot)
-        print "Thread PWM : ", threadPWM
         threadPWM.start()
         
         # Démarrage du webservice
+        print "Démarrage webservice"
         webservice = MonWebservice(robot, globals())
         webservice.run()
 
@@ -57,10 +63,17 @@ def main():
         traceback.print_exc()
         status = 1
 
-    # Arret du stream
+
+    print ""
+    
+    # Arret du stream et de l'analyse d'images
     try:
-       if cam != None:
-           cam.stop_image_stream()
+        print "Arrêt caméra"
+        if cam != None:
+            #print "Arrêt stream"
+            #cam.stop_image_stream()
+            print "Arrêt traitement d'images"
+            cam.stop_processing()
     except:
         traceback.print_exc()
         status = 1
@@ -68,6 +81,7 @@ def main():
 
     # Arrêt du thread pour le PWM
     try:
+        print "Arrêt thread PWM"
         if threadPWM != None:
             threadPWM.stopped = True
     except:
@@ -77,12 +91,12 @@ def main():
 
     # Nettoyage des données du robot
     try:
+        print "Arrêt robot"
         if robot != None:
             robot.clean()
     except:
         traceback.print_exc()
         status = 1
-    
     
     sys.exit(status)
 
