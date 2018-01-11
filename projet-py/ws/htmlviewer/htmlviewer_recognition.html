@@ -3,6 +3,11 @@
     <div>
         <div>
             <img id="stream" src="">
+
+			<div>
+                <h2>Recognition result:</h2>
+                <i><span id="recognition">Recognition result</span></i>
+            </div>
         </div>
 
         <div>
@@ -38,9 +43,12 @@
     <script src="http://10.3.141.1:8080/stream/htmlviewer/jquery.js"></script>
     <script>
         function reloadImage() {
-            $.ajax("/stream" + "?" + Math.random()).done(function(data) {
+            $.ajax("/stream_recognition" + "?" + Math.random()).done(function(data) {
                 try {
-                    $("#stream").attr("src", "data:image/jpeg;base64," + data);
+                    var obj = JSON.parse(data);
+                    
+                    $("#stream").attr("src", "data:image/jpeg;base64," + obj.response.stream);
+                    $("#recognition").html(obj.response.recognition);
                 }
                 catch(e) {
                     // Do nothing

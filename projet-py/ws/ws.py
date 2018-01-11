@@ -35,6 +35,9 @@ URLS = (
     "/stream/htmlviewer",       "ImageStreamViewer",
     "/stream/htmlviewer/jquery.js", "ImageStreamViewerJQuery",
     
+    "/stream_recognition",      "ImageStreamRecognition",
+    "/stream/htmlviewer_recognition", "ImageStreamViewerRecognition",
+    
     "/recognition/(start|stop)", "RecognitionControl",
 
     "/(.*)",                    "NotFound"
@@ -141,13 +144,7 @@ class Release:
 '''
     Récupération d'un stream en forme de flux d'images.
     
-    La méthode GET va retourner l'objet JSON suivant :
-        {
-            "response": {
-                "stream": "<image encodé en Base64>",
-                "recognition": "<string vide>" ou "<objet reconnu>"
-            }
-        }
+    La méthode GET va retourner l'image encodé en Base64.
 '''
 class ImageStream:
     def GET(self):
@@ -157,9 +154,43 @@ class ImageStream:
             ext = img.split(".")[-1]
             
             if os.path.exists(img):
-                #web.header("Content-Type", IMAGE_TYPES[ext]) # Header pour renvoyer une image
-                #return open(img, "rb").read()                # On ouvre l'image et on retourne le binaire, 'rb'
+                # Conversion de l'image à texte
+                image_base64 = ""
+                with open(img, "rb") as image_file:
+                    image_base64 = base64.b64encode(image_file.read())
                 
+                return image_base64
+                
+            else:
+                return web.NoContent(data="Image '%s' non trouvée ou stream inactif" % (img))
+
+        except Exception as e:
+            traceback.print_exc()
+            return web.InternalError("%s" % e)
+
+            
+
+# -- ImageStreamRecognition --------------------------- #
+
+'''
+    Récupération d'un stream en forme de flux d'images.
+    
+    La méthode GET va retourner l'objet JSON suivant :
+        {
+            "response": {
+                "stream": "<image encodé en Base64>",
+                "recognition": "<string vide>" ou "<objet reconnu>"
+            }
+        }
+'''
+class ImageStreamRecognition:
+    def GET(self):
+        inst = MonWebservice.instance
+        try:
+            img = inst.robot.camera_get_last_frame()
+            ext = img.split(".")[-1]
+            
+            if os.path.exists(img):
                 # Conversion de l'image à texte
                 image_base64 = ""
                 with open(img, "rb") as image_file:
@@ -179,12 +210,10 @@ class ImageStream:
                 return response
                 
             else:
-                #return "Image '%s' non trouvée ou stream inactif" % (img)
                 return web.NoContent(data="Image '%s' non trouvée ou stream inactif" % (img))
 
         except Exception as e:
             traceback.print_exc()
-            #return "%s" % e
             return web.InternalError("%s" % e)
 
             
@@ -218,12 +247,25 @@ class ImageStreamControl:
 # -- ImageStreamViewer -------------------------------- #
 
 '''
-    Activation ou désactivation du stream d'images.
+    Page HTML pour vir le flux d'images.
 '''
 class ImageStreamViewer:
     def GET(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         with open(os.path.join(dir_path, "htmlviewer", "htmlviewer.html"), "r") as viewer:
+            return viewer.read()
+
+            
+
+# -- ImageStreamViewerRecognition --------------------- #
+
+'''
+    Page HTML pour vir le flux d'images avec reconnaissance d'images.
+'''
+class ImageStreamViewerRecognition:
+    def GET(self):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        with open(os.path.join(dir_path, "htmlviewer", "htmlviewer_recognition.html"), "r") as viewer:
             return viewer.read()
 
 

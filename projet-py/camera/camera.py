@@ -2,13 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import os, time, shlex, subprocess
+import urllib
 from threading import Thread
 from shutil import copyfile
 from cameratensorflow import CameraTensorFlow
 
 # Paramètres pour la capture d'images
-CAMERA_IMG_PATH         = "/tmp/carlos_i_images/"
-CAMERA_IMG_NAME         = "stream.jpg" #"stream%02d.jpg"
+CAMERA_IMG_PATH         = "/dev/shm/carlos_i_images/"
+CAMERA_IMG_NAME         = "stream.jpg"
+
+"""
 CAMERA_IMG_WIDTH        = 320 #640   # Paramètre -w
 CAMERA_IMG_HEIGHT       = 240 #480   # Paramètre -h
 CAMERA_IMG_QUALITY      = 50         # Paramètre -q (0 à 100)
@@ -16,10 +19,15 @@ CAMERA_IMG_ROTATION     = 270        # Paramètre -rot
 CAMERA_IMG_FPS          = 15         # Nombre de photos par seconde
 CAMERA_IMG_COMMAND      = "raspistill"
 CAMERA_IMG_ARGS         = "--nopreview -w %i -h %i -rot %i -q %i -o %s"
+"""
 
+# Paramètres pour la capture d'images
+CAMERA_WEBCAM_START     = "/home/pi/rpiwebcam/RPi_Cam_Web_Interface/start.sh"
+CAMERA_WEBCAM_STOP      = "/home/pi/rpiwebcam/RPi_Cam_Web_Interface/stop.sh"
+CAMERA_WEBCAM_FRAME     = "http://localhost:9090/cam_pic.php?time=%i&pDelay=40000"
 
 # Paramètres pour l'analyse d'images
-CAMERA_PROCESSING_FILE  = "/tmp/carlos_i_images/processing.jpg"
+CAMERA_PROCESSING_FILE  = CAMERA_IMG_PATH + "processing.jpg"
 
 
 """
@@ -27,15 +35,18 @@ CAMERA_PROCESSING_FILE  = "/tmp/carlos_i_images/processing.jpg"
     configurer des prises vidéos à intervalles réguliers et détecter
     des objets.
     
+    Nous avons commencé avec raspistill, mais la prise de photos était trop lente.
+        Documentation raspistill
+            https://www.modmypi.com/blog/raspberry-pi-camera-board-raspistill-command-list
+        
+        Capture vidéo + Streaming VLC
+            raspivid -o - -rot 270 -t 0 -w 640 -h 360 -fps 25|cvlc stream:///dev/stdin --sout '#standard{access=http,mux=ts,dst=:8090}' :demux=h264
+        
+        Capture images en continu
+            raspistill --nopreview -w 320 -h 240 -q 50 -o /tmp/carlos_i_images/stream.jpg -tl 100 -t 0
     
-    Documentation raspistill
-        https://www.modmypi.com/blog/raspberry-pi-camera-board-raspistill-command-list
-    
-    Capture vidéo + Streaming VLC
-        raspivid -o - -rot 270 -t 0 -w 640 -h 360 -fps 25|cvlc stream:///dev/stdin --sout '#standard{access=http,mux=ts,dst=:8090}' :demux=h264
-    
-    Capture images en continu
-        raspistill --nopreview -w 320 -h 240 -q 50 -o /tmp/carlos_i_images/stream.jpg -tl 100 -t 0
+    Finalement nous avons installé et configuré l'outil RPi Cam Web Interface:
+        https://elinux.org/RPi-Cam-Web-Interface
 """
 class Camera(object):
 
@@ -72,6 +83,10 @@ class Camera(object):
 
     def get_last_frame(self):
         output = CAMERA_IMG_PATH + CAMERA_IMG_NAME
+        
+        # Obtention de l'image générée par RPi Cam Web
+        urllib.urlretrieve(CAMERA_WEBCAM_FRAME % (time.time()), output)
+        
         if os.path.exists(output):
             return output
         else:
@@ -79,7 +94,6 @@ class Camera(object):
 
     def start_processing(self):
         frame = self.get_last_frame()
-        #frame = "/home/pi/carlos-i/tensorflow/test.jpg"
         if frame != "":
             copyfile(frame, CAMERA_PROCESSING_FILE)
             self.image_processor.process_image(CAMERA_PROCESSING_FILE)
@@ -95,20 +109,35 @@ class Camera(object):
 """
     Thread pour gérer un flux d'images.
     
-    Quand le flux est activé, on lance une commande raspistill pour prendre
+    Quand le flux est activé, on lance une commande qui lance RPi Cam Web pour prendre
     des photos à intervalles réguliers.
     
-    Si le flux est désactivé, il faut arrêter la commande raspistill. Pour cela,
-    on utilise une instance de la classe subprocess.Popen qui va faire l'appel
-    système et, quand le flux est arrêté, on execute terminate() sur le subprocess.
+    Si le flux est désactivé, il faut arrêter RPi Cam Web.
 """
 class CameraImageStream(Thread):
 
     def __init__(self):
         self.command_process = None
+        self.stopped = False
         super(CameraImageStream, self).__init__()
     
     def run(self):
+        # La sortie sera redirigée à /dev/null
+        DEVNULL = open(os.devnull, "w")
+        
+        cmd_line = CAMERA_WEBCAM_START
+        
+        # Création d'un subprocess avec subprocess.call
+        print "LOG [CameraImageStream] :", cmd_line
+        self.command_process = subprocess.call(cmd_line,
+                                                stdout=DEVNULL,
+                                                stderr=subprocess.STDOUT)
+        while not self.stopped:
+            time.sleep(0.001)
+        
+        """
+        # Ancien code pour utiliser raspistill
+        
         # Paramètres de base pour une image
         #output = self.cam.dest_path + CAMERA_IMG_NAME
         output = CAMERA_IMG_PATH + CAMERA_IMG_NAME
@@ -139,10 +168,31 @@ class CameraImageStream(Thread):
                                                 stdout=DEVNULL,
                                                 stderr=subprocess.STDOUT)
         self.command_process.wait()
+        """
+        
 
     def stop(self):
+        print "LOG [CameraImageStream] : Trying to stop RPi Cam Web Interface"
+        
+        # La sortie sera redirigée à /dev/null
+        DEVNULL = open(os.devnull, "w")
+        
+        cmd_line = CAMERA_WEBCAM_STOP
+        
+        # Création d'un subprocess avec subprocess.call
+        print "LOG [CameraImageStream] :", cmd_line
+        self.command_process = subprocess.call(cmd_line,
+                                                stdout=DEVNULL,
+                                                stderr=subprocess.STDOUT)
+
+        self.stopped = True
+        
+        """
+        # Ancien code pour utiliser raspistill
+        
         print "LOG [CameraImageStream] : Trying to stop raspistill"
         if self.command_process is not None:
             self.command_process.kill()
             self.command_process.wait()
+        """
 
